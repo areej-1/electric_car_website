@@ -9,7 +9,7 @@
         <style>
             .edu-hero {
                 text-align: center;
-                padding: 40px 20px;
+                padding: 40px 20px 20px;
                 margin: 0;
             }
 
@@ -38,7 +38,7 @@
                 background: rgba(255, 255, 255, 0.15);
                 backdrop-filter: blur(10px);
                 border-radius: 16px;
-                padding: 28px 24px;
+                padding: 26px 22px;
                 border: 1px solid rgba(255, 255, 255, 0.3);
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
             }
@@ -49,71 +49,18 @@
                 background: rgba(255, 255, 255, 0.22);
             }
 
-            .card-icon {
-                width: 52px;
-                height: 52px;
-                margin-bottom: 18px;
-                background: rgba(255, 255, 255, 0.9);
-                border-radius: 12px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .card-icon svg {
-                width: 28px;
-                height: 28px;
-                fill: #2980b9;
-            }
-
             .learn-card h3 {
                 font-family: 'Orbitron', sans-serif;
-                font-size: 1.15rem;
+                font-size: 1.1rem;
                 color: #fff;
-                margin-bottom: 14px;
+                margin-bottom: 12px;
                 letter-spacing: 0.5px;
             }
 
             .learn-card p {
                 color: rgba(255, 255, 255, 0.9);
-                line-height: 1.7;
-                font-size: 0.92rem;
-            }
-
-            .key-fact {
-                background: rgba(255, 255, 255, 0.12);
-                border-left: 3px solid rgba(255, 255, 255, 0.6);
-                padding: 12px 14px;
-                margin-top: 16px;
-                border-radius: 0 10px 10px 0;
-                font-size: 0.85rem;
-                color: rgba(255, 255, 255, 0.85);
-                font-style: italic;
-            }
-
-            .bottom-section {
-                background: rgba(255, 255, 255, 0.1);
-                padding: 35px 40px;
-                margin: 30px 40px;
-                border-radius: 16px;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-            }
-
-            .bottom-section h2 {
-                text-align: center;
-                color: #fff;
-                margin-bottom: 20px;
-                font-family: 'Orbitron', sans-serif;
-                font-size: 1.4rem;
-            }
-
-            .bottom-section p {
-                text-align: center;
-                color: rgba(255, 255, 255, 0.9);
-                max-width: 800px;
-                margin: 0 auto;
-                line-height: 1.8;
-                font-size: 0.95rem;
+                line-height: 1.75;
+                font-size: 0.9rem;
             }
 
             @media screen and (max-width: 1024px) {
@@ -136,17 +83,10 @@
                     font-size: 0.9rem;
                 }
                 .learn-card {
-                    padding: 22px 18px;
+                    padding: 20px 18px;
                 }
                 .learn-card h3 {
-                    font-size: 1.05rem;
-                }
-                .bottom-section {
-                    margin: 20px 15px;
-                    padding: 25px 18px;
-                }
-                .bottom-section h2 {
-                    font-size: 1.2rem;
+                    font-size: 1rem;
                 }
             }
         </style>
@@ -166,99 +106,40 @@
         <main>
             <section class="edu-hero">
                 <h1>Electric Cars 101</h1>
-                <p>Everything you need to know about how electric vehicles work and why they matter.</p>
+                <p>How do electric cars actually work? Here's a simple breakdown.</p>
             </section>
 
             <div class="cards-container">
-                <!-- Card 1: Battery -->
                 <div class="learn-card">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M17 4h-3V2h-4v2H7c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 18H7V6h10v16zm-2-6H9v-2h6v2zm0-4H9V9h6v3z"/>
-                        </svg>
-                    </div>
-                    <h3>The Battery Pack</h3>
-                    <p>Think of the battery as the fuel tank of an electric car. Instead of storing gasoline, it stores electrical energy. Most EVs today use lithium-ion batteries - the same technology in your phone, just way bigger. These batteries can be charged hundreds of times and typically last the lifetime of the car.</p>
-                    <div class="key-fact">
-                        Fun fact: Formula E racing cars run entirely on battery power and can hit speeds over 280 km/h.
-                    </div>
+                    <h3>Battery</h3>
+                    <p>The battery stores energy, kind of like a fuel tank but for electricity. Most electric cars use lithium-ion batteries (same as phones, just bigger). You charge it, it holds the charge, and it powers everything in the car.</p>
                 </div>
 
-                <!-- Card 2: Electric Motor -->
                 <div class="learn-card">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                        </svg>
-                    </div>
-                    <h3>The Electric Motor</h3>
-                    <p>This is what actually moves the car. Unlike a gas engine with hundreds of moving parts, an electric motor is beautifully simple. When electricity flows through it, magnets spin and create motion. The best part? It delivers full power instantly - no need to "rev up" like a traditional engine.</p>
-                    <div class="key-fact">
-                        That's why electric cars feel so quick off the line - instant torque from the moment you press the pedal.
-                    </div>
+                    <h3>Motor</h3>
+                    <p>The motor makes the car move. Electricity goes in, the magnets inside spin, and that spins the wheels. Unlike gas engines, electric motors give you full power right away - no waiting for it to build up.</p>
                 </div>
 
-                <!-- Card 3: Controller -->
                 <div class="learn-card">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7 2v11h3v9l7-12h-4l4-8z"/>
-                        </svg>
-                    </div>
-                    <h3>The Brain (Controller)</h3>
-                    <p>The controller is like the car's brain. It sits between the battery and motor, deciding how much power to send based on how hard you're pressing the accelerator. It also converts the battery's stored energy into the right type of electricity the motor needs to spin.</p>
-                    <div class="key-fact">
-                        Modern controllers are smart enough to adjust power delivery thousands of times per second for a smooth ride.
-                    </div>
+                    <h3>Controller</h3>
+                    <p>This sits between the battery and motor. When you press the accelerator, the controller decides how much electricity to send to the motor. Press harder, more power. It also converts the electricity into the right form for the motor to use.</p>
                 </div>
 
-                <!-- Card 4: Regenerative Braking -->
                 <div class="learn-card">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
-                        </svg>
-                    </div>
                     <h3>Regenerative Braking</h3>
-                    <p>Here's something cool: when you slow down, the motor runs backwards and acts like a generator. It captures the energy that would normally be wasted as heat in regular brakes and sends it back to the battery. It's like getting free fuel every time you brake.</p>
-                    <div class="key-fact">
-                        Some EVs let you drive with just one pedal - lift off the accelerator and regen braking slows you down automatically.
-                    </div>
+                    <p>When you slow down, the motor can run in reverse and work like a generator. Instead of wasting energy as heat (like normal brakes), it captures that energy and puts it back in the battery. Free range, basically.</p>
                 </div>
 
-                <!-- Card 5: Charging -->
                 <div class="learn-card">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14.5 11l-3 6v-4h-2l3-6v4h2zM7 1h10c1.1 0 2 .9 2 2v18c0 1.1-.9 2-2 2H7c-1.1 0-2-.9-2-2V3c0-1.1.9-2 2-2zm0 5v12h10V6H7z"/>
-                        </svg>
-                    </div>
                     <h3>Charging</h3>
-                    <p>You can charge an EV from a regular wall outlet (slow but works overnight), a home charger (faster, good for daily use), or public fast chargers (great for road trips). Most people charge at home while they sleep - wake up to a "full tank" every morning.</p>
-                    <div class="key-fact">
-                        The latest fast chargers can add hundreds of kilometers of range in just 15-20 minutes.
-                    </div>
+                    <p>You can plug into a regular outlet (slow), a home charger (faster), or a public fast charger (quick stops on road trips). Most EV owners just plug in at home overnight and wake up with a full "tank."</p>
                 </div>
 
-                <!-- Card 6: Why EVs Matter -->
                 <div class="learn-card">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                        </svg>
-                    </div>
-                    <h3>Why It Matters</h3>
-                    <p>Electric cars produce zero emissions while driving - no exhaust pipe, no fumes. They're also way more efficient than gas cars, converting most of their energy into actual movement instead of wasting it as heat. Plus, they're quieter, cheaper to maintain, and honestly? Pretty fun to drive.</p>
-                    <div class="key-fact">
-                        An EV motor has about 20 moving parts. A gas engine? Over 2,000.
-                    </div>
+                    <h3>Why Electric?</h3>
+                    <p>No exhaust, no emissions while driving. Electric motors are way simpler than engines - fewer parts means less stuff that can break. They're also quieter and cheaper to run since electricity costs less than gas.</p>
                 </div>
             </div>
-
-            <section class="bottom-section">
-                <h2>The Future is Electric</h2>
-                <p>Electric vehicles aren't just about being "green" - they're genuinely better technology. Faster acceleration, lower running costs, less maintenance, and a smoother, quieter ride. As battery technology keeps improving and charging networks expand, EVs are becoming the obvious choice for more and more drivers. That's why we're building one ourselves - to learn firsthand how this technology works.</p>
-            </section>
         </main>
 
         <footer>
