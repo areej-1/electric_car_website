@@ -212,6 +212,9 @@ function doLevelUp(newLevel) {
     overlayText.textContent = 'LEVEL ' + newLevel + '!';
     overlay.classList.remove('hidden');
 
+    // update level display
+    levelDisplay.textContent = 'Level: ' + newLevel;
+
     // after 1 second, hide overlay and resume harder
     setTimeout(() => {
         overlay.classList.add('hidden');
