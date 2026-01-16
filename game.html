@@ -77,6 +77,24 @@
         player.style.left = playerX + 'px';
     });
 
+    // Touch controls - tap left or right side of game container to move
+    container.addEventListener('touchstart', (e) => {
+        if (!gameRunning) return;
+        e.preventDefault();
+
+        const touch = e.touches[0];
+        const containerRect = container.getBoundingClientRect();
+        const touchX = touch.clientX - containerRect.left;
+        const containerMiddle = containerRect.width / 2;
+
+        if (touchX < containerMiddle && playerX > 0) {
+            playerX -= 30;
+        } else if (touchX >= containerMiddle && playerX < 520) {
+            playerX += 30;
+        }
+        player.style.left = playerX + 'px';
+    });
+
     // Create falling obstacle (snake)
     function createObstacle() {
         const obstacle = document.createElement('div');
