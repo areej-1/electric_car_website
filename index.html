@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="styles.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="favicon.png" type="image/png">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+        <title>Electric Car Club</title>
+    </head>
+    <body>
+        <nav>
+        
+            <div class="logo">SIS Al Jada Cobras</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="members.html">Members</a></li>
+                <li><a href="projects.html">Our Work</a></li>
+                <li><a href="game.html">Game</a></li>
+                <li><a href="101.html">Electric Cars 101</a></li>
+            </ul>
+        </nav>
+        <main>
+            <p>The SIS Al Jada Cobras Electric Car Club is a student-led team working on designing, building, and testing an electric car. Follow our journey as we learn, improve, and bring the project to life.</p>
+            <section id="home-carousel" class="splide" aria-label="Beautiful Images">
+                <div class="splide__track">
+		        <ul class="splide__list">
+			<li class="splide__slide">
+				<video src="home1.MP4" controls></video>
+			</li>
+			<li class="splide__slide">
+				<img src="home2.JPG" alt="">
+			</li>
+			<li class="splide__slide">
+				<video src="home3.MP4" controls></video>
+			</li>
+		</ul>
+  </div>
+</section>
+        </main>
+        <footer>
+        <p> Copyright 2026 SIS Al Jada Cobras</p>
+        <p>Made by Areej</p>
+        <div class="socials">
+            <a href="https://tiktok.com/@sisaljadacobras?_r=1&_t=ZS-935T-PczwWdL"><img src="tiktok.png" alt="description"></a>
+            <a href="https://instagram.com/sisaljadacobras?igsh=dmRpbXlyMzVjNjV1"><img src="instagram.png" alt="description"></a>
+        </div>
+        </footer>
+        <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+        <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new Splide('#home-carousel', {
+                type: 'loop',
+                perPage: 1,
+                autoplay: true,
+                pauseOnHover: true
+            }).mount();
+        });
+        </script>
+    </body>
+</html>

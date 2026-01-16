@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="styles.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="favicon.png" type="image/png">
+        <title>Electric Car Club</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/css/splide.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/js/splide.min.js"></script>
+
+    </head>
+    <body>
+        <nav>
+            <div class="logo">SIS Al Jada Cobras</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="members.html">Members</a></li>
+                <li><a href="projects.html">Our Work</a></li>
+                <li><a href="game.html">Game</a></li>
+                <li><a href="101.html">Electric Cars 101</a></li>
+            </ul>
+        </nav>
+    <main>
+    <header>
+        <h1>Our Progress</h1>
+        <p>The key stages behind building our electric car</p>
+    </header>
+    <section id="image-carousel" class="splide" aria-label="Project Phases">
+        <div class="splide__track">
+            <ul class="splide__list">
+        <li class="splide__slide">
+        <div class="text">
+        <h2>Phase 1: Design + Planning</h2>
+        <p>This is where the team decides what the car should achieve and how it should be built. We plan the layout, choose materials and parts, and make sure everything fits together and follows the rules and safety requirements.</p>
+        </div>
+        <img src="design.jpg" alt="">
+        </li>
+
+        <li class="splide__slide">
+        <div class="text">
+        <h2>Phase 2: Building + Assembly</h2>
+        <p>After the design is decided, we start physically building the car. This includes putting together the main structure and mounting the important components so the car is solid, balanced, and ready for the systems to be added.</p>
+        </div>
+        <video src="build.MP4" controls></video>
+        </li>
+
+        <li class="splide__slide">
+        <div class="text">
+        <h2>Phase 3: Wiring + Setup</h2>
+        <p>This stage focuses on the electrical side of the car. We connect the battery, motor, and control systems, organize wiring neatly, and make sure everything is properly insulated and safe before powering it on.</p>
+        </div>
+        <img src="wiring.jpg" alt="">
+        </li>
+
+        <li class="splide__slide">
+        <div class="text">
+        <h2>Phase 4: Testing + Troubleshooting</h2>
+        <p>Once the car is running, we test it step by step to see how it performs. If something doesn’t work correctly, we diagnose the issue, adjust the setup, and keep improving until the car runs smoothly and reliably.</p>
+        </div>
+        <video src="testing.MP4" controls></video>
+        </li>
+
+        <li class="splide__slide">
+        <div class="text">
+            <h2>Phase 5: Final Adjustments</h2>
+            <p>Near the end, we fine-tune and polish everything. This includes small improvements, safety checks, and making sure the car is fully ready for driving, showcasing, or competition.</p>
+        </div>
+         <video src="adjust.MP4" controls></video>
+        </li>
+
+        </ul>
+       </div>
+
+    </section>
+    </main>
+    <footer>
+        <p> Copyright 2026 SIS Al Jada Cobras</p>
+        <p>Made by Areej</p>
+        <div class="socials">
+            <a href="https://tiktok.com/@sisaljadacobras?_r=1&_t=ZS-935T-PczwWdL"><img src="tiktok.png" alt="description"></a>
+            <a href="https://instagram.com/sisaljadacobras?igsh=dmRpbXlyMzVjNjV1"><img src="instagram.png" alt="description"></a>
+        </div>
+    </footer>
+    <script>
+    new Splide('#image-carousel').mount();
+    </script>
+    </body>
+</html>
