@@ -1,0 +1,323 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;500;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #87CEEB;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+
+}
+
+nav {
+    background-color: #87CEEB;
+    padding: 15px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.logo {
+    text-align: center;
+    color: white;
+    font-size: 32px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+header {
+    text-align: center;
+    padding: 40px;
+    margin: 20px;
+    color: white;
+}
+
+h1, h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+section {
+    padding: 20px;
+    margin: 20px;
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    color: white;
+}
+
+main {
+    flex-grow: 1;
+}
+
+.members-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+    color: white;
+    text-align: center;
+}
+
+.members-grid img {
+    width: 100%;
+    height: 250px;
+    object-fit: contain;
+}
+
+.projects-section {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.projects-section img {
+    width: 50%;
+    height: auto;
+}
+
+.projects-section .text{
+    width: 50%;
+    color: white;
+}
+
+.socials {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.socials img {
+    width: 30px;
+    height: 30px;
+}
+
+#image-carousel {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#image-carousel .splide__slide img {
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+}
+
+.splide__slide {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    min-height: 400px;
+}
+
+.splide__slide .text{
+    flex: 1;
+}
+
+.splide__slide img, 
+.splide__slide video {
+    flex: 1;
+    max-width: 50%;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.splide {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+
+#home-carousel .splide__slide img {
+    width: 100%;
+    height: 600px;
+    object-fit: contain;
+    align-items: center;
+    max-width: 100%;
+}
+
+#home-carousel .splide__slide {
+    justify-content: center;
+}
+
+main > p {
+    text-align: center;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+main > h1 {
+    text-align: center;
+}
+
+#game-container {
+    width: 600px;
+    height: 500px;
+    background: linear-gradient(#333 0%, #333 100%);
+    position: relative;
+    margin: 10px auto;
+    overflow: hidden;
+    border: 3px solid white;
+}
+
+#game-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 8px;
+    height: 100%;
+    background: repeating-linear-gradient(
+        to bottom,
+        yellow 0px,
+        yellow 40px,
+        transparent 40px,
+        transparent 80px
+    );
+    transform: translateX(-50%);
+    animation: roadMove 0.5s linear infinite;
+}
+
+@keyframes roadMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 80px; }
+}
+
+#player {
+    width: 80px;
+    height: 120px;
+    background-image: url('car.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    bottom: 20px;
+    left: 260px;
+    transition: left 0.1s ease-out;
+}
+
+.obstacle {
+    width: 80px;
+    height: 100px;
+    background-image: url('snake_game.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    top: -100px;
+}
+
+
+#score {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: white;
+    font-size: 20px;
+    z-index: 10;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+}
+
+.battery {
+    width: 60px;
+    height: 60px;
+    background-image: url('battery.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    top: -60px;
+}
+
+#start-btn {
+    display: block;
+    margin: 10px auto;
+    padding: 12px 40px;
+    font-size: 18px;
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    background: #333;
+    color: white;
+    border: 2px solid white;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+#start-btn:hover {
+    background: white;
+    color: #333;
+}
+
+#level {
+    position: absolute;
+    top: 40px;
+    left: 10px;
+    color: white;
+    font-size: 20px;
+    z-index: 10;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+}
+
+#level-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.6);
+  z-index: 50;
+}
+
+#level-overlay.hidden {
+  display: none;
+}
+
+.overlay-box {
+  background: rgba(20, 20, 20, 0.9);
+  border: 2px solid white;
+  padding: 20px 30px;
+  text-align: center;
+  border-radius: 12px;
+}
+
+#overlay-text {
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
+  font-family: 'Orbitron', sans-serif;
+}
+
+#overlay-subtext {
+  color: white;
+  font-size: 16px;
+  margin-top: 8px;
+  opacity: 0.9;
+}

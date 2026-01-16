@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="styles.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="favicon.png" type="image/png">
+        <title>Electric Car Club</title>
+    </head>
+    <body>
+        <nav>
+            <div class="logo">SIS Al Jada Cobras</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="members.html">Members</a></li>
+                <li><a href="projects.html">Our Work</a></li>
+                <li><a href="game.html">Game</a></li>
+                <li><a href="101.html">Electric Cars 101</a></li>
+            </ul>
+        </nav>
+        <main>
+            <h1>Cobra Racing</h1>
+            <div id="game-container">
+                <div id="player"></div>
+                <div id="score">Score: 0</div>
+                <div id="level">Level: 1</div>
+                <div id="level-overlay" class="hidden">
+                    <div class="overlay-box">
+                        <div id="overlay-text">LEVEL UP!</div>
+                        <div id="overlay-subtext">Get ready…</div>
+                    </div>
+                    </div>
+
+
+            </div>
+            <button id="start-btn">Start Game</button>
+</main>
+<script>
+    const container = document.getElementById('game-container');
+    const player = document.getElementById('player');
+    const scoreDisplay = document.getElementById('score');
+    const startBtn = document.getElementById('start-btn');
+    const overlay = document.getElementById('level-overlay');
+    const overlayText = document.getElementById('overlay-text');
+
+
+    let playerX = 260;
+    let score = 0;
+    const levelDisplay = document.getElementById('level');
+
+    let level = 1;
+    let obstacleSpeed = 7;
+    let batterySpeed = 5;
+    let obstacleSpawnMs = 1500;
+    let batterySpawnMs = 2000;
+
+    const LEVEL_UP_EVERY = 50; // points
+    let levelingUp = false;
+    let gameRunning = false;
+    let obstacleInterval;
+    let batteryInterval;
+
+    // Move player with left/right arrow keys only
+    document.addEventListener('keydown', (e) => {
+        if (!gameRunning) return;
+
+        if (['ArrowLeft', 'ArrowRight'].includes(e.key)) {
+            e.preventDefault();
+        }
+
+        if (e.key === 'ArrowLeft' && playerX > 0) {
+            playerX -= 30;
+        }
+        if (e.key === 'ArrowRight' && playerX < 520) {
+            playerX += 30;
+        }
+        player.style.left = playerX + 'px';
+    });
+
+    // Create falling obstacle (snake)
+    function createObstacle() {
+        const obstacle = document.createElement('div');
+        obstacle.classList.add('obstacle');
+        obstacle.style.left = Math.random() * 520 + 'px';
+        container.appendChild(obstacle);
+
+        let obstacleY = -100;
+
+        const fall = setInterval(() => {
+            if (!gameRunning) {
+                clearInterval(fall);
+                obstacle.remove();
+                return;
+            }
+
+            obstacleY += obstacleSpeed;
+            obstacle.style.top = obstacleY + 'px';
+
+            // Collision detection
+            const obstacleX = parseInt(obstacle.style.left);
+            if (
+                playerX + 15 < obstacleX + 65 &&
+                playerX + 65 > obstacleX + 15 &&
+                360 < obstacleY + 80 &&
+                480 > obstacleY
+            ) {
+                gameOver();
+            }
+
+            if (obstacleY > 500) {
+                obstacle.remove();
+                clearInterval(fall);
+            }
+        }, 30);
+    }
+
+    // Create falling battery (collectible)
+    function createBattery() {
+        const battery = document.createElement('div');
+        battery.classList.add('battery');
+        battery.style.left = Math.random() * 520 + 'px';
+        container.appendChild(battery);
+
+        let batteryY = -60;
+
+        const fall = setInterval(() => {
+            if (!gameRunning) {
+                clearInterval(fall);
+                battery.remove();
+                return;
+            }
+
+            batteryY += batterySpeed;
+            battery.style.top = batteryY + 'px';
+
+            // Collection detection
+            const batteryX = parseInt(battery.style.left);
+            if (
+                playerX + 10 < batteryX + 50 &&
+                playerX + 70 > batteryX + 10 &&
+                360 < batteryY + 50 &&
+                480 > batteryY
+            ) {
+                battery.remove();
+                clearInterval(fall);
+                score += 10;
+                scoreDisplay.textContent = 'Score: ' + score;
+                const newLevel = Math.floor(score / LEVEL_UP_EVERY) + 1;
+                if (newLevel > level && !levelingUp) {
+                    level = newLevel;
+                    doLevelUp(level);
+                }
+                updateLevel();
+            }
+
+            if (batteryY > 500) {
+                battery.remove();
+                clearInterval(fall);
+            }
+        }, 30);
+    }
+
+    function updateLevel() {
+    const newLevel = Math.floor(score / LEVEL_UP_EVERY) + 1;
+
+    if (newLevel !== level) {
+        level = newLevel;
+        levelDisplay.textContent = 'Level: ' + level;
+
+        // Increase difficulty
+        obstacleSpeed = 7 + (level - 1) * 1.2;  // faster falling
+        batterySpeed  = 5 + (level - 1) * 0.8;
+
+        // OPTIONAL: spawn faster too (cap so it doesn’t become impossible)
+        obstacleSpawnMs = Math.max(600, 1500 - (level - 1) * 120);
+        batterySpawnMs  = Math.max(900, 2000 - (level - 1) * 100);
+
+        // Restart intervals with new spawn rates
+        clearInterval(obstacleInterval);
+        clearInterval(batteryInterval);
+        obstacleInterval = setInterval(createObstacle, obstacleSpawnMs);
+        batteryInterval = setInterval(createBattery, batterySpawnMs);
+    }
+}
+
+function doLevelUp(newLevel) {
+    levelingUp = true;
+
+    // pause spawning new items
+    clearInterval(obstacleInterval);
+    clearInterval(batteryInterval);
+
+    // show overlay
+    overlayText.textContent = 'LEVEL ' + newLevel + '!';
+    overlay.classList.remove('hidden');
+
+    // after 1 second, hide overlay and resume harder
+    setTimeout(() => {
+        overlay.classList.add('hidden');
+
+        // increase difficulty
+        obstacleSpeed = 7 + (newLevel - 1) * 1.2;
+        batterySpeed  = 5 + (newLevel - 1) * 0.8;
+
+        // resume spawning
+        obstacleInterval = setInterval(createObstacle, 1500);
+        batteryInterval = setInterval(createBattery, 2000);
+
+        levelingUp = false;
+    }, 1000);
+}
+
+
+
+    function startGame() {
+        level = 1;
+        obstacleSpeed = 7;
+        batterySpeed = 5;
+        obstacleSpawnMs = 1500;
+        batterySpawnMs = 2000;
+        levelDisplay.textContent = 'Level: 1';
+        overlay.classList.add('hidden');
+        levelingUp = false;
+
+        gameRunning = true;
+        score = 0;
+        playerX = 260;
+        player.style.left = playerX + 'px';
+        scoreDisplay.textContent = 'Score: 0';
+        startBtn.style.display = 'none';
+        obstacleInterval = setInterval(createObstacle, obstacleSpawnMs);
+        batteryInterval = setInterval(createBattery, batterySpawnMs);
+
+    }
+
+    function gameOver() {
+        gameRunning = false;
+        clearInterval(obstacleInterval);
+        clearInterval(batteryInterval);
+        alert('Game Over! Score: ' + score);
+
+        document.querySelectorAll('.obstacle').forEach(ob => ob.remove());
+        document.querySelectorAll('.battery').forEach(b => b.remove());
+
+        startBtn.style.display = 'block';
+    }
+
+    startBtn.addEventListener('click', startGame);
+</script>
+    <footer>
+        <p> Copyright 2026 SIS Al Jada Cobras</p>
+        <p>Made by Areej</p>
+        <div class="socials">
+            <a href="https://tiktok.com/@sisaljadacobras?_r=1&_t=ZS-935T-PczwWdL"><img src="tiktok.png" alt="description"></a>
+            <a href="https://instagram.com/sisaljadacobras?igsh=dmRpbXlyMzVjNjV1"><img src="instagram.png" alt="description"></a>
+        </div>
+    </footer>
+    </body>
+</html>

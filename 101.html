@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="styles.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="favicon.png" type="image/png">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+        <title>Electric Car Club</title>
+    </head>
+    <body>
+        <nav>
+        
+            <div class="logo">SIS Al Jada Cobras</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="members.html">Members</a></li>
+                <li><a href="projects.html">Our Work</a></li>
+                <li><a href="game.html">Game</a></li>
+                <li><a href="101.html">Electric Cars 101</a></li>
+            </ul>
+        </nav>
+        <main>
+            <br>
+            <p>Electric cars (EVs) are vehicles powered by electricity instead of gasoline. They use a <b>battery pack</b> to store energy and an <b>electric motor</b> to move the car, replacing the traditional engine. When the driver presses the accelerator, the battery sends electricity through a controller/inverter, which delivers the right amount of power to the motor and turns the wheels.</p>
+            <br>
+            <p>EVs are known for being <b>quiet, efficient, and environmentally friendly</b>, since they produce <b>zero exhaust emissions</b> while driving. They can be recharged by plugging into a charger, and many electric cars also use <b>regenerative braking</b>, which helps recover energy when slowing down and sends it back into the battery.</p>
+            <br>
+            <p>Overall, electric cars are an important part of the future of transportation, combining <b>technology, sustainability, and performance</b> in one system.</p>
+        </main>
+        <footer>
+        <p> Copyright 2026 SIS Al Jada Cobras</p>
+        <p>Made by Areej</p>
+        <div class="socials">
+            <a href="https://tiktok.com/@sisaljadacobras?_r=1&_t=ZS-935T-PczwWdL"><img src="tiktok.png" alt="description"></a>
+            <a href="https://instagram.com/sisaljadacobras?igsh=dmRpbXlyMzVjNjV1"><img src="instagram.png" alt="description"></a>
+        </div>
+        </footer>
+        <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+        <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new Splide('#home-carousel', {
+                type: 'loop',
+                perPage: 1,
+                autoplay: true,
+                pauseOnHover: true
+            }).mount();
+        });
+        </script>
+    </body>
+</html>
