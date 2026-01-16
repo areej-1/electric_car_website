@@ -42,64 +42,86 @@
     const startBtn = document.getElementById('start-btn');
     const overlay = document.getElementById('level-overlay');
     const overlayText = document.getElementById('overlay-text');
-
-
-    let playerX = 260;
-    let score = 0;
     const levelDisplay = document.getElementById('level');
 
+    // Dynamic sizing - reads actual container/player dimensions
+    function getGameDimensions() {
+        const containerWidth = container.offsetWidth;
+        const containerHeight = container.offsetHeight;
+        const playerWidth = player.offsetWidth;
+        const playerHeight = player.offsetHeight;
+        return {
+            containerWidth,
+            containerHeight,
+            playerWidth,
+            playerHeight,
+            maxPlayerX: containerWidth - playerWidth,
+            playerTopY: containerHeight - playerHeight - 20,
+            playerBottomY: containerHeight - 20
+        };
+    }
+
+    let playerX = 0;
+    let score = 0;
     let level = 1;
     let obstacleSpeed = 7;
     let batterySpeed = 5;
     let obstacleSpawnMs = 1500;
     let batterySpawnMs = 2000;
 
-    const LEVEL_UP_EVERY = 50; // points
+    const LEVEL_UP_EVERY = 50;
     let levelingUp = false;
     let gameRunning = false;
     let obstacleInterval;
     let batteryInterval;
 
-    // Move player with left/right arrow keys only
+    // Move player with left/right arrow keys
     document.addEventListener('keydown', (e) => {
         if (!gameRunning) return;
+        const dims = getGameDimensions();
+        const moveAmount = Math.max(20, dims.containerWidth * 0.05);
 
         if (['ArrowLeft', 'ArrowRight'].includes(e.key)) {
             e.preventDefault();
         }
 
         if (e.key === 'ArrowLeft' && playerX > 0) {
-            playerX -= 30;
+            playerX = Math.max(0, playerX - moveAmount);
         }
-        if (e.key === 'ArrowRight' && playerX < 520) {
-            playerX += 30;
+        if (e.key === 'ArrowRight' && playerX < dims.maxPlayerX) {
+            playerX = Math.min(dims.maxPlayerX, playerX + moveAmount);
         }
         player.style.left = playerX + 'px';
     });
 
-    // Touch controls - tap left or right side of game container to move
+    // Touch controls
     container.addEventListener('touchstart', (e) => {
         if (!gameRunning) return;
         e.preventDefault();
 
+        const dims = getGameDimensions();
+        const moveAmount = Math.max(20, dims.containerWidth * 0.05);
         const touch = e.touches[0];
         const containerRect = container.getBoundingClientRect();
         const touchX = touch.clientX - containerRect.left;
         const containerMiddle = containerRect.width / 2;
 
         if (touchX < containerMiddle && playerX > 0) {
-            playerX -= 30;
-        } else if (touchX >= containerMiddle && playerX < 520) {
-            playerX += 30;
+            playerX = Math.max(0, playerX - moveAmount);
+        } else if (touchX >= containerMiddle && playerX < dims.maxPlayerX) {
+            playerX = Math.min(dims.maxPlayerX, playerX + moveAmount);
         }
         player.style.left = playerX + 'px';
     });
 
     // Create falling obstacle (snake)
     function createObstacle() {
+        const dims = getGameDimensions();
         const obstacle = document.createElement('div');
         obstacle.classList.add('obstacle');
-        obstacle.style.left = Math.random() * 520 + 'px';
+        const obstacleWidth = 80; // Will be smaller on mobile via CSS
+        const maxX = dims.containerWidth - obstacleWidth;
+        obstacle.style.left = Math.random() * maxX + 'px';
         container.appendChild(obstacle);
 
         let obstacleY = -100;
@@ -111,21 +133,25 @@
                 return;
             }
 
+            const currentDims = getGameDimensions();
             obstacleY += obstacleSpeed;
             obstacle.style.top = obstacleY + 'px';
 
-            // Collision detection
+            // Collision detection using actual dimensions
             const obstacleX = parseInt(obstacle.style.left);
+            const obsWidth = obstacle.offsetWidth;
+            const obsHeight = obstacle.offsetHeight;
+
             if (
-                playerX + 15 < obstacleX + 65 &&
-                playerX + 65 > obstacleX + 15 &&
-                360 < obstacleY + 80 &&
-                480 > obstacleY
+                playerX + 10 < obstacleX + obsWidth - 10 &&
+                playerX + currentDims.playerWidth - 10 > obstacleX + 10 &&
+                currentDims.playerTopY < obstacleY + obsHeight &&
+                currentDims.playerBottomY > obstacleY
             ) {
                 gameOver();
             }
 
-            if (obstacleY > 500) {
+            if (obstacleY > currentDims.containerHeight) {
                 obstacle.remove();
                 clearInterval(fall);
             }
@@ -134,9 +160,12 @@
 
     // Create falling battery (collectible)
     function createBattery() {
+        const dims = getGameDimensions();
         const battery = document.createElement('div');
         battery.classList.add('battery');
-        battery.style.left = Math.random() * 520 + 'px';
+        const batteryWidth = 60;
+        const maxX = dims.containerWidth - batteryWidth;
+        battery.style.left = Math.random() * maxX + 'px';
         container.appendChild(battery);
 
         let batteryY = -60;
@@ -148,23 +177,26 @@
                 return;
             }
 
+            const currentDims = getGameDimensions();
             batteryY += batterySpeed;
             battery.style.top = batteryY + 'px';
 
             // Collection detection
             const batteryX = parseInt(battery.style.left);
+            const batWidth = battery.offsetWidth;
+            const batHeight = battery.offsetHeight;
+
             if (
-                playerX + 10 < batteryX + 50 &&
-                playerX + 70 > batteryX + 10 &&
-                360 < batteryY + 50 &&
-                480 > batteryY
+                playerX + 5 < batteryX + batWidth - 5 &&
+                playerX + currentDims.playerWidth - 5 > batteryX + 5 &&
+                currentDims.playerTopY < batteryY + batHeight &&
+                currentDims.playerBottomY > batteryY
             ) {
                 battery.remove();
                 clearInterval(fall);
                 score += 10;
                 scoreDisplay.textContent = 'Score: ' + score;
 
-                // Check if we should level up
                 const newLevel = Math.floor(score / LEVEL_UP_EVERY) + 1;
                 if (newLevel > level && !levelingUp) {
                     level = newLevel;
@@ -172,50 +204,40 @@
                 }
             }
 
-            if (batteryY > 500) {
+            if (batteryY > currentDims.containerHeight) {
                 battery.remove();
                 clearInterval(fall);
             }
         }, 30);
     }
 
-function doLevelUp(newLevel) {
-    levelingUp = true;
+    function doLevelUp(newLevel) {
+        levelingUp = true;
+        clearInterval(obstacleInterval);
+        clearInterval(batteryInterval);
 
-    // pause spawning new items
-    clearInterval(obstacleInterval);
-    clearInterval(batteryInterval);
+        overlayText.textContent = 'LEVEL ' + newLevel + '!';
+        overlay.classList.remove('hidden');
+        levelDisplay.textContent = 'Level: ' + newLevel;
 
-    // show overlay
-    overlayText.textContent = 'LEVEL ' + newLevel + '!';
-    overlay.classList.remove('hidden');
+        setTimeout(() => {
+            overlay.classList.add('hidden');
 
-    // update level display
-    levelDisplay.textContent = 'Level: ' + newLevel;
+            obstacleSpeed = 7 + (newLevel - 1) * 1.2;
+            batterySpeed = 5 + (newLevel - 1) * 0.8;
+            obstacleSpawnMs = Math.max(600, 1500 - (newLevel - 1) * 120);
+            batterySpawnMs = Math.max(900, 2000 - (newLevel - 1) * 100);
 
-    // after 1 second, hide overlay and resume harder
-    setTimeout(() => {
-        overlay.classList.add('hidden');
+            obstacleInterval = setInterval(createObstacle, obstacleSpawnMs);
+            batteryInterval = setInterval(createBattery, batterySpawnMs);
 
-        // increase difficulty
-        obstacleSpeed = 7 + (newLevel - 1) * 1.2;
-        batterySpeed  = 5 + (newLevel - 1) * 0.8;
-
-        // increase spawn rates (with caps so it doesn't become impossible)
-        obstacleSpawnMs = Math.max(600, 1500 - (newLevel - 1) * 120);
-        batterySpawnMs  = Math.max(900, 2000 - (newLevel - 1) * 100);
-
-        // resume spawning with NEW faster rates
-        obstacleInterval = setInterval(createObstacle, obstacleSpawnMs);
-        batteryInterval = setInterval(createBattery, batterySpawnMs);
-
-        levelingUp = false;
-    }, 1000);
-}
-
-
+            levelingUp = false;
+        }, 1000);
+    }
 
     function startGame() {
+        const dims = getGameDimensions();
+
         level = 1;
         obstacleSpeed = 7;
         batterySpeed = 5;
@@ -227,13 +249,12 @@ function doLevelUp(newLevel) {
 
         gameRunning = true;
         score = 0;
-        playerX = 260;
+        playerX = (dims.containerWidth - dims.playerWidth) / 2;
         player.style.left = playerX + 'px';
         scoreDisplay.textContent = 'Score: 0';
         startBtn.style.display = 'none';
         obstacleInterval = setInterval(createObstacle, obstacleSpawnMs);
         batteryInterval = setInterval(createBattery, batterySpawnMs);
-
     }
 
     function gameOver() {
