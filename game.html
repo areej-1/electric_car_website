@@ -163,12 +163,13 @@
                 clearInterval(fall);
                 score += 10;
                 scoreDisplay.textContent = 'Score: ' + score;
+
+                // Check if we should level up
                 const newLevel = Math.floor(score / LEVEL_UP_EVERY) + 1;
                 if (newLevel > level && !levelingUp) {
                     level = newLevel;
                     doLevelUp(level);
                 }
-                updateLevel();
             }
 
             if (batteryY > 500) {
@@ -177,29 +178,6 @@
             }
         }, 30);
     }
-
-    function updateLevel() {
-    const newLevel = Math.floor(score / LEVEL_UP_EVERY) + 1;
-
-    if (newLevel !== level) {
-        level = newLevel;
-        levelDisplay.textContent = 'Level: ' + level;
-
-        // Increase difficulty
-        obstacleSpeed = 7 + (level - 1) * 1.2;  // faster falling
-        batterySpeed  = 5 + (level - 1) * 0.8;
-
-        // OPTIONAL: spawn faster too (cap so it doesn’t become impossible)
-        obstacleSpawnMs = Math.max(600, 1500 - (level - 1) * 120);
-        batterySpawnMs  = Math.max(900, 2000 - (level - 1) * 100);
-
-        // Restart intervals with new spawn rates
-        clearInterval(obstacleInterval);
-        clearInterval(batteryInterval);
-        obstacleInterval = setInterval(createObstacle, obstacleSpawnMs);
-        batteryInterval = setInterval(createBattery, batterySpawnMs);
-    }
-}
 
 function doLevelUp(newLevel) {
     levelingUp = true;
@@ -223,9 +201,13 @@ function doLevelUp(newLevel) {
         obstacleSpeed = 7 + (newLevel - 1) * 1.2;
         batterySpeed  = 5 + (newLevel - 1) * 0.8;
 
-        // resume spawning
-        obstacleInterval = setInterval(createObstacle, 1500);
-        batteryInterval = setInterval(createBattery, 2000);
+        // increase spawn rates (with caps so it doesn't become impossible)
+        obstacleSpawnMs = Math.max(600, 1500 - (newLevel - 1) * 120);
+        batterySpawnMs  = Math.max(900, 2000 - (newLevel - 1) * 100);
+
+        // resume spawning with NEW faster rates
+        obstacleInterval = setInterval(createObstacle, obstacleSpawnMs);
+        batteryInterval = setInterval(createBattery, batterySpawnMs);
 
         levelingUp = false;
     }, 1000);
