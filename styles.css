@@ -321,3 +321,208 @@ main > h1 {
   margin-top: 8px;
   opacity: 0.9;
 }
+
+/* ==================== MOBILE RESPONSIVE ==================== */
+
+/* Tablets and smaller (768px and below) */
+@media screen and (max-width: 768px) {
+
+    /* Navigation - stack vertically */
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo {
+        font-size: 24px;
+    }
+
+    /* Members grid - 2 columns */
+    .members-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .members-grid img {
+        height: 180px;
+    }
+
+    /* Carousels - smaller */
+    #image-carousel .splide__slide img,
+    #home-carousel .splide__slide img {
+        height: 350px;
+    }
+
+    .splide__slide {
+        flex-direction: column;
+        padding: 1rem;
+        min-height: auto;
+    }
+
+    .splide__slide img,
+    .splide__slide video {
+        max-width: 100%;
+        height: 300px;
+    }
+
+    .splide {
+        padding: 1rem;
+    }
+
+    /* Projects - stack vertically */
+    .projects-section {
+        flex-direction: column;
+    }
+
+    .projects-section img,
+    .projects-section .text {
+        width: 100%;
+    }
+
+    /* Game - scale down */
+    #game-container {
+        width: 100%;
+        max-width: 400px;
+        height: 400px;
+    }
+
+    #player {
+        width: 60px;
+        height: 90px;
+        left: 170px;
+    }
+
+    .obstacle {
+        width: 60px;
+        height: 75px;
+    }
+
+    .battery {
+        width: 45px;
+        height: 45px;
+    }
+
+    #score, #level {
+        font-size: 16px;
+    }
+
+    #overlay-text {
+        font-size: 24px;
+    }
+
+    /* General spacing */
+    header {
+        padding: 20px;
+        margin: 10px;
+    }
+
+    section {
+        padding: 15px;
+        margin: 15px;
+    }
+
+    main > p {
+        padding: 15px;
+        margin: 10px auto;
+    }
+}
+
+/* Phones (480px and below) */
+@media screen and (max-width: 480px) {
+
+    .logo {
+        font-size: 18px;
+        letter-spacing: 1px;
+    }
+
+    nav {
+        padding: 10px;
+    }
+
+    nav ul {
+        gap: 8px;
+    }
+
+    nav a {
+        font-size: 14px;
+    }
+
+    /* Members grid - 1 column */
+    .members-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .members-grid img {
+        height: 200px;
+    }
+
+    /* Carousels - even smaller */
+    #image-carousel .splide__slide img,
+    #home-carousel .splide__slide img {
+        height: 250px;
+    }
+
+    .splide__slide img,
+    .splide__slide video {
+        height: 200px;
+    }
+
+    /* Game - phone size */
+    #game-container {
+        max-width: 320px;
+        height: 350px;
+    }
+
+    #player {
+        width: 50px;
+        height: 75px;
+        left: 135px;
+    }
+
+    .obstacle {
+        width: 50px;
+        height: 60px;
+    }
+
+    .battery {
+        width: 40px;
+        height: 40px;
+    }
+
+    #score, #level {
+        font-size: 14px;
+    }
+
+    #overlay-text {
+        font-size: 20px;
+    }
+
+    .overlay-box {
+        padding: 15px 20px;
+    }
+
+    #start-btn {
+        padding: 10px 30px;
+        font-size: 16px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    main > p {
+        font-size: 14px;
+    }
+}
+
+/* Center socials on all screens */
+.socials {
+    justify-content: center;
+}
