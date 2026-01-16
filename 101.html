@@ -7,67 +7,53 @@
         <link rel="icon" href="favicon.png" type="image/png">
         <title>Electric Cars 101 | SIS Al Jada Cobras</title>
         <style>
-            /* 101 Page Specific Styles */
             .edu-hero {
                 text-align: center;
                 padding: 40px 20px;
-                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
                 margin: 0;
-                border-bottom: 3px solid #e94560;
             }
 
             .edu-hero h1 {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
                 margin-bottom: 10px;
-                color: #fff;
             }
 
             .edu-hero p {
-                color: #aaa;
-                font-size: 1.1rem;
-                max-width: 600px;
+                color: rgba(255,255,255,0.85);
+                font-size: 1.05rem;
+                max-width: 550px;
                 margin: 0 auto;
             }
 
             .cards-container {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
-                gap: 25px;
-                padding: 40px;
-                max-width: 1400px;
+                gap: 20px;
+                padding: 30px 40px;
+                max-width: 1300px;
                 margin: 0 auto;
             }
 
             .learn-card {
-                background: linear-gradient(180deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(10px);
                 border-radius: 16px;
-                padding: 30px 25px;
-                border: 1px solid #2a2a4a;
+                padding: 28px 24px;
+                border: 1px solid rgba(255, 255, 255, 0.3);
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
-                position: relative;
-                overflow: hidden;
-            }
-
-            .learn-card::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 4px;
-                background: linear-gradient(90deg, #e94560, #ff6b6b);
             }
 
             .learn-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 20px 40px rgba(233, 69, 96, 0.2);
+                transform: translateY(-4px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: rgba(255, 255, 255, 0.22);
             }
 
             .card-icon {
-                width: 60px;
-                height: 60px;
-                margin-bottom: 20px;
-                background: linear-gradient(135deg, #e94560, #ff6b6b);
+                width: 52px;
+                height: 52px;
+                margin-bottom: 18px;
+                background: rgba(255, 255, 255, 0.9);
                 border-radius: 12px;
                 display: flex;
                 align-items: center;
@@ -75,103 +61,65 @@
             }
 
             .card-icon svg {
-                width: 32px;
-                height: 32px;
-                fill: #fff;
+                width: 28px;
+                height: 28px;
+                fill: #2980b9;
             }
 
             .learn-card h3 {
                 font-family: 'Orbitron', sans-serif;
-                font-size: 1.3rem;
+                font-size: 1.15rem;
                 color: #fff;
-                margin-bottom: 15px;
+                margin-bottom: 14px;
                 letter-spacing: 0.5px;
             }
 
             .learn-card p {
-                color: #b0b0b0;
+                color: rgba(255, 255, 255, 0.9);
                 line-height: 1.7;
-                font-size: 0.95rem;
-            }
-
-            .learn-card ul {
-                color: #b0b0b0;
-                line-height: 1.8;
-                font-size: 0.9rem;
-                padding-left: 20px;
-                margin-top: 10px;
-            }
-
-            .learn-card li {
-                margin-bottom: 5px;
-            }
-
-            .stat-highlight {
-                display: inline-block;
-                background: linear-gradient(90deg, #e94560, #ff6b6b);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-                font-weight: 600;
+                font-size: 0.92rem;
             }
 
             .key-fact {
-                background: rgba(233, 69, 96, 0.1);
-                border-left: 3px solid #e94560;
-                padding: 12px 15px;
-                margin-top: 15px;
-                border-radius: 0 8px 8px 0;
+                background: rgba(255, 255, 255, 0.12);
+                border-left: 3px solid rgba(255, 255, 255, 0.6);
+                padding: 12px 14px;
+                margin-top: 16px;
+                border-radius: 0 10px 10px 0;
                 font-size: 0.85rem;
-                color: #ccc;
+                color: rgba(255, 255, 255, 0.85);
+                font-style: italic;
             }
 
-            .formula-section {
-                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-                padding: 40px;
-                margin: 40px;
+            .bottom-section {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 35px 40px;
+                margin: 30px 40px;
                 border-radius: 16px;
-                border: 1px solid #2a2a4a;
+                border: 1px solid rgba(255, 255, 255, 0.2);
             }
 
-            .formula-section h2 {
+            .bottom-section h2 {
                 text-align: center;
                 color: #fff;
-                margin-bottom: 30px;
+                margin-bottom: 20px;
                 font-family: 'Orbitron', sans-serif;
+                font-size: 1.4rem;
             }
 
-            .formula-grid {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-                gap: 20px;
+            .bottom-section p {
                 text-align: center;
+                color: rgba(255, 255, 255, 0.9);
+                max-width: 800px;
+                margin: 0 auto;
+                line-height: 1.8;
+                font-size: 0.95rem;
             }
 
-            .formula-stat {
-                padding: 20px;
-            }
-
-            .formula-stat .number {
-                font-family: 'Orbitron', sans-serif;
-                font-size: 2.5rem;
-                color: #e94560;
-                font-weight: 700;
-            }
-
-            .formula-stat .label {
-                color: #888;
-                font-size: 0.9rem;
-                margin-top: 5px;
-            }
-
-            /* Responsive for 101 page */
             @media screen and (max-width: 1024px) {
                 .cards-container {
                     grid-template-columns: repeat(2, 1fr);
-                    padding: 30px 20px;
-                }
-                .formula-grid {
-                    grid-template-columns: repeat(2, 1fr);
+                    padding: 25px 20px;
                 }
             }
 
@@ -179,30 +127,26 @@
                 .cards-container {
                     grid-template-columns: 1fr;
                     padding: 20px 15px;
-                    gap: 20px;
+                    gap: 16px;
                 }
                 .edu-hero h1 {
-                    font-size: 1.8rem;
+                    font-size: 1.6rem;
                 }
                 .edu-hero p {
-                    font-size: 0.95rem;
+                    font-size: 0.9rem;
                 }
                 .learn-card {
-                    padding: 25px 20px;
+                    padding: 22px 18px;
                 }
                 .learn-card h3 {
-                    font-size: 1.1rem;
+                    font-size: 1.05rem;
                 }
-                .formula-section {
+                .bottom-section {
                     margin: 20px 15px;
-                    padding: 25px 15px;
+                    padding: 25px 18px;
                 }
-                .formula-grid {
-                    grid-template-columns: repeat(2, 1fr);
-                    gap: 15px;
-                }
-                .formula-stat .number {
-                    font-size: 1.8rem;
+                .bottom-section h2 {
+                    font-size: 1.2rem;
                 }
             }
         </style>
@@ -221,65 +165,50 @@
 
         <main>
             <section class="edu-hero">
-                <h1>Electric Vehicles 101</h1>
-                <p>Master the fundamentals of electric vehicle technology, from battery chemistry to regenerative braking systems.</p>
+                <h1>Electric Cars 101</h1>
+                <p>Everything you need to know about how electric vehicles work and why they matter.</p>
             </section>
 
             <div class="cards-container">
-                <!-- Card 1: Battery Technology -->
+                <!-- Card 1: Battery -->
                 <div class="learn-card">
                     <div class="card-icon">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M17 4h-3V2h-4v2H7c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 18H7V6h10v16zm-2-6H9v-2h6v2zm0-4H9V9h6v3z"/>
                         </svg>
                     </div>
-                    <h3>Battery Technology</h3>
-                    <p>The battery pack is the heart of every EV. Most modern electric vehicles use <span class="stat-highlight">lithium-ion batteries</span> due to their high energy density and long cycle life.</p>
-                    <ul>
-                        <li><strong>Energy Density:</strong> 150-265 Wh/kg</li>
-                        <li><strong>Cycle Life:</strong> 1,000-2,000 charge cycles</li>
-                        <li><strong>Voltage:</strong> 400V-800V systems</li>
-                    </ul>
+                    <h3>The Battery Pack</h3>
+                    <p>Think of the battery as the fuel tank of an electric car. Instead of storing gasoline, it stores electrical energy. Most EVs today use lithium-ion batteries - the same technology in your phone, just way bigger. These batteries can be charged hundreds of times and typically last the lifetime of the car.</p>
                     <div class="key-fact">
-                        Formula E cars use 54 kWh battery packs capable of delivering up to 350 kW of power.
+                        Fun fact: Formula E racing cars run entirely on battery power and can hit speeds over 280 km/h.
                     </div>
                 </div>
 
-                <!-- Card 2: Electric Motors -->
+                <!-- Card 2: Electric Motor -->
                 <div class="learn-card">
                     <div class="card-icon">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                         </svg>
                     </div>
-                    <h3>Electric Motors</h3>
-                    <p>EVs use electric motors that convert electrical energy into mechanical motion. The main types are:</p>
-                    <ul>
-                        <li><strong>AC Induction:</strong> Robust, used by Tesla Model S</li>
-                        <li><strong>Permanent Magnet:</strong> Higher efficiency, most common</li>
-                        <li><strong>Switched Reluctance:</strong> Simple, no magnets needed</li>
-                    </ul>
+                    <h3>The Electric Motor</h3>
+                    <p>This is what actually moves the car. Unlike a gas engine with hundreds of moving parts, an electric motor is beautifully simple. When electricity flows through it, magnets spin and create motion. The best part? It delivers full power instantly - no need to "rev up" like a traditional engine.</p>
                     <div class="key-fact">
-                        Electric motors deliver instant torque from 0 RPM, enabling rapid acceleration without gear changes.
+                        That's why electric cars feel so quick off the line - instant torque from the moment you press the pedal.
                     </div>
                 </div>
 
-                <!-- Card 3: Power Electronics -->
+                <!-- Card 3: Controller -->
                 <div class="learn-card">
                     <div class="card-icon">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7 2v11h3v9l7-12h-4l4-8z"/>
                         </svg>
                     </div>
-                    <h3>Power Electronics</h3>
-                    <p>The inverter and controller manage power flow between the battery and motor, converting DC to AC and controlling speed.</p>
-                    <ul>
-                        <li><strong>Inverter:</strong> Converts DC battery power to AC</li>
-                        <li><strong>Controller:</strong> Manages power delivery</li>
-                        <li><strong>BMS:</strong> Battery Management System monitors cell health</li>
-                    </ul>
+                    <h3>The Brain (Controller)</h3>
+                    <p>The controller is like the car's brain. It sits between the battery and motor, deciding how much power to send based on how hard you're pressing the accelerator. It also converts the battery's stored energy into the right type of electricity the motor needs to spin.</p>
                     <div class="key-fact">
-                        Modern inverters use silicon carbide (SiC) semiconductors for 5-10% efficiency gains.
+                        Modern controllers are smart enough to adjust power delivery thousands of times per second for a smooth ride.
                     </div>
                 </div>
 
@@ -291,77 +220,44 @@
                         </svg>
                     </div>
                     <h3>Regenerative Braking</h3>
-                    <p>When decelerating, the motor runs in reverse as a generator, converting kinetic energy back into electrical energy.</p>
-                    <ul>
-                        <li><strong>Energy Recovery:</strong> Up to 70% of braking energy</li>
-                        <li><strong>Range Extension:</strong> 10-25% more range</li>
-                        <li><strong>Brake Wear:</strong> Significantly reduced</li>
-                    </ul>
+                    <p>Here's something cool: when you slow down, the motor runs backwards and acts like a generator. It captures the energy that would normally be wasted as heat in regular brakes and sends it back to the battery. It's like getting free fuel every time you brake.</p>
                     <div class="key-fact">
-                        One-pedal driving is possible because regen braking can fully stop the car without touching the brake pedal.
+                        Some EVs let you drive with just one pedal - lift off the accelerator and regen braking slows you down automatically.
                     </div>
                 </div>
 
-                <!-- Card 5: Charging Systems -->
+                <!-- Card 5: Charging -->
                 <div class="learn-card">
                     <div class="card-icon">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M14.5 11l-3 6v-4h-2l3-6v4h2zM7 1h10c1.1 0 2 .9 2 2v18c0 1.1-.9 2-2 2H7c-1.1 0-2-.9-2-2V3c0-1.1.9-2 2-2zm0 5v12h10V6H7z"/>
                         </svg>
                     </div>
-                    <h3>Charging Systems</h3>
-                    <p>EVs can be charged at different power levels depending on the infrastructure:</p>
-                    <ul>
-                        <li><strong>Level 1:</strong> 120V AC, ~5 km/hour</li>
-                        <li><strong>Level 2:</strong> 240V AC, ~40 km/hour</li>
-                        <li><strong>DC Fast:</strong> 50-350 kW, ~500 km/hour</li>
-                    </ul>
+                    <h3>Charging</h3>
+                    <p>You can charge an EV from a regular wall outlet (slow but works overnight), a home charger (faster, good for daily use), or public fast chargers (great for road trips). Most people charge at home while they sleep - wake up to a "full tank" every morning.</p>
                     <div class="key-fact">
-                        800V architecture (Porsche Taycan, Hyundai Ioniq 5) enables 10-80% charge in under 18 minutes.
+                        The latest fast chargers can add hundreds of kilometers of range in just 15-20 minutes.
                     </div>
                 </div>
 
-                <!-- Card 6: Efficiency & Range -->
+                <!-- Card 6: Why EVs Matter -->
                 <div class="learn-card">
                     <div class="card-icon">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
                         </svg>
                     </div>
-                    <h3>Efficiency & Range</h3>
-                    <p>Electric vehicles are significantly more efficient than internal combustion engines:</p>
-                    <ul>
-                        <li><strong>EV Efficiency:</strong> 85-90% (battery to wheel)</li>
-                        <li><strong>ICE Efficiency:</strong> 20-30% (fuel to wheel)</li>
-                        <li><strong>Cost:</strong> ~$0.04/km vs $0.12/km for gas</li>
-                    </ul>
+                    <h3>Why It Matters</h3>
+                    <p>Electric cars produce zero emissions while driving - no exhaust pipe, no fumes. They're also way more efficient than gas cars, converting most of their energy into actual movement instead of wasting it as heat. Plus, they're quieter, cheaper to maintain, and honestly? Pretty fun to drive.</p>
                     <div class="key-fact">
-                        The Tesla Model S Long Range achieves over 650 km on a single charge with a 100 kWh battery.
+                        An EV motor has about 20 moving parts. A gas engine? Over 2,000.
                     </div>
                 </div>
             </div>
 
-            <!-- Performance Stats Section -->
-            <section class="formula-section">
-                <h2>EV Performance by the Numbers</h2>
-                <div class="formula-grid">
-                    <div class="formula-stat">
-                        <div class="number">1.9s</div>
-                        <div class="label">0-100 km/h (Tesla Model S Plaid)</div>
-                    </div>
-                    <div class="formula-stat">
-                        <div class="number">1,020</div>
-                        <div class="label">Horsepower (Rimac Nevera)</div>
-                    </div>
-                    <div class="formula-stat">
-                        <div class="number">412</div>
-                        <div class="label">km/h Top Speed (Rimac Nevera)</div>
-                    </div>
-                    <div class="formula-stat">
-                        <div class="number">90%</div>
-                        <div class="label">Efficiency (Battery to Wheels)</div>
-                    </div>
-                </div>
+            <section class="bottom-section">
+                <h2>The Future is Electric</h2>
+                <p>Electric vehicles aren't just about being "green" - they're genuinely better technology. Faster acceleration, lower running costs, less maintenance, and a smoother, quieter ride. As battery technology keeps improving and charging networks expand, EVs are becoming the obvious choice for more and more drivers. That's why we're building one ourselves - to learn firsthand how this technology works.</p>
             </section>
         </main>
 
