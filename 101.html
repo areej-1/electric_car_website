@@ -5,12 +5,210 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" href="favicon.png" type="image/png">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
-        <title>Electric Car Club</title>
+        <title>Electric Cars 101 | SIS Al Jada Cobras</title>
+        <style>
+            /* 101 Page Specific Styles */
+            .edu-hero {
+                text-align: center;
+                padding: 40px 20px;
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+                margin: 0;
+                border-bottom: 3px solid #e94560;
+            }
+
+            .edu-hero h1 {
+                font-size: 2.5rem;
+                margin-bottom: 10px;
+                color: #fff;
+            }
+
+            .edu-hero p {
+                color: #aaa;
+                font-size: 1.1rem;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .cards-container {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 25px;
+                padding: 40px;
+                max-width: 1400px;
+                margin: 0 auto;
+            }
+
+            .learn-card {
+                background: linear-gradient(180deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+                border-radius: 16px;
+                padding: 30px 25px;
+                border: 1px solid #2a2a4a;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .learn-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #e94560, #ff6b6b);
+            }
+
+            .learn-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 40px rgba(233, 69, 96, 0.2);
+            }
+
+            .card-icon {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 20px;
+                background: linear-gradient(135deg, #e94560, #ff6b6b);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .card-icon svg {
+                width: 32px;
+                height: 32px;
+                fill: #fff;
+            }
+
+            .learn-card h3 {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 1.3rem;
+                color: #fff;
+                margin-bottom: 15px;
+                letter-spacing: 0.5px;
+            }
+
+            .learn-card p {
+                color: #b0b0b0;
+                line-height: 1.7;
+                font-size: 0.95rem;
+            }
+
+            .learn-card ul {
+                color: #b0b0b0;
+                line-height: 1.8;
+                font-size: 0.9rem;
+                padding-left: 20px;
+                margin-top: 10px;
+            }
+
+            .learn-card li {
+                margin-bottom: 5px;
+            }
+
+            .stat-highlight {
+                display: inline-block;
+                background: linear-gradient(90deg, #e94560, #ff6b6b);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                font-weight: 600;
+            }
+
+            .key-fact {
+                background: rgba(233, 69, 96, 0.1);
+                border-left: 3px solid #e94560;
+                padding: 12px 15px;
+                margin-top: 15px;
+                border-radius: 0 8px 8px 0;
+                font-size: 0.85rem;
+                color: #ccc;
+            }
+
+            .formula-section {
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                padding: 40px;
+                margin: 40px;
+                border-radius: 16px;
+                border: 1px solid #2a2a4a;
+            }
+
+            .formula-section h2 {
+                text-align: center;
+                color: #fff;
+                margin-bottom: 30px;
+                font-family: 'Orbitron', sans-serif;
+            }
+
+            .formula-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+                text-align: center;
+            }
+
+            .formula-stat {
+                padding: 20px;
+            }
+
+            .formula-stat .number {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 2.5rem;
+                color: #e94560;
+                font-weight: 700;
+            }
+
+            .formula-stat .label {
+                color: #888;
+                font-size: 0.9rem;
+                margin-top: 5px;
+            }
+
+            /* Responsive for 101 page */
+            @media screen and (max-width: 1024px) {
+                .cards-container {
+                    grid-template-columns: repeat(2, 1fr);
+                    padding: 30px 20px;
+                }
+                .formula-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            @media screen and (max-width: 600px) {
+                .cards-container {
+                    grid-template-columns: 1fr;
+                    padding: 20px 15px;
+                    gap: 20px;
+                }
+                .edu-hero h1 {
+                    font-size: 1.8rem;
+                }
+                .edu-hero p {
+                    font-size: 0.95rem;
+                }
+                .learn-card {
+                    padding: 25px 20px;
+                }
+                .learn-card h3 {
+                    font-size: 1.1rem;
+                }
+                .formula-section {
+                    margin: 20px 15px;
+                    padding: 25px 15px;
+                }
+                .formula-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 15px;
+                }
+                .formula-stat .number {
+                    font-size: 1.8rem;
+                }
+            }
+        </style>
     </head>
     <body>
         <nav>
-        
             <div class="logo">SIS Al Jada Cobras</div>
             <ul>
                 <li><a href="index.html">Home</a></li>
@@ -20,32 +218,160 @@
                 <li><a href="101.html">Electric Cars 101</a></li>
             </ul>
         </nav>
+
         <main>
-            <br>
-            <p>Electric cars (EVs) are vehicles powered by electricity instead of gasoline. They use a <b>battery pack</b> to store energy and an <b>electric motor</b> to move the car, replacing the traditional engine. When the driver presses the accelerator, the battery sends electricity through a controller/inverter, which delivers the right amount of power to the motor and turns the wheels.</p>
-            <br>
-            <p>EVs are known for being <b>quiet, efficient, and environmentally friendly</b>, since they produce <b>zero exhaust emissions</b> while driving. They can be recharged by plugging into a charger, and many electric cars also use <b>regenerative braking</b>, which helps recover energy when slowing down and sends it back into the battery.</p>
-            <br>
-            <p>Overall, electric cars are an important part of the future of transportation, combining <b>technology, sustainability, and performance</b> in one system.</p>
+            <section class="edu-hero">
+                <h1>Electric Vehicles 101</h1>
+                <p>Master the fundamentals of electric vehicle technology, from battery chemistry to regenerative braking systems.</p>
+            </section>
+
+            <div class="cards-container">
+                <!-- Card 1: Battery Technology -->
+                <div class="learn-card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17 4h-3V2h-4v2H7c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 18H7V6h10v16zm-2-6H9v-2h6v2zm0-4H9V9h6v3z"/>
+                        </svg>
+                    </div>
+                    <h3>Battery Technology</h3>
+                    <p>The battery pack is the heart of every EV. Most modern electric vehicles use <span class="stat-highlight">lithium-ion batteries</span> due to their high energy density and long cycle life.</p>
+                    <ul>
+                        <li><strong>Energy Density:</strong> 150-265 Wh/kg</li>
+                        <li><strong>Cycle Life:</strong> 1,000-2,000 charge cycles</li>
+                        <li><strong>Voltage:</strong> 400V-800V systems</li>
+                    </ul>
+                    <div class="key-fact">
+                        Formula E cars use 54 kWh battery packs capable of delivering up to 350 kW of power.
+                    </div>
+                </div>
+
+                <!-- Card 2: Electric Motors -->
+                <div class="learn-card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                    <h3>Electric Motors</h3>
+                    <p>EVs use electric motors that convert electrical energy into mechanical motion. The main types are:</p>
+                    <ul>
+                        <li><strong>AC Induction:</strong> Robust, used by Tesla Model S</li>
+                        <li><strong>Permanent Magnet:</strong> Higher efficiency, most common</li>
+                        <li><strong>Switched Reluctance:</strong> Simple, no magnets needed</li>
+                    </ul>
+                    <div class="key-fact">
+                        Electric motors deliver instant torque from 0 RPM, enabling rapid acceleration without gear changes.
+                    </div>
+                </div>
+
+                <!-- Card 3: Power Electronics -->
+                <div class="learn-card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 2v11h3v9l7-12h-4l4-8z"/>
+                        </svg>
+                    </div>
+                    <h3>Power Electronics</h3>
+                    <p>The inverter and controller manage power flow between the battery and motor, converting DC to AC and controlling speed.</p>
+                    <ul>
+                        <li><strong>Inverter:</strong> Converts DC battery power to AC</li>
+                        <li><strong>Controller:</strong> Manages power delivery</li>
+                        <li><strong>BMS:</strong> Battery Management System monitors cell health</li>
+                    </ul>
+                    <div class="key-fact">
+                        Modern inverters use silicon carbide (SiC) semiconductors for 5-10% efficiency gains.
+                    </div>
+                </div>
+
+                <!-- Card 4: Regenerative Braking -->
+                <div class="learn-card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+                        </svg>
+                    </div>
+                    <h3>Regenerative Braking</h3>
+                    <p>When decelerating, the motor runs in reverse as a generator, converting kinetic energy back into electrical energy.</p>
+                    <ul>
+                        <li><strong>Energy Recovery:</strong> Up to 70% of braking energy</li>
+                        <li><strong>Range Extension:</strong> 10-25% more range</li>
+                        <li><strong>Brake Wear:</strong> Significantly reduced</li>
+                    </ul>
+                    <div class="key-fact">
+                        One-pedal driving is possible because regen braking can fully stop the car without touching the brake pedal.
+                    </div>
+                </div>
+
+                <!-- Card 5: Charging Systems -->
+                <div class="learn-card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14.5 11l-3 6v-4h-2l3-6v4h2zM7 1h10c1.1 0 2 .9 2 2v18c0 1.1-.9 2-2 2H7c-1.1 0-2-.9-2-2V3c0-1.1.9-2 2-2zm0 5v12h10V6H7z"/>
+                        </svg>
+                    </div>
+                    <h3>Charging Systems</h3>
+                    <p>EVs can be charged at different power levels depending on the infrastructure:</p>
+                    <ul>
+                        <li><strong>Level 1:</strong> 120V AC, ~5 km/hour</li>
+                        <li><strong>Level 2:</strong> 240V AC, ~40 km/hour</li>
+                        <li><strong>DC Fast:</strong> 50-350 kW, ~500 km/hour</li>
+                    </ul>
+                    <div class="key-fact">
+                        800V architecture (Porsche Taycan, Hyundai Ioniq 5) enables 10-80% charge in under 18 minutes.
+                    </div>
+                </div>
+
+                <!-- Card 6: Efficiency & Range -->
+                <div class="learn-card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                        </svg>
+                    </div>
+                    <h3>Efficiency & Range</h3>
+                    <p>Electric vehicles are significantly more efficient than internal combustion engines:</p>
+                    <ul>
+                        <li><strong>EV Efficiency:</strong> 85-90% (battery to wheel)</li>
+                        <li><strong>ICE Efficiency:</strong> 20-30% (fuel to wheel)</li>
+                        <li><strong>Cost:</strong> ~$0.04/km vs $0.12/km for gas</li>
+                    </ul>
+                    <div class="key-fact">
+                        The Tesla Model S Long Range achieves over 650 km on a single charge with a 100 kWh battery.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Stats Section -->
+            <section class="formula-section">
+                <h2>EV Performance by the Numbers</h2>
+                <div class="formula-grid">
+                    <div class="formula-stat">
+                        <div class="number">1.9s</div>
+                        <div class="label">0-100 km/h (Tesla Model S Plaid)</div>
+                    </div>
+                    <div class="formula-stat">
+                        <div class="number">1,020</div>
+                        <div class="label">Horsepower (Rimac Nevera)</div>
+                    </div>
+                    <div class="formula-stat">
+                        <div class="number">412</div>
+                        <div class="label">km/h Top Speed (Rimac Nevera)</div>
+                    </div>
+                    <div class="formula-stat">
+                        <div class="number">90%</div>
+                        <div class="label">Efficiency (Battery to Wheels)</div>
+                    </div>
+                </div>
+            </section>
         </main>
+
         <footer>
-        <p> Copyright 2026 SIS Al Jada Cobras</p>
-        <p>Made by Areej</p>
-        <div class="socials">
-            <a href="https://tiktok.com/@sisaljadacobras?_r=1&_t=ZS-935T-PczwWdL"><img src="tiktok.png" alt="description"></a>
-            <a href="https://instagram.com/sisaljadacobras?igsh=dmRpbXlyMzVjNjV1"><img src="instagram.png" alt="description"></a>
-        </div>
+            <p>Copyright 2026 SIS Al Jada Cobras</p>
+            <p>Made by Areej</p>
+            <div class="socials">
+                <a href="https://tiktok.com/@sisaljadacobras?_r=1&_t=ZS-935T-PczwWdL"><img src="tiktok.png" alt="TikTok"></a>
+                <a href="https://instagram.com/sisaljadacobras?igsh=dmRpbXlyMzVjNjV1"><img src="instagram.png" alt="Instagram"></a>
+            </div>
         </footer>
-        <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
-        <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            new Splide('#home-carousel', {
-                type: 'loop',
-                perPage: 1,
-                autoplay: true,
-                pauseOnHover: true
-            }).mount();
-        });
-        </script>
     </body>
 </html>
