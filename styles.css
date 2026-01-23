@@ -12,7 +12,6 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-color: #7C0A02;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
