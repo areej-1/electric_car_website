@@ -729,7 +729,7 @@ main > h1 {
 .spec-value {
     color: white;
     font-weight: 500;
-    text-align: right;
+    text-align: left;
 }
 
 .last-updated {
