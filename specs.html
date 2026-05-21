@@ -67,7 +67,7 @@
                             <td class="spec-value">VRLA (Sealed Lead-Acid), 26 Ah</td>
                         </tr>
                         <tr>
-                            <td class="spec-label">Voltage (Per Battery, 4 Batteries Total)</td>
+                            <td class="spec-label">Voltage (x4 Batteries)</td>
                             <td class="spec-value">12 V</td>
                         </tr>
                         <tr>
@@ -135,8 +135,19 @@
                     </table>
                 </section>
             </div>
-
-            <p class="last-updated">Last Updated: January 2026</p>
+        <button class="open-button" onclick="openForm()">CarGPT</button>
+        <div class="chat-popup" id="myForm">
+        <div class="form-container">
+            <h1>CarGPT</h1>
+            <div id="chatMessages" class="chat-messages">
+                <div class="bot-msg">Hi! Ask me anything about the Cobras team or electric cars. 🏎️⚡</div>
+            </div>
+            <textarea id="chatInput" placeholder="Type message.."></textarea>
+            <button type="button" class="btn" onclick="sendMessage()">Send</button>
+            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+        </div>
+</div>
+            <p class="last-updated">Last Updated: May 2026</p>
         </main>
         <footer>
         <p> Copyright 2026 SIS Al Jada Cobras</p>
@@ -148,14 +159,53 @@
         </footer>
         <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
         <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            new Splide('#home-carousel', {
-                type: 'loop',
-                perPage: 1,
-                autoplay: true,
-                pauseOnHover: true
-            }).mount();
+        function openForm() {
+            document.getElementById("myForm").style.display = "block";
+        }
+
+        function closeForm() {
+            document.getElementById("myForm").style.display = "none";
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById("chatInput");
+            const messages = document.getElementById("chatMessages");
+            const userMsg = input.value.trim();
+            if (!userMsg) return;
+
+            messages.innerHTML += `<div class="user-msg">${userMsg}</div>`;
+            input.value = "";
+
+            const thinkingId = "thinking-" + Date.now();
+            messages.innerHTML += `<div id="${thinkingId}" class="bot-msg">...</div>`;
+            messages.scrollTop = messages.scrollHeight;
+
+            try {
+                const res = await fetch("https://cobras-chat.areej-dridi.workers.dev", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: userMsg })
+                });
+                const data = await res.json();
+                document.getElementById(thinkingId).textContent = data.reply;
+            } catch (err) {
+                document.getElementById(thinkingId).textContent = "Sorry, something went wrong. Try again!";
+            }
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const input = document.getElementById("chatInput");
+            if (input) {
+                input.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+            }
         });
         </script>
+        
     </body>
 </html>
