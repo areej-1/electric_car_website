@@ -988,6 +988,21 @@ html[dir="rtl"] h1, html[dir="rtl"] h2, html[dir="rtl"] h3, html[dir="rtl"] .log
   letter-spacing: 0;
   text-transform: none;
 }
+html[dir="rtl"] .site-nav .logo,
+html[dir="rtl"] nav.site-nav .logo {
+  width: 38px;
+  min-width: 38px;
+  overflow: hidden;
+  font-size: 0;
+}
+html[dir="rtl"] .site-nav .logo::before,
+html[dir="rtl"] nav.site-nav .logo::before {
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
 html[dir="rtl"] .text-link > span:last-child { display: inline-block; transform: scaleX(-1); }
 html[dir="rtl"] .text-link:hover > span:last-child { transform: scaleX(-1) translateX(5px); }
 html[dir="rtl"] .timeline-copy li::before { margin-right: 0; margin-left: 10px; }
