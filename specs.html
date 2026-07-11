@@ -1,52 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <link rel="stylesheet" href="styles.css">
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" href="cobra-race-mark.png" type="image/png">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
-        <title>Electric Car Club</title>
-    </head>
-    <body>
-        <nav>
-        
-            <div class="logo">SIS Al Jada Cobras</div>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="members.html">Members</a></li>
-                <li><a href="projects.html">Our Work</a></li>
-                <li><a href="game.html">Game</a></li>
-                <li><a href="101.html">Electric Cars 101</a></li>
-                <li><a href="specs.html" aria-current="page">Specs</a></li>
-                <li><a href="about.html">About Us</a></li>
-                <li><a href="sponsors.html">Sponsor Us</a></li>
-            </ul>
-        </nav>
-        <main class="specs-page">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Current specifications of the Cobras 48V electric race car build.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="cobra-race-mark.png" type="image/png">
+  <title>Specs | SIS Al Jada Cobras</title>
+</head>
+<body>
+          <nav class="site-nav" aria-label="Main">
+    <a class="logo" href="index.html">SIS Al Jada Cobras</a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open menu">
+      <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+    </button>
+    <ul id="site-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="projects.html">Our Work</a></li>
+      <li><a href="game.html">Game</a></li>
+      <li><a href="101.html">Electric Cars 101</a></li>
+      <li><a href="specs.html" aria-current="page">Specs</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="sponsors.html">Sponsor Us</a></li>
+    </ul>
+  </nav>
+        <main id="main" class="specs-page">
             <header class="specs-header">
                 <h1>Car Specifications</h1>
-                <p class="specs-subtitle">Current specifications of our electric car. Some details may change as we continue improving and preparing for competition.</p>
+                <p class="specs-subtitle">Live build figures for the Cobras 48V electric race car. Values evolve as we test, weigh, and prepare for EVGP.</p>
             </header>
 
-            <div class="specs-grid">
+            <div class="specs-grid" aria-label="Car specifications">
                 <section class="spec-section">
                     <h2>Basic Information</h2>
                     <table class="spec-table">
                         <tr>
-                            <td class="spec-label">Car Name</td>
+                            <th class="spec-label" scope="row">Car Name</th>
                             <td class="spec-value">Cobra</td>
                         </tr>
                         <tr>
-                            <td class="spec-label">School</td>
+                            <th class="spec-label" scope="row">School</th>
                             <td class="spec-value">SABIS&reg; Aljada (Sharjah, UAE)</td>
                         </tr>
                         <tr>
-                            <td class="spec-label">Team</td>
+                            <th class="spec-label" scope="row">Team</th>
                             <td class="spec-value">SIS Al Jada Cobras</td>
                         </tr>
                         <tr>
-                            <td class="spec-label">Competition</td>
+                            <th class="spec-label" scope="row">Competition</th>
                             <td class="spec-value">EVGP</td>
                         </tr>
                     </table>
@@ -56,23 +62,23 @@
                     <h2>Power System</h2>
                     <table class="spec-table">
                         <tr>
-                            <td class="spec-label">Motor Type</td>
+                            <th class="spec-label" scope="row">Motor Type</th>
                             <td class="spec-value">Brushless DC48V</td>
                         </tr>
                         <tr>
-                            <td class="spec-label">Controller Type</td>
+                            <th class="spec-label" scope="row">Controller Type</th>
                             <td class="spec-value">Kelly KEB Brushless Motor Controller</td>
                         </tr>
                         <tr>
-                            <td class="spec-label">Battery Type</td>
+                            <th class="spec-label" scope="row">Battery Type</th>
                             <td class="spec-value">VRLA (Sealed Lead-Acid), 26 Ah</td>
                         </tr>
                         <tr>
-                            <td class="spec-label">Voltage (x4 Batteries)</td>
+                            <th class="spec-label" scope="row">Voltage (x4 Batteries)</th>
                             <td class="spec-value">12 V</td>
                         </tr>
                         <tr>
-                            <td class="spec-label">Estimated Runtime</td>
+                            <th class="spec-label" scope="row">Estimated Runtime</th>
                             <td class="spec-value">1-3 hours (depends on load)</td>
                         </tr>
                     </table>
@@ -82,19 +88,19 @@
                     <h2>Build & Design</h2>
                     <table class="spec-table">
                         <tr>
-                            <td class="spec-label">Chassis / Frame</td>
+                            <th class="spec-label" scope="row">Chassis / Frame</th>
                             <td class="spec-value">(TBD)</td>
                         </tr>
                         <tr>
-                            <td class="spec-label">Drivetrain</td>
+                            <th class="spec-label" scope="row">Drivetrain</th>
                             <td class="spec-value">(TBD)</td>
                         </tr>
                         <tr>
-                            <td class="spec-label">Wheels / Tires</td>
+                            <th class="spec-label" scope="row">Wheels / Tires</th>
                             <td class="spec-value">(TBD)</td>
                         </tr>
                         <tr>
-                            <td class="spec-label">Total Weight</td>
+                            <th class="spec-label" scope="row">Total Weight</th>
                             <td class="spec-value">186 kg</td>
                         </tr>
                     </table>
@@ -104,15 +110,15 @@
                     <h2>Performance</h2>
                     <table class="spec-table">
                         <tr>
-                            <td class="spec-label">Average Speed</td>
+                            <th class="spec-label" scope="row">Average Speed</th>
                             <td class="spec-value">30 km/h</td>
                         </tr>
                         <tr>
-                            <td class="spec-label">Acceleration</td>
+                            <th class="spec-label" scope="row">Acceleration</th>
                             <td class="spec-value">(TBD)</td>
                         </tr>
                         <tr>
-                            <td class="spec-label">Handling / Stability</td>
+                            <th class="spec-label" scope="row">Handling / Stability</th>
                             <td class="spec-value">Stable at average speed, improved with proper weight balance</td>
                         </tr>
                     </table>
@@ -122,92 +128,45 @@
                     <h2>Safety Features</h2>
                     <table class="spec-table">
                         <tr>
-                            <td class="spec-label">Kill Switch</td>
+                            <th class="spec-label" scope="row">Kill Switch</th>
                             <td class="spec-value">Emergency Kill Switch</td>
                         </tr>
                         <tr>
-                            <td class="spec-label">Braking System</td>
+                            <th class="spec-label" scope="row">Braking System</th>
                             <td class="spec-value">(TBD)</td>
                         </tr>
                         <tr>
-                            <td class="spec-label">Driver Protection</td>
+                            <th class="spec-label" scope="row">Driver Protection</th>
                             <td class="spec-value">Helmet + seat belt</td>
                         </tr>
                     </table>
                 </section>
             </div>
-        <button class="open-button" onclick="openForm()">CarGPT</button>
+        <button class="open-button" type="button">CarGPT</button>
         <div class="chat-popup" id="myForm">
         <div class="form-container">
             <h1>CarGPT</h1>
             <div id="chatMessages" class="chat-messages">
                 <div class="bot-msg">Hi! Ask me anything about the Cobras team or electric cars. 🏎️⚡</div>
             </div>
-            <textarea id="chatInput" placeholder="Type message.."></textarea>
-            <button type="button" class="btn" onclick="sendMessage()">Send</button>
-            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+            <textarea id="chatInput" aria-label="Message to CarGPT" maxlength="1200" placeholder="Ask CarGPT…"></textarea>
+            <button type="button" class="btn">Send</button>
+            <button type="button" class="btn cancel">Close</button>
         </div>
 </div>
             <p class="last-updated">Last Updated: May 2026</p>
+            <p class="download-row"><a class="primary-action" href="specs-sheet.pdf" download>Download specs PDF</a><a class="secondary-action" href="sponsor-package.html">Sponsor package</a></p>
+            <p class="last-updated"><a class="text-link" href="sponsors.html">Help fund the next test cycle <span>→</span></a></p>
         </main>
         <footer>
         <p> Copyright 2026 SIS Al Jada Cobras</p>
         <p>Made by Areej</p>
         <div class="socials">
-            <a href="https://tiktok.com/@sisaljadacobras?_r=1&_t=ZS-935T-PczwWdL"><img src="tiktok.png" alt="description"></a>
-            <a href="https://instagram.com/sisaljadacobras?igsh=dmRpbXlyMzVjNjV1"><img src="instagram.png" alt="description"></a>
+            <a href="https://tiktok.com/@sisaljadacobras?_r=1&_t=ZS-935T-PczwWdL" target="_blank" rel="noopener noreferrer"><img src="tiktok.png" alt="SIS Al Jada Cobras on TikTok" width="28" height="28"></a>
+            <a href="https://instagram.com/sisaljadacobras?igsh=dmRpbXlyMzVjNjV1" target="_blank" rel="noopener noreferrer"><img src="instagram.png" alt="SIS Al Jada Cobras on Instagram" width="28" height="28"></a>
         </div>
         </footer>
-        <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
-        <script>
-        function openForm() {
-            document.getElementById("myForm").style.display = "block";
-        }
-
-        function closeForm() {
-            document.getElementById("myForm").style.display = "none";
-        }
-
-        async function sendMessage() {
-            const input = document.getElementById("chatInput");
-            const messages = document.getElementById("chatMessages");
-            const userMsg = input.value.trim();
-            if (!userMsg) return;
-
-            messages.innerHTML += `<div class="user-msg">${userMsg}</div>`;
-            input.value = "";
-
-            const thinkingId = "thinking-" + Date.now();
-            messages.innerHTML += `<div id="${thinkingId}" class="bot-msg">...</div>`;
-            messages.scrollTop = messages.scrollHeight;
-
-            try {
-                const res = await fetch("https://cobras-chat.areej-dridi.workers.dev", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: userMsg })
-                });
-                const data = await res.json();
-                document.getElementById(thinkingId).textContent = data.reply;
-            } catch (err) {
-                document.getElementById(thinkingId).textContent = "Sorry, something went wrong. Try again!";
-            }
-            messages.scrollTop = messages.scrollHeight;
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const input = document.getElementById("chatInput");
-            if (input) {
-                input.addEventListener("keydown", (e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        sendMessage();
-                    }
-                });
-            }
-        });
-        </script>
-        
-        <script src="site.js"></script>
-    </body>
+        <script src="cobras-lib.js"></script>
+  <script src="site.js"></script>
+  </body>
 </html>
