@@ -988,6 +988,11 @@ html[dir="rtl"] h1, html[dir="rtl"] h2, html[dir="rtl"] h3, html[dir="rtl"] .log
   letter-spacing: 0;
   text-transform: none;
 }
+html[dir="rtl"] .text-link > span:last-child { display: inline-block; transform: scaleX(-1); }
+html[dir="rtl"] .text-link:hover > span:last-child { transform: scaleX(-1) translateX(5px); }
+html[dir="rtl"] .timeline-copy li::before { margin-right: 0; margin-left: 10px; }
+html[dir="rtl"] .mission-box { border-left: 0; border-right: 4px solid var(--hot-red); border-radius: 12px 0 0 12px; }
+html[dir="rtl"] .sponsor-interest, html[dir="rtl"] .landing-cta { border-left-width: 1px; border-right: 5px solid var(--hot-red); }
 
 .news-list, .checklist-page, .package-page { width: min(var(--max-width), calc(100% - 40px)); margin: 0 auto 90px; }
 .news-list article {

@@ -135,6 +135,7 @@
     });
     if (langBtn) langBtn.textContent = Lib.t(lang, 'lang.toggle');
     if (skip) skip.textContent = Lib.t(lang, 'skip');
+    if (window.CobrasArabic) window.CobrasArabic.apply(document, pageName, lang);
   }
 
   langBtn?.addEventListener('click', () => {
@@ -161,15 +162,15 @@
         <a href="news.html" data-i18n="nav.news">${Lib.t(lang, 'nav.news')}</a>
         <a href="checklist.html" data-i18n="nav.checklist">${Lib.t(lang, 'nav.checklist')}</a>
         <a href="specs.html" data-i18n="nav.specs">${Lib.t(lang, 'nav.specs')}</a>
-        <a href="specs-sheet.pdf" download>Specs PDF</a>
+        <a href="specs-sheet.pdf" download>${Lib.t(lang, 'footer.specsPdf')}</a>
         <a href="sponsor-package.html" data-i18n="nav.package">${Lib.t(lang, 'nav.package')}</a>
-        <a href="sponsor-package.pdf" download>Package PDF</a>
+        <a href="sponsor-package.pdf" download>${Lib.t(lang, 'footer.packagePdf')}</a>
         <a href="sponsors.html" data-i18n="nav.sponsors">${Lib.t(lang, 'nav.sponsors')}</a>
         <a href="game.html" data-i18n="nav.game">${Lib.t(lang, 'nav.game')}</a>
       </div>
       <div class="footer-meta">
-        <p data-i18n="footer.rights">${Lib.t(lang, 'footer.rights')} · Made by Areej</p>
-        <p class="analytics-note" data-i18n="analytics.notice">${Lib.t(lang, 'analytics.notice')} · visits: ${analytics.total}</p>
+        <p>${Lib.t(lang, 'footer.rights')} · ${Lib.t(lang, 'footer.made')}</p>
+        <p class="analytics-note">${Lib.t(lang, 'analytics.notice')} · ${Lib.t(lang, 'footer.visits')}: ${analytics.total}</p>
         <div class="socials">
           <a href="https://tiktok.com/@sisaljadacobras" target="_blank" rel="noopener noreferrer"><img src="tiktok.png" alt="TikTok" width="28" height="28"></a>
           <a href="https://instagram.com/sisaljadacobras" target="_blank" rel="noopener noreferrer"><img src="instagram.png" alt="Instagram" width="28" height="28"></a>
@@ -213,7 +214,7 @@
   const messages = document.getElementById('chatMessages');
 
   if (popup && launcher && input && messages && nav) {
-    if (!input.getAttribute('aria-label')) input.setAttribute('aria-label', 'Message to CarGPT');
+    input.setAttribute('aria-label', Lib.t(lang, 'chat.aria'));
     launcher.removeAttribute('onclick');
     launcher.type = 'button';
     launcher.setAttribute('aria-controls', 'myForm');
@@ -222,7 +223,7 @@
     nav.appendChild(launcher);
 
     popup.setAttribute('role', 'dialog');
-    popup.setAttribute('aria-label', 'CarGPT assistant');
+    popup.setAttribute('aria-label', Lib.t(lang, 'chat.dialog'));
     popup.setAttribute('aria-modal', 'true');
 
     const intro = messages.querySelector('.bot-msg');
@@ -234,10 +235,10 @@
     if (!prompts) {
       prompts = document.createElement('div');
       prompts.className = 'chat-prompts';
-      ['How does the 48V system work?', 'What is EVGP?', 'How can I sponsor the team?'].forEach(label => {
+      ['chat.prompt48', 'chat.promptEVGP', 'chat.promptSponsor'].forEach(key => {
         const button = document.createElement('button');
         button.type = 'button';
-        button.textContent = label;
+        button.textContent = Lib.t(lang, key);
         prompts.appendChild(button);
       });
       const textarea = popup.querySelector('textarea');
@@ -289,7 +290,7 @@
       const showLocal = (extra) => {
         thinking.classList.remove('is-thinking');
         thinking.classList.add('is-local');
-        const faq = Lib.localFaqReply(userText);
+        const faq = Lib.localFaqReply(userText, lang);
         thinking.textContent = extra ? `${extra}\n\n${faq}` : faq;
         statusDot?.classList.add('is-offline');
         statusDot?.classList.remove('is-online');
@@ -441,7 +442,7 @@
     const filters = document.createElement('div');
     filters.className = 'member-filters';
     filters.setAttribute('role', 'toolbar');
-    filters.setAttribute('aria-label', 'Filter members by role');
+    filters.setAttribute('aria-label', Lib.t(lang, 'filter.aria'));
 
     const empty = document.createElement('p');
     empty.className = 'members-empty';
@@ -464,9 +465,9 @@
         if (show) visible += 1;
       });
       empty.hidden = visible > 0;
-      meta.textContent = role === 'All'
-        ? `Showing all ${cards.length} builders · ${roles.length} roles`
-        : `Showing ${visible} · role: ${role}`;
+      meta.textContent = lang === 'ar'
+        ? (role === 'All' ? `عرض جميع الأعضاء: ${cards.length} · الأدوار: ${roles.length}` : `المعروض: ${visible} · الدور: ${role}`)
+        : (role === 'All' ? `Showing all ${cards.length} builders · ${roles.length} roles` : `Showing ${visible} · role: ${role}`);
     };
 
     ['All', ...roles].forEach(role => {
@@ -522,7 +523,7 @@
     chatEndpoint: chatConfig.endpoint,
     hasChatKey: chatConfig.hasKey,
     lang,
-    localReply: Lib.localFaqReply,
+    localReply: (text) => Lib.localFaqReply(text, lang),
     lib: Lib,
     shouldCollapseNav: Lib.shouldCollapseNav,
     buildScoreShareText: Lib.buildScoreShareText,
