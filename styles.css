@@ -20,7 +20,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; color-scheme: dark; }
+html { scroll-behavior: smooth; color-scheme: dark; overflow-x: clip; }
 
 body {
   min-height: 100vh;
@@ -1089,4 +1089,208 @@ html[dir="rtl"] .sponsor-interest, html[dir="rtl"] .landing-cta { border-left-wi
 }
 @media (max-width: 760px) {
   .site-nav.is-collapsed, nav.is-collapsed { width: calc(100% - 16px); }
+}
+
+/* === Compact top bar + site-wide spacing pass === */
+.site-nav,
+nav.site-nav {
+  min-height: 64px;
+  margin-top: 12px;
+  padding: 7px 9px 7px 12px;
+  flex-wrap: nowrap;
+  gap: 8px;
+  border-radius: 12px;
+}
+
+.site-nav .logo,
+nav.site-nav .logo {
+  flex: 0 0 auto;
+  font-size: 13px;
+}
+
+.site-nav .logo::before,
+nav.site-nav .logo::before {
+  width: 38px;
+  height: 38px;
+  margin-right: 9px;
+  border-radius: 9px;
+}
+
+.site-nav > ul,
+nav.site-nav > ul {
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.site-nav > ul a,
+nav.site-nav > ul a {
+  padding: 8px 7px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.site-nav .nav-tools,
+nav.site-nav .nav-tools {
+  width: auto;
+  margin-left: 0;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 5px;
+}
+
+.site-nav .lang-toggle,
+nav.site-nav .lang-toggle,
+.site-nav .open-button,
+nav.site-nav .open-button {
+  width: auto;
+  min-height: 38px;
+  margin: 0;
+  padding: 8px 10px;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid rgba(245, 240, 232, .1);
+  border-radius: 8px;
+  box-shadow: none;
+  font: 600 10px/1 var(--body);
+}
+
+.site-nav .lang-toggle:hover,
+nav.site-nav .lang-toggle:hover,
+.site-nav .open-button:hover,
+nav.site-nav .open-button:hover {
+  color: var(--gold);
+  background: rgba(201, 162, 39, .06);
+  border-color: var(--border-gold);
+}
+
+.site-nav .chat-status,
+nav.site-nav .chat-status {
+  width: 6px;
+  height: 6px;
+  box-shadow: none;
+}
+
+header:not(.home-hero),
+.edu-hero {
+  padding-top: 76px !important;
+  padding-bottom: 42px !important;
+}
+
+.home-hero {
+  padding-top: 96px;
+  padding-bottom: 78px;
+}
+
+.member-filter-shell {
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.member-filter-shell .member-filters {
+  width: 100%;
+  margin: 0;
+}
+
+@media (max-width: 1040px) {
+  .site-nav,
+  nav.site-nav {
+    position: sticky;
+    top: 8px;
+    min-height: 60px;
+    padding: 7px 8px 7px 10px;
+    flex-wrap: wrap;
+    row-gap: 7px;
+  }
+
+  .site-nav .logo,
+  nav.site-nav .logo {
+    order: 1;
+    min-width: 0;
+    flex: 1 1 auto;
+    padding-right: 4px;
+  }
+
+  .site-nav .nav-tools,
+  nav.site-nav .nav-tools {
+    order: 2;
+    width: auto;
+    margin-left: auto;
+  }
+
+  .site-nav .nav-toggle,
+  nav.site-nav .nav-toggle {
+    position: static !important;
+    order: 3;
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    margin: 0;
+    border-width: 1px !important;
+    border-color: var(--border-red) !important;
+    background: rgba(230, 57, 43, .14) !important;
+    box-shadow: none;
+  }
+
+  .site-nav > ul,
+  nav.site-nav > ul {
+    order: 4;
+    width: 100%;
+    flex: 0 0 100%;
+    padding: 8px 0 2px;
+  }
+
+  .site-nav .open-button,
+  nav.site-nav .open-button,
+  .site-nav .lang-toggle,
+  nav.site-nav .lang-toggle {
+    order: initial;
+    width: auto;
+    min-height: 40px;
+    justify-content: center;
+    padding: 8px 10px;
+  }
+
+  .chat-popup {
+    top: 80px;
+    right: 12px;
+    bottom: auto;
+  }
+
+  header:not(.home-hero),
+  .edu-hero {
+    padding-top: 58px !important;
+    padding-bottom: 36px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .site-nav .logo,
+  nav.site-nav .logo {
+    font-size: 0;
+  }
+
+  .site-nav .logo::before,
+  nav.site-nav .logo::before {
+    width: 36px;
+    height: 36px;
+    margin-right: 0;
+  }
+
+  .site-nav .lang-toggle,
+  nav.site-nav .lang-toggle,
+  .site-nav .open-button,
+  nav.site-nav .open-button {
+    min-height: 38px;
+    padding: 7px 9px;
+    font-size: 10px;
+  }
+
+  .home-hero {
+    min-height: 540px;
+    padding-top: 66px;
+    padding-bottom: 62px;
+  }
 }
