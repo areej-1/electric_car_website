@@ -343,8 +343,7 @@
     { href: 'specs.html', key: 'nav.specs', match: ['specs.html'] },
     { href: 'checklist.html', key: 'nav.checklist', match: ['checklist.html'] },
     { href: 'about.html', key: 'nav.about', match: ['about.html'] },
-    { href: 'sponsors.html', key: 'nav.sponsors', match: ['sponsors.html'] },
-    { href: 'sponsor-package.html', key: 'nav.package', match: ['sponsor-package.html'] }
+    { href: 'sponsors.html', key: 'nav.sponsors', match: ['sponsors.html'] }
   ];
 
   function normalizeLang(lang) {
