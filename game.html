@@ -1,344 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <link rel="stylesheet" href="styles.css">
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" href="favicon.png" type="image/png">
-        <title>Electric Car Club</title>
-    </head>
-    <body>
-        <nav>
-            <div class="logo">SIS Al Jada Cobras</div>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="members.html">Members</a></li>
-                <li><a href="projects.html">Our Work</a></li>
-                <li><a href="game.html">Game</a></li>
-                <li><a href="101.html">Electric Cars 101</a></li>
-                <li><a href="specs.html">Specs</a></li>
-                <li><a href="about.html">About Us</a></li>
-            </ul>
-        </nav>
-        <main>
-            <h1>Cobra Racing</h1>
-            <div id="game-container">
-                <div id="player"></div>
-                <div id="score">Score: 0</div>
-                <div id="level">Level: 1</div>
-                <div id="level-overlay" class="hidden">
-                    <div class="overlay-box">
-                        <div id="overlay-text">LEVEL UP!</div>
-                        <div id="overlay-subtext">Get ready…</div>
-                    </div>
-                    </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Play Cobra Circuit, the SIS Al Jada Cobras electric racing game.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="cobra-race-mark.png" type="image/png">
+  <title>Cobra Circuit | SIS Al Jada Cobras</title>
+</head>
+<body>
+  <nav>
+    <div class="logo">SIS Al Jada Cobras</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="projects.html">Our Work</a></li>
+      <li><a href="game.html" aria-current="page">Game</a></li>
+      <li><a href="101.html">Electric Cars 101</a></li>
+      <li><a href="specs.html">Specs</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="sponsors.html">Sponsor Us</a></li>
+    </ul>
+  </nav>
 
+  <main class="race-page">
+    <header>
+      <span class="race-kicker">Arcade test program</span>
+      <h1>Cobra Circuit</h1>
+      <p>A retro night run through Cobra City. Cut through traffic, evade hazards, collect battery cells, and hold your nerve as the road accelerates.</p>
+    </header>
 
-            </div>
-            <button id="start-btn">Start Game</button>
-
-        <button class="open-button" onclick="openForm()">CarGPT</button>
-        <div class="chat-popup" id="myForm">
-        <div class="form-container">
-            <h1>CarGPT</h1>
-            <div id="chatMessages" class="chat-messages">
-                <div class="bot-msg">Hi! Ask me anything about the Cobras team or electric cars. 🏎️⚡</div>
-            </div>
-            <textarea id="chatInput" placeholder="Type message.."></textarea>
-            <button type="button" class="btn" onclick="sendMessage()">Send</button>
-            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+    <section class="race-shell" aria-label="Cobra Circuit game">
+      <div class="race-topbar">
+        <div class="race-stat"><span>Score</span><strong id="race-score">00000</strong></div>
+        <div class="race-stat"><span>Level</span><strong id="race-level">1</strong></div>
+        <div class="race-stat"><span>Best</span><strong id="race-best">00000</strong></div>
+        <div class="energy-meter">
+          <span>Energy</span>
+          <div class="energy-track"><div id="energy-fill"></div></div>
         </div>
-</main>
-<script>
-    const container = document.getElementById('game-container');
-    const player = document.getElementById('player');
-    const scoreDisplay = document.getElementById('score');
-    const startBtn = document.getElementById('start-btn');
-    const overlay = document.getElementById('level-overlay');
-    const overlayText = document.getElementById('overlay-text');
-    const levelDisplay = document.getElementById('level');
+      </div>
 
-    // Dynamic sizing - reads actual container/player dimensions
-    function getGameDimensions() {
-        const containerWidth = container.offsetWidth;
-        const containerHeight = container.offsetHeight;
-        const playerWidth = player.offsetWidth;
-        const playerHeight = player.offsetHeight;
-        return {
-            containerWidth,
-            containerHeight,
-            playerWidth,
-            playerHeight,
-            maxPlayerX: containerWidth - playerWidth,
-            playerTopY: containerHeight - playerHeight - 20,
-            playerBottomY: containerHeight - 20
-        };
-    }
-
-    let playerX = 0;
-    let score = 0;
-    let level = 1;
-    let obstacleSpeed = 7;
-    let batterySpeed = 5;
-    let obstacleSpawnMs = 1500;
-    let batterySpawnMs = 2000;
-
-    const LEVEL_UP_EVERY = 50;
-    let levelingUp = false;
-    let gameRunning = false;
-    let obstacleInterval;
-    let batteryInterval;
-
-    // Move player with left/right arrow keys
-    document.addEventListener('keydown', (e) => {
-        if (!gameRunning) return;
-        const dims = getGameDimensions();
-        const moveAmount = Math.max(20, dims.containerWidth * 0.05);
-
-        if (['ArrowLeft', 'ArrowRight'].includes(e.key)) {
-            e.preventDefault();
-        }
-
-        if (e.key === 'ArrowLeft' && playerX > 0) {
-            playerX = Math.max(0, playerX - moveAmount);
-        }
-        if (e.key === 'ArrowRight' && playerX < dims.maxPlayerX) {
-            playerX = Math.min(dims.maxPlayerX, playerX + moveAmount);
-        }
-        player.style.left = playerX + 'px';
-    });
-
-    // Touch controls
-    container.addEventListener('touchstart', (e) => {
-        if (!gameRunning) return;
-        e.preventDefault();
-
-        const dims = getGameDimensions();
-        const moveAmount = Math.max(20, dims.containerWidth * 0.05);
-        const touch = e.touches[0];
-        const containerRect = container.getBoundingClientRect();
-        const touchX = touch.clientX - containerRect.left;
-        const containerMiddle = containerRect.width / 2;
-
-        if (touchX < containerMiddle && playerX > 0) {
-            playerX = Math.max(0, playerX - moveAmount);
-        } else if (touchX >= containerMiddle && playerX < dims.maxPlayerX) {
-            playerX = Math.min(dims.maxPlayerX, playerX + moveAmount);
-        }
-        player.style.left = playerX + 'px';
-    });
-
-    // Create falling obstacle (snake)
-    function createObstacle() {
-        const dims = getGameDimensions();
-        const obstacle = document.createElement('div');
-        obstacle.classList.add('obstacle');
-        const obstacleWidth = 80; // Will be smaller on mobile via CSS
-        const maxX = dims.containerWidth - obstacleWidth;
-        obstacle.style.left = Math.random() * maxX + 'px';
-        container.appendChild(obstacle);
-
-        let obstacleY = -100;
-
-        const fall = setInterval(() => {
-            if (!gameRunning) {
-                clearInterval(fall);
-                obstacle.remove();
-                return;
-            }
-
-            const currentDims = getGameDimensions();
-            obstacleY += obstacleSpeed;
-            obstacle.style.top = obstacleY + 'px';
-
-            // Collision detection using actual dimensions
-            const obstacleX = parseInt(obstacle.style.left);
-            const obsWidth = obstacle.offsetWidth;
-            const obsHeight = obstacle.offsetHeight;
-
-            if (
-                playerX + currentDims.playerWidth *0.2 < obstacleX + obsWidth - obsWidth*0.3 &&
-                playerX + currentDims.playerWidth - currentDims.playerWidth *0.2 > obstacleX + obsWidth*0.3 &&
-                currentDims.playerTopY + currentDims.playerHeight *0.2 < obstacleY + obsHeight - obsHeight*0.3&&
-                currentDims.playerBottomY - currentDims.playerHeight *0.2 > obstacleY +obsHeight*0.3
-            ) {
-                gameOver();
-            }
-
-            if (obstacleY > currentDims.containerHeight) {
-                obstacle.remove();
-                clearInterval(fall);
-            }
-        }, 30);
-    }
-
-    // Create falling battery (collectible)
-    function createBattery() {
-        const dims = getGameDimensions();
-        const battery = document.createElement('div');
-        battery.classList.add('battery');
-        const batteryWidth = 60;
-        const maxX = dims.containerWidth - batteryWidth;
-        battery.style.left = Math.random() * maxX + 'px';
-        container.appendChild(battery);
-
-        let batteryY = -60;
-
-        const fall = setInterval(() => {
-            if (!gameRunning) {
-                clearInterval(fall);
-                battery.remove();
-                return;
-            }
-
-            const currentDims = getGameDimensions();
-            batteryY += batterySpeed;
-            battery.style.top = batteryY + 'px';
-
-            // Collection detection
-            const batteryX = parseInt(battery.style.left);
-            const batWidth = battery.offsetWidth;
-            const batHeight = battery.offsetHeight;
-
-            if (
-                playerX + 5 < batteryX + batWidth - 5 &&
-                playerX + currentDims.playerWidth - 5 > batteryX + 5 &&
-                currentDims.playerTopY < batteryY + batHeight &&
-                currentDims.playerBottomY > batteryY
-            ) {
-                battery.remove();
-                clearInterval(fall);
-                score += 10;
-                scoreDisplay.textContent = 'Score: ' + score;
-
-                const newLevel = Math.floor(score / LEVEL_UP_EVERY) + 1;
-                if (newLevel > level && !levelingUp) {
-                    level = newLevel;
-                    doLevelUp(level);
-                }
-            }
-
-            if (batteryY > currentDims.containerHeight) {
-                battery.remove();
-                clearInterval(fall);
-            }
-        }, 30);
-    }
-
-    function doLevelUp(newLevel) {
-        levelingUp = true;
-        clearInterval(obstacleInterval);
-        clearInterval(batteryInterval);
-
-        overlayText.textContent = 'LEVEL ' + newLevel + '!';
-        overlay.classList.remove('hidden');
-        levelDisplay.textContent = 'Level: ' + newLevel;
-
-        setTimeout(() => {
-            overlay.classList.add('hidden');
-
-            obstacleSpeed = 7 + (newLevel - 1) * 1.2;
-            batterySpeed = 5 + (newLevel - 1) * 0.8;
-            obstacleSpawnMs = Math.max(600, 1500 - (newLevel - 1) * 120);
-            batterySpawnMs = Math.max(900, 2000 - (newLevel - 1) * 100);
-
-            obstacleInterval = setInterval(createObstacle, obstacleSpawnMs);
-            batteryInterval = setInterval(createBattery, batterySpawnMs);
-
-            levelingUp = false;
-        }, 1000);
-    }
-
-    function startGame() {
-        const dims = getGameDimensions();
-
-        level = 1;
-        obstacleSpeed = 7;
-        batterySpeed = 5;
-        obstacleSpawnMs = 1500;
-        batterySpawnMs = 2000;
-        levelDisplay.textContent = 'Level: 1';
-        overlay.classList.add('hidden');
-        levelingUp = false;
-
-        gameRunning = true;
-        score = 0;
-        playerX = (dims.containerWidth - dims.playerWidth) / 2;
-        player.style.left = playerX + 'px';
-        scoreDisplay.textContent = 'Score: 0';
-        startBtn.style.display = 'none';
-        obstacleInterval = setInterval(createObstacle, obstacleSpawnMs);
-        batteryInterval = setInterval(createBattery, batterySpawnMs);
-    }
-
-    function gameOver() {
-        gameRunning = false;
-        clearInterval(obstacleInterval);
-        clearInterval(batteryInterval);
-        alert('Game Over! Score: ' + score);
-
-        document.querySelectorAll('.obstacle').forEach(ob => ob.remove());
-        document.querySelectorAll('.battery').forEach(b => b.remove());
-
-        startBtn.style.display = 'block';
-    }
-
-    startBtn.addEventListener('click', startGame);
-
-    function openForm() {
-            document.getElementById("myForm").style.display = "block";
-        }
-
-        function closeForm() {
-            document.getElementById("myForm").style.display = "none";
-        }
-
-        async function sendMessage() {
-            const input = document.getElementById("chatInput");
-            const messages = document.getElementById("chatMessages");
-            const userMsg = input.value.trim();
-            if (!userMsg) return;
-
-            messages.innerHTML += `<div class="user-msg">${userMsg}</div>`;
-            input.value = "";
-
-            const thinkingId = "thinking-" + Date.now();
-            messages.innerHTML += `<div id="${thinkingId}" class="bot-msg">...</div>`;
-            messages.scrollTop = messages.scrollHeight;
-
-            try {
-                const res = await fetch("https://cobras-chat.areej-dridi.workers.dev", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: userMsg })
-                });
-                const data = await res.json();
-                document.getElementById(thinkingId).textContent = data.reply;
-            } catch (err) {
-                document.getElementById(thinkingId).textContent = "Sorry, something went wrong. Try again!";
-            }
-            messages.scrollTop = messages.scrollHeight;
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const input = document.getElementById("chatInput");
-            if (input) {
-                input.addEventListener("keydown", (e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        sendMessage();
-                    }
-                });
-            }
-        });
-</script>
-    <footer>
-        <p> Copyright 2026 SIS Al Jada Cobras</p>
-        <p>Made by Areej</p>
-        <div class="socials">
-            <a href="https://tiktok.com/@sisaljadacobras?_r=1&_t=ZS-935T-PczwWdL"><img src="tiktok.png" alt="description"></a>
-            <a href="https://instagram.com/sisaljadacobras?igsh=dmRpbXlyMzVjNjV1"><img src="instagram.png" alt="description"></a>
+      <div class="race-stage">
+        <canvas id="race-canvas" aria-label="Four-lane electric racing game"></canvas>
+        <div id="race-overlay" class="race-overlay">
+          <img src="cobra-race-mark.png" alt="" aria-hidden="true">
+          <span>EVGP training simulation</span>
+          <h2 id="race-overlay-title">Ready to strike?</h2>
+          <p id="race-overlay-copy">Use ← → or A / D. On mobile, tap or swipe to change lanes.</p>
+          <button type="button">Start race</button>
         </div>
-    </footer>
-    </body>
+      </div>
+
+      <div class="race-controls">
+        <button type="button" data-steer="left" aria-label="Steer left">←</button>
+        <div class="race-legend"><span><i class="legend-battery"></i> Charge</span><span><i class="legend-snake"></i> Hazard</span></div>
+        <button type="button" data-steer="right" aria-label="Steer right">→</button>
+      </div>
+      <div class="race-modes" aria-label="Difficulty"><span>Difficulty</span><button type="button" data-mode="rookie">Rookie</button><button type="button" data-mode="race" class="is-active">Race</button><button type="button" data-mode="elite">Elite</button></div>
+    </section>
+    <button id="start-btn" type="button">Restart race</button>
+    <section class="local-leaderboard"><div><span class="section-kicker">Local leaderboard</span><h2>Fastest runs on this device.</h2></div><ol id="race-leaderboard"></ol></section>
+
+    <button class="open-button" type="button">CarGPT</button>
+    <div class="chat-popup" id="myForm">
+      <div class="form-container">
+        <h1>CarGPT</h1>
+        <div id="chatMessages" class="chat-messages">
+          <div class="bot-msg">Ask me anything about the Cobras team, EVGP, or electric cars.</div>
+        </div>
+        <textarea id="chatInput" maxlength="1200" placeholder="Ask CarGPT…"></textarea>
+        <button type="button" class="btn">Send</button>
+        <button type="button" class="btn cancel">Close</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Copyright 2026 SIS Al Jada Cobras</p>
+    <p>Made by Areej</p>
+    <div class="socials">
+      <a href="https://tiktok.com/@sisaljadacobras?_r=1&amp;_t=ZS-935T-PczwWdL"><img src="tiktok.png" alt="SIS Al Jada Cobras on TikTok"></a>
+      <a href="https://instagram.com/sisaljadacobras?igsh=dmRpbXlyMzVjNjV1"><img src="instagram.png" alt="SIS Al Jada Cobras on Instagram"></a>
+    </div>
+  </footer>
+
+  <script src="site.js"></script>
+  <script src="game.js"></script>
+</body>
 </html>
