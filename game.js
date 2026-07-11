@@ -338,10 +338,10 @@
     ctx.strokeRect(18, H - 76, 150, 58);
     ctx.fillStyle = '#C9A227';
     ctx.font = '700 12px Orbitron, monospace';
-    ctx.fillText('SPEED', 30, H - 52);
+    ctx.fillText(tr('game.speed', 'Speed').toUpperCase(), 30, H - 52);
     ctx.fillStyle = '#F5F0E8';
     ctx.font = '900 23px Orbitron, monospace';
-    ctx.fillText(`${speed} KM/H`, 30, H - 27);
+    ctx.fillText(`${speed} ${tr('game.kmh', 'km/h')}`, 30, H - 27);
   }
 
   function draw() {
@@ -455,7 +455,10 @@
   async function shareScore() {
     const build = (window.CobrasSite && window.CobrasSite.buildScoreShareText)
       || (window.CobrasLib && window.CobrasLib.buildScoreShareText);
-    const text = build ? build(sharePayload()) : `Cobra Circuit score ${Math.floor(state.score)}`;
+    const payload = sharePayload();
+    const text = document.documentElement.lang === 'ar'
+      ? `حققت ${payload.score} نقطة في Cobra Circuit بنمط ${modeLabel[payload.mode] || payload.mode} — أفضل نتيجة ${payload.best}. #SISAlJadaCobras`
+      : (build ? build(payload) : `Cobra Circuit score ${Math.floor(state.score)}`);
     try {
       if (navigator.share) {
         await navigator.share({ title: 'Cobra Circuit', text });
