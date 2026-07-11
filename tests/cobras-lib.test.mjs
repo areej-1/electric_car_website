@@ -112,6 +112,8 @@ check('trackPageView increments', () => {
 
 check('currentPageName + nav current', () => {
   assert.equal(Lib.currentPageName('/foo/news.html'), 'news.html');
+  assert.equal(Lib.currentPageName('/members'), 'members.html');
+  assert.equal(Lib.currentPageName('/'), 'index.html');
   const news = Lib.NAV_ITEMS.find((i) => i.href === 'news.html');
   assert.ok(Lib.isCurrentNav(news, 'news.html'));
   assert.equal(Lib.isCurrentNav(news, 'index.html'), false);

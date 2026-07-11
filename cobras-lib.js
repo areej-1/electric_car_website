@@ -365,7 +365,8 @@
   function currentPageName(pathname) {
     const raw = String(pathname || '').split(/[?#]/)[0];
     const base = raw.split('/').pop() || 'index.html';
-    return base === '' ? 'index.html' : base;
+    if (!base || base === 'index') return 'index.html';
+    return base.includes('.') ? base : `${base}.html`;
   }
 
   function isCurrentNav(item, pageName) {

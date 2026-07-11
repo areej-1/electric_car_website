@@ -220,7 +220,8 @@
     launcher.setAttribute('aria-controls', 'myForm');
     launcher.setAttribute('aria-expanded', 'false');
     launcher.innerHTML = `<span class="chat-status" aria-hidden="true"></span> <span data-i18n="chat.open">${Lib.t(lang, 'chat.open')}</span>`;
-    nav.appendChild(launcher);
+    const navTools = nav.querySelector('.nav-tools');
+    (navTools || nav).appendChild(launcher);
 
     popup.setAttribute('role', 'dialog');
     popup.setAttribute('aria-label', Lib.t(lang, 'chat.dialog'));
