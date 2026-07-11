@@ -1,0 +1,5 @@
+# Public static team site — allow all crawlers
+User-agent: *
+Allow: /
+
+Sitemap: /sitemap.xml

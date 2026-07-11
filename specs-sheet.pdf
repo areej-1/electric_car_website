@@ -1,0 +1,46 @@
+%PDF-1.4
+1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj
+2 0 obj<< /Type /Pages /Kids [3 0 R] /Count 1 >>endobj
+3 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources<< /Font<< /F1 5 0 R >> >> >>endobj
+4 0 obj<< /Length 669 >>stream
+BT
+/F1 18 Tf
+50 780 Td
+(Cobras Specs) Tj
+/F1 11 Tf
+0 -28 Td
+(SIS Al Jada Cobras — Car specification sheet) Tj
+0 -16 Td
+(Team: SIS Al Jada Cobras | School: SABIS Al Jada, Sharjah) Tj
+0 -16 Td
+(Competition: Electric Vehicle Grand Prix \(EVGP\)) Tj
+0 -16 Td
+(System voltage: 48V \(4 x 12V batteries\)) Tj
+0 -16 Td
+(Total weight: ~186 kg \(current measured build\)) Tj
+0 -16 Td
+(Average test speed: ~30 km/h) Tj
+0 -16 Td
+(Estimated runtime: 1-3 hours depending on load) Tj
+0 -16 Td
+(Safety: kill switch, seat belt, helmet, pre-run checks) Tj
+0 -16 Td
+(Last updated: May 2026 — figures evolve with testing.) Tj
+0 -16 Td
+(Contact: cobras.sponsors@sisaljada.example) Tj
+ET
+endstream
+endobj
+5 0 obj<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000056 00000 n 
+0000000111 00000 n 
+0000000233 00000 n 
+0000000951 00000 n 
+trailer<< /Size 6 /Root 1 0 R >>
+startxref
+1019
+%%EOF

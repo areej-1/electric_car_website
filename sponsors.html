@@ -4,19 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Support the SIS Al Jada Cobras student electric race car team.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="cobra-race-mark.png" type="image/png">
-  <title>Sponsor the Cobras | SIS Al Jada</title>
+  <title>Sponsor Us | SIS Al Jada Cobras</title>
 </head>
 <body>
-  <nav>
-    <div class="logo">SIS Al Jada Cobras</div>
-    <ul>
-      <li><a href="index.html">Home</a></li><li><a href="members.html">Members</a></li><li><a href="projects.html">Our Work</a></li><li><a href="game.html">Game</a></li><li><a href="101.html">Electric Cars 101</a></li><li><a href="specs.html">Specs</a></li><li><a href="about.html">About Us</a></li><li><a href="sponsors.html" aria-current="page">Sponsor Us</a></li>
+    <nav class="site-nav" aria-label="Main">
+    <a class="logo" href="index.html">SIS Al Jada Cobras</a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open menu">
+      <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+    </button>
+    <ul id="site-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="projects.html">Our Work</a></li>
+      <li><a href="game.html">Game</a></li>
+      <li><a href="101.html">Electric Cars 101</a></li>
+      <li><a href="specs.html">Specs</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="sponsors.html" aria-current="page">Sponsor Us</a></li>
     </ul>
   </nav>
 
-  <main class="sponsor-page">
+  <main id="main" class="sponsor-page">
     <header class="sponsor-hero">
       <span class="eyebrow">Partner with student engineering</span>
       <h1>Put your name behind<br><span>the next generation.</span></h1>
@@ -54,16 +68,25 @@
     </section>
 
     <section class="sponsor-interest" id="sponsor-interest">
-      <img src="cobra-race-mark.png" alt="SIS Al Jada Cobras emblem">
-      <div><span class="section-kicker">Want to sponsor us?</span><h2>Tell CarGPT you want to partner with the Cobras.</h2><p>Open the assistant and choose the sponsorship prompt. The team can then guide you to the correct school contact channel.</p></div>
+      <img src="cobra-race-mark.png" alt="SIS Al Jada Cobras emblem" width="100" height="100">
+      <div><span class="section-kicker">Want to sponsor us?</span><h2>Tell CarGPT you want to partner with the Cobras.</h2><p>Open the assistant and choose the sponsorship prompt, or message the team on Instagram/TikTok. We will connect you with the right school contact for equipment, race, or learning partnerships.</p></div>
       <button class="primary-action sponsor-chat-trigger" type="button">Open CarGPT</button>
     </section>
 
     <button class="open-button" type="button">CarGPT</button>
-    <div class="chat-popup" id="myForm"><div class="form-container"><h1>CarGPT</h1><div id="chatMessages" class="chat-messages"><div class="bot-msg">Ask how your organization can support the Cobras.</div></div><div class="chat-prompts"><button type="button">How can I sponsor the team?</button><button type="button">What support does the team need?</button></div><textarea id="chatInput" maxlength="1200" placeholder="Ask about sponsorship…"></textarea><button type="button" class="btn">Send</button><button type="button" class="btn cancel">Close</button></div></div>
+    <div class="chat-popup" id="myForm"><div class="form-container"><h1>CarGPT</h1><div id="chatMessages" class="chat-messages"><div class="bot-msg">Ask how your organization can support the Cobras.</div></div><div class="chat-prompts"><button type="button">How can I sponsor the team?</button><button type="button">What support does the team need?</button></div><textarea id="chatInput" aria-label="Message to CarGPT" maxlength="1200" placeholder="Ask about sponsorship…"></textarea><button type="button" class="btn">Send</button><button type="button" class="btn cancel">Close</button></div></div>
+  
+    <section class="contact-card" id="sponsor-contact" style="width:min(var(--max-width),calc(100% - 40px));margin:0 auto 80px">
+      <span class="section-kicker">Real contact</span>
+      <h2>Email the sponsorship desk</h2>
+      <p><a href="mailto:cobras.sponsors@sisaljada.example">cobras.sponsors@sisaljada.example</a> · social <strong>@sisaljadacobras</strong></p>
+      <p><a class="primary-action" href="sponsor-package.html">Open sponsor package</a>
+      <a class="secondary-action" href="sponsor-package.pdf" download>Download package PDF</a></p>
+    </section>
   </main>
 
-  <footer><p>Copyright 2026 SIS Al Jada Cobras</p><p>Made by Areej</p><div class="socials"><a href="https://tiktok.com/@sisaljadacobras"><img src="tiktok.png" alt="TikTok"></a><a href="https://instagram.com/sisaljadacobras"><img src="instagram.png" alt="Instagram"></a></div></footer>
+  <footer><p>Copyright 2026 SIS Al Jada Cobras</p><p>Made by Areej</p><div class="socials"><a href="https://tiktok.com/@sisaljadacobras" target="_blank" rel="noopener noreferrer"><img src="tiktok.png" alt="SIS Al Jada Cobras on TikTok" width="28" height="28"></a><a href="https://instagram.com/sisaljadacobras" target="_blank" rel="noopener noreferrer"><img src="instagram.png" alt="SIS Al Jada Cobras on Instagram" width="28" height="28"></a></div></footer>
+  <script src="cobras-lib.js"></script>
   <script src="site.js"></script>
-</body>
+  </body>
 </html>
