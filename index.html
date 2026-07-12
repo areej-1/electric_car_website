@@ -43,28 +43,13 @@
   <link rel="prefetch" href="sponsors.html">
 </head>
 <body>
-    <nav class="site-nav" aria-label="Main">
-    <a class="logo" href="index.html">SIS Al Jada Cobras</a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open menu">
-      <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
-    </button>
-    <ul id="site-menu">
-      <li><a href="index.html" aria-current="page">Home</a></li>
-      <li><a href="members.html">Members</a></li>
-      <li><a href="projects.html">Our Work</a></li>
-      <li><a href="game.html">Game</a></li>
-      <li><a href="101.html">Electric Cars 101</a></li>
-      <li><a href="specs.html">Specs</a></li>
-      <li><a href="about.html">About Us</a></li>
-      <li><a href="sponsors.html">Sponsor Us</a></li>
-    </ul>
-  </nav>
+    <nav class="site-nav" data-i18n-aria="nav.main" aria-label="Main navigation"></nav>
 
   <main id="main">
     <header class="home-hero">
       <span class="eyebrow" data-i18n="home.eyebrow">EVGP · SABIS® Al Jada · Sharjah</span>
       <h1><span data-i18n="home.title1">Built to strike.</span><br><span data-i18n="home.title2">Engineered to race.</span></h1>
-      <p data-i18n="home.lead">We are a Grades 10–11 student team turning classroom knowledge into a competition-ready electric race car—one design, test, and hard-earned improvement at a time.</p>
+      <p data-i18n="home.lead">We are a Grades 11–12 student team turning classroom knowledge into a competition-ready electric race car—one design, test, and hard-earned improvement at a time.</p>
       <div class="hero-actions">
         <a class="primary-action" href="projects.html" data-i18n="home.ctaBuild">Follow the build</a>
         <a class="secondary-action" href="members.html" data-i18n="home.ctaCrew">Meet the crew</a>
@@ -76,14 +61,28 @@
       </div>
     </header>
 
-    <section class="race-countdown" data-race-date="2027-02-13T09:00:00+04:00">
+    <section class="race-countdown" data-race-date="2027-02-13T00:00:00+04:00">
       <div><span class="section-kicker" data-i18n="home.countKicker">Target race date · February 13, 2027</span><h2 data-i18n="home.countTitle">The countdown to EVGP is on.</h2></div>
-      <div class="countdown-grid" role="timer" aria-live="polite" aria-label="EVGP countdown">
+      <div class="countdown-grid" role="timer" aria-label="EVGP countdown">
         <div><strong data-countdown="days">---</strong><span data-i18n="home.days">Days</span></div>
         <div><strong data-countdown="hours">--</strong><span data-i18n="home.hours">Hours</span></div>
         <div><strong data-countdown="minutes">--</strong><span data-i18n="home.minutes">Minutes</span></div>
         <div><strong data-countdown="seconds">--</strong><span data-i18n="home.seconds">Seconds</span></div>
       </div>
+    </section>
+
+    <section class="build-status" aria-labelledby="build-status-title">
+      <div class="section-heading">
+        <div class="section-index" data-i18n="home.statusIndex">Current / Build status</div>
+        <div><span class="section-kicker" data-i18n="home.statusKicker">Published workshop snapshot</span><h2 id="build-status-title" data-i18n="home.statusTitle">Current priority: system testing.</h2><p data-i18n="home.statusNote">This status comes from the latest workshop log, not a live telemetry feed.</p></div>
+      </div>
+      <div class="status-grid">
+        <article><span data-i18n="home.statusCompletion">Completion percentage</span><strong data-i18n="common.awaitingSignoff">Awaiting team sign-off</strong></article>
+        <article><span data-i18n="home.statusCurrent">Current task</span><strong data-i18n="home.nowT">System testing</strong><p data-i18n="home.nowB">Verify controls, electrical connections, and safe shutdown behavior.</p></article>
+        <article><span data-i18n="home.statusNext">Next milestone</span><strong data-i18n="home.nextT">Track refinement</strong><p data-i18n="home.nextB">Use driving feedback to improve stability, balance, and consistency.</p></article>
+        <article><span data-i18n="home.statusCrew">Crew assignment</span><strong data-i18n="common.toBeConfirmed">To be confirmed</strong><p data-i18n="home.statusUpdated">Latest published update: 1 July 2026</p></article>
+      </div>
+      <a class="text-link" href="news.html"><span data-i18n="home.statusLink">Read the dated workshop log</span> <span>→</span></a>
     </section>
 
     <section class="landing-intro">
@@ -149,28 +148,29 @@
         <div><span class="section-kicker" data-i18n="home.engKicker">Problems become progress</span><h2 data-i18n="home.engTitle">What we learn when the first idea fails.</h2></div>
       </div>
       <div class="story-grid">
-        <article><div class="story-tag" data-i18n="home.challenge">Challenge</div><h3 data-i18n="home.ch1">Weight balance</h3><p data-i18n="home.ch1b">Uneven weight can change the way the car turns and behaves at speed.</p><div class="story-answer"><span data-i18n="home.response">Our response</span><p data-i18n="home.ch1r">Test component placement and adjust the balance before performance runs.</p></div></article>
-        <article><div class="story-tag" data-i18n="home.challenge">Challenge</div><h3 data-i18n="home.ch2">Reliable wiring</h3><p data-i18n="home.ch2b">Loose or unclear connections make troubleshooting slower and less safe.</p><div class="story-answer"><span data-i18n="home.response">Our response</span><p data-i18n="home.ch2r">Organize, secure, label, and verify the power system one circuit at a time.</p></div></article>
-        <article><div class="story-tag" data-i18n="home.challenge">Challenge</div><h3 data-i18n="home.ch3">Driver protection</h3><p data-i18n="home.ch3b">Performance only matters when the driver and crew can operate safely.</p><div class="story-answer"><span data-i18n="home.response">Our response</span><p data-i18n="home.ch3r">Use a kill switch, seat belt, helmet, and repeatable safety checks.</p></div></article>
+        <article><div class="story-tag" data-i18n="home.ch1">Weight balance</div><div class="decision-step"><span data-i18n="home.problem">Problem</span><p data-i18n="home.ch1Problem">Uneven weight can change how the car turns and behaves at speed.</p></div><div class="decision-step"><span data-i18n="home.decision">Decision</span><p data-i18n="home.ch1Decision">Mechanics shifted battery placement after low-speed runs.</p></div><div class="decision-step is-result"><span data-i18n="home.result">Result / next test</span><p data-i18n="home.ch1Result">Weight remains near 186 kg; a new weigh-in is pending after the next parts change.</p></div></article>
+        <article><div class="story-tag" data-i18n="home.ch2">Reliable wiring</div><div class="decision-step"><span data-i18n="home.problem">Problem</span><p data-i18n="home.ch2Problem">Loose or unclear connections make troubleshooting slower and less safe.</p></div><div class="decision-step"><span data-i18n="home.decision">Decision</span><p data-i18n="home.ch2Decision">The electrical crew re-checked the 48V layout, secured connectors, and re-labeled critical runs.</p></div><div class="decision-step is-result"><span data-i18n="home.result">Result / next test</span><p data-i18n="home.ch2Result">The next test day has a clearer, faster troubleshooting path.</p></div></article>
+        <article><div class="story-tag" data-i18n="home.ch3">Driver protection</div><div class="decision-step"><span data-i18n="home.problem">Problem</span><p data-i18n="home.ch3Problem">Performance only matters when the driver and crew can operate safely.</p></div><div class="decision-step"><span data-i18n="home.decision">Decision</span><p data-i18n="home.ch3Decision">Use an emergency kill switch, seat belt, helmet, and repeatable pre-run checks.</p></div><div class="decision-step is-result"><span data-i18n="home.result">Result / next test</span><p data-i18n="home.ch3Result">The hardware is documented; final race-day safety sign-off is still tracked in the checklist.</p></div></article>
       </div>
     </section>
 
     <section class="workshop-journal">
       <div class="section-heading">
         <div class="section-index" data-i18n="home.logIndex">06 / Workshop log</div>
-        <div><span class="section-kicker" data-i18n="home.logKicker">What happens next</span><h2 data-i18n="home.logTitle">Current priorities.</h2></div>
+        <div><span class="section-kicker" data-i18n="home.logKicker">Dated workshop notes</span><h2 data-i18n="home.logTitle">Latest verified updates.</h2></div>
       </div>
       <div class="journal-list">
-        <article><span data-i18n="home.now">Now</span><div><h3 data-i18n="home.nowT">System testing</h3><p data-i18n="home.nowB">Verify controls, electrical connections, and safe shutdown behavior.</p></div></article>
-        <article><span data-i18n="home.next">Next</span><div><h3 data-i18n="home.nextT">Track refinement</h3><p data-i18n="home.nextB">Use driving feedback to improve stability, balance, and consistency.</p></div></article>
-        <article><span data-i18n="home.race">Race target</span><div><h3 data-i18n="home.raceT">February 13</h3><p data-i18n="home.raceB">Prepare the car, driver, documentation, and team for competition.</p></div></article>
+        <article><time datetime="2026-07-01" data-i18n="home.logDate1">1 Jul 2026</time><div><span class="log-tag" data-i18n="home.logTag1">Electrical</span><h3 data-i18n="home.logEntry1">Kill switch and critical-run labels checked</h3><p data-i18n="home.logBody1">Connectors were secured and the 48V layout was re-labeled for faster troubleshooting.</p></div></article>
+        <article><time datetime="2026-06-18" data-i18n="home.logDate2">18 Jun 2026</time><div><span class="log-tag" data-i18n="home.logTag2">Mechanical</span><h3 data-i18n="home.logEntry2">Battery placement shifted after low-speed runs</h3><p data-i18n="home.logBody2">The build remains near 186 kg; the next parts change will be followed by another weigh-in.</p></div></article>
+        <article><time datetime="2026-06-04" data-i18n="home.logDate3">4 Jun 2026</time><div><span class="log-tag" data-i18n="home.logTag3">Media</span><h3 data-i18n="home.logEntry3">Sponsor package prepared</h3><p data-i18n="home.logBody3">The media crew published the sponsor PDF and refreshed outreach materials.</p></div></article>
       </div>
+      <a class="text-link" href="news.html"><span data-i18n="home.logLink">Open the complete workshop log</span> <span>→</span></a>
     </section>
 
     <section class="landing-cta">
       <img src="cobra-race-mark.png" alt="" width="100" height="100" aria-hidden="true">
       <div><span class="section-kicker" data-i18n="home.ctaKicker">Ready for the grid</span><h2 data-i18n="home.ctaTitle">Follow the Cobras from workshop to race day.</h2></div>
-      <a class="secondary-action" href="checklist.html" data-i18n="home.ctaCheck">Race checklist</a>
+      <a class="secondary-action" href="race-day.html" data-i18n="nav.raceDay">Race Day</a>
       <a class="primary-action" href="news.html" data-i18n="home.ctaNews">Latest news</a>
       <a class="secondary-action" href="specs.html" data-i18n="home.ctaSpecs">Explore the car specs</a>
     </section>
@@ -181,9 +181,9 @@
         <h1>CarGPT</h1>
         <div id="chatMessages" class="chat-messages"><div class="bot-msg" data-i18n="chat.intro">Ask me about the team, EVGP, or electric cars.</div></div>
         <div class="chat-prompts">
-          <button type="button">How does the 48V system work?</button>
-          <button type="button">What is EVGP?</button>
-          <button type="button">How can I sponsor the team?</button>
+          <button type="button" data-i18n="chat.prompt48">How does the 48V system work?</button>
+          <button type="button" data-i18n="chat.promptEVGP">What is EVGP?</button>
+          <button type="button" data-i18n="chat.promptSponsor">How can I sponsor the team?</button>
         </div>
         <textarea id="chatInput" aria-label="Message to CarGPT" maxlength="1200" placeholder="Ask CarGPT…"></textarea>
         <button type="button" class="btn">Send</button>
@@ -213,6 +213,7 @@
     </div>
   </footer>
   <script src="cobras-lib.js"></script>
+  <script src="arabic.js"></script>
   <script src="site.js"></script>
   </body>
 </html>

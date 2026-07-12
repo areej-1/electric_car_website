@@ -14,6 +14,7 @@ const PAGES = [
   'index.html',
   'members.html',
   'projects.html',
+  'race-day.html',
   'game.html',
   '101.html',
   'specs.html',
@@ -78,6 +79,9 @@ if (!read('game.html').includes('share-score-btn')) fail('score share ui', 'shar
 else pass('score share ui');
 if (!read('game.js').includes('buildScoreShareText') && !read('game.js').includes('shareScore')) fail('score share js', 'share logic missing');
 else pass('score share js');
+const projectVideos = [...read('projects.html').matchAll(/<video[^>]+src="([^"]+)"/g)].map(match => match[1]);
+if (projectVideos.length !== new Set(projectVideos).size) fail('project videos', 'timeline stages reuse the same video source');
+else pass('project timeline videos are distinct');
 if (/sk-[a-zA-Z0-9]{10,}|AIza[0-9A-Za-z_-]{20,}/.test(read('site.js') + read('cobras-lib.js'))) fail('secrets', 'possible API key committed');
 else pass('no obvious API secrets');
 
@@ -89,6 +93,48 @@ if (!css.includes('.nav-toggle') || !css.includes('@media (max-width: 1040px)'))
 if (!css.includes('--hot-red') || !css.includes('--gold')) {
   fail('css brand tokens', 'missing brand CSS variables');
 } else pass('css brand tokens');
+if (!/body\s*\{[\s\S]*?overflow-x:\s*clip;/.test(css)) {
+  fail('css sticky nav scroll container', 'body overflow must use clip so sticky nav remains attached');
+} else pass('css sticky nav keeps window scroll container');
+if (!css.includes('.nav-submenu[hidden]') || !css.includes('.site-nav.is-open > ul')) {
+  fail('resources nav css', 'missing disclosure hidden/mobile direct-child rules');
+} else pass('resources navigation css');
+if (/\.site-nav\.is-open\s+ul/.test(css)) fail('resources nav selector', 'broad mobile selector would force nested submenu open');
+else pass('resources submenu stays closed on mobile');
+if (/body\.nav-open\s*\{[^}]*overflow\s*:\s*hidden/s.test(css) || /classList\.toggle\(['"]nav-open/.test(read('site.js'))) {
+  fail('sticky mobile navigation', 'opening the menu would lock body scrolling and pull the sticky bar off-screen');
+} else pass('sticky mobile navigation keeps its scroll position');
+
+const raceDayHtml = read('race-day.html');
+if (!/data-i18n="race\.title"/.test(raceDayHtml) || !/To be confirmed/.test(raceDayHtml) || !/Pending until race/.test(raceDayHtml)) {
+  fail('race-day semantics', 'missing race hub, explicit TBC fields, or pending results');
+} else pass('race-day honest status and results placeholders');
+if (!/dir="auto" data-i18n="race\.targetDateLong"/.test(raceDayHtml)) {
+  fail('race-day date direction', 'translated planning date would be forced into left-to-right order');
+} else pass('race-day translated date keeps natural reading order');
+if (!read('sw.js').includes('race-day.html') || !read('sw.js').includes('arabic.js') || !read('sitemap.xml').includes('race-day.html') || !read('README.md').includes('race-day.html')) {
+  fail('race-day inventory', 'missing from PWA, sitemap, README, or Arabic offline shell');
+} else pass('race-day included in project inventory');
+if (!/req\.mode\s*===\s*['"]navigate['"]/.test(read('sw.js'))) fail('PWA clean-page updates', 'extensionless page navigations could remain stale');
+else pass('PWA uses network-first updates for clean page URLs');
+if (/sisaljada\.example/.test(PAGES.map(read).join('\n'))) fail('placeholder sponsor email', 'fake .example email is still exposed');
+else pass('no fake sponsor email exposed');
+if (!read('index.html').includes('class="build-status"') || !read('specs.html').includes('class="test-data"') || !read('sponsors.html').includes('class="sponsor-progress"')) {
+  fail('new status surfaces', 'missing build status, engineering data, or sponsor progress');
+} else pass('build, data, and sponsor status surfaces present');
+if (!read('sponsors.html').includes('data-i18n="sponsor.remaining"')) fail('sponsor remaining state', 'remaining-to-goal status is missing');
+else pass('sponsor remaining state stays explicit');
+if (!read('site.js').includes('member-contribution') || !read('site.js').includes('member.assignmentLabel')) fail('member responsibilities', 'role focus or pending individual assignment is not generated');
+else pass('member role focus generated');
+const countdownDates = PAGES.map(read).flatMap(html => [...html.matchAll(/data-race-date="([^"]+)"/g)].map(match => match[1]));
+if (!countdownDates.length || new Set(countdownDates).size !== 1 || countdownDates[0] !== '2027-02-13T00:00:00+04:00') fail('shared planning countdown', 'countdowns do not share the unconfirmed planning date start');
+else pass('shared planning countdown uses one non-invented start');
+if (PAGES.map(read).some(html => /class="countdown-grid"[^>]*aria-live="polite"/.test(html))) fail('countdown accessibility', 'second-by-second countdown would interrupt assistive technology');
+else pass('countdown avoids second-by-second live announcements');
+if (!read('index.html').includes('data-i18n="chat.prompt48"') || !read('sponsors.html').includes('data-i18n="sponsor.chatPromptSupport"') || !read('site.js').includes("Lib.t(lang, 'chat.liveUnavailable')") || !read('site.js').includes("input.value = Lib.t(lang, 'chat.promptSponsor')")) fail('localized CarGPT states', 'prompts, sponsor CTA, or live fallback states bypass i18n');
+else pass('CarGPT prompts and fallback states are localized');
+if (/setAttribute\(['"]role['"],\s*['"]toolbar['"]\)/.test(read('site.js'))) fail('member filter semantics', 'toolbar role lacks arrow-key behavior');
+else pass('member filters use group semantics');
 
 // --- Evaluate shipped site.js in a minimal browser sandbox ---
 function makeDocument() {

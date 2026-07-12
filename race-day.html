@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Race-day planning hub for the SIS Al Jada Cobras student electric race car team and its EVGP target date.">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta property="og:title" content="Race Day | SIS Al Jada Cobras">
+  <meta property="og:description" content="Follow the Cobras' provisional EVGP race-day plan, driver selection, readiness, and results.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="cobra-race-mark.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="cobra-race-mark.png" type="image/png">
+  <title>Race Day | SIS Al Jada Cobras</title>
+</head>
+<body>
+  <nav class="site-nav" data-i18n-aria="nav.main" aria-label="Main navigation"></nav>
+
+  <main id="main" class="race-day-page">
+    <header class="home-hero race-day-hero">
+      <span class="eyebrow" data-i18n="race.eyebrow">EVGP / Race-day hub</span>
+      <h1 data-i18n="race.title">Ready for the grid.</h1>
+      <p data-i18n="race.lead">One place for the Cobras' provisional race plan, readiness checks, driver selection, and official results when the flag falls.</p>
+      <div class="hero-actions">
+        <a class="primary-action" href="checklist.html" data-i18n="race.heroChecklist">Open race checklist</a>
+        <a class="secondary-action" href="projects.html" data-i18n="race.heroBuild">Follow the build</a>
+      </div>
+      <div class="hero-proof">
+        <div>
+          <strong><bdi dir="auto" data-i18n="race.targetDateShort">13 FEB 2027</bdi></strong>
+          <span data-i18n="race.targetDateLabel">Planning target — not a confirmed event date</span>
+        </div>
+        <div>
+          <strong data-i18n="race.eventName">EVGP</strong>
+          <span data-i18n="race.eventLabel">Competition target</span>
+        </div>
+        <div>
+          <strong data-i18n="race.statusValue">Planning</strong>
+          <span data-i18n="race.statusLabel">Current race-day status</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="race-countdown" data-race-date="2027-02-13T00:00:00+04:00">
+      <div>
+        <span class="section-kicker"><span data-i18n="race.countKicker">Planning target</span> · <bdi dir="auto" data-i18n="race.targetDateLong">13 February 2027</bdi></span>
+        <h2 data-i18n="race.countTitle">Countdown to the target date.</h2>
+        <p data-i18n="race.countNote">This clock counts to the start of the planning date; the organizer has not confirmed a race start time.</p>
+      </div>
+      <div class="countdown-grid" role="timer" aria-labelledby="race-countdown-label">
+        <span id="race-countdown-label" class="visually-hidden" data-i18n="race.countA11y">Countdown to the EVGP planning target</span>
+        <div><bdi dir="ltr"><strong data-countdown="days">---</strong></bdi><span data-i18n="race.days">Days</span></div>
+        <div><bdi dir="ltr"><strong data-countdown="hours">--</strong></bdi><span data-i18n="race.hours">Hours</span></div>
+        <div><bdi dir="ltr"><strong data-countdown="minutes">--</strong></bdi><span data-i18n="race.minutes">Minutes</span></div>
+        <div><bdi dir="ltr"><strong data-countdown="seconds">--</strong></bdi><span data-i18n="race.seconds">Seconds</span></div>
+      </div>
+    </section>
+
+    <section class="car-dashboard" aria-labelledby="race-status-title">
+      <div class="section-heading">
+        <div class="section-index"><bdi dir="ltr">01</bdi> / <span data-i18n="race.statusIndex">Event status</span></div>
+        <div>
+          <span class="section-kicker" data-i18n="race.statusKicker">Confirmed facts only</span>
+          <h2 id="race-status-title" data-i18n="race.statusTitle">What we know right now.</h2>
+          <p data-i18n="race.statusBody">This board will be updated when the organizer and school confirm official details.</p>
+        </div>
+      </div>
+      <div class="dashboard-grid">
+        <article><span data-i18n="race.venueLabel">Venue</span><strong data-i18n="race.tbc">To be confirmed</strong><i data-i18n="race.venueNote">Awaiting official event information</i></article>
+        <article><span data-i18n="race.scheduleLabel">Schedule</span><strong data-i18n="race.tbc">To be confirmed</strong><i data-i18n="race.scheduleNote">No official session times published</i></article>
+        <article><span data-i18n="race.inspectionLabel">Inspection</span><strong data-i18n="race.tbc">To be confirmed</strong><i data-i18n="race.inspectionNote">Requirements will follow organizer guidance</i></article>
+        <article><span data-i18n="race.selectedDriverLabel">Selected driver</span><strong data-i18n="race.tbc">To be confirmed</strong><i data-i18n="race.selectedDriverNote">Selection remains pending</i></article>
+      </div>
+    </section>
+
+    <section class="engineering-stories" aria-labelledby="race-driver-title">
+      <div class="section-heading">
+        <div class="section-index"><bdi dir="ltr">02</bdi> / <span data-i18n="race.driverIndex">Driver pool</span></div>
+        <div>
+          <span class="section-kicker" data-i18n="race.driverKicker">Selection pending</span>
+          <h2 id="race-driver-title" data-i18n="race.driverTitle">Three candidates. One seat.</h2>
+          <p data-i18n="race.driverBody">The final driver will be selected after the team's readiness and practice process is complete.</p>
+        </div>
+      </div>
+      <div class="story-grid">
+        <article>
+          <div class="story-tag" data-i18n="race.candidate">Driver candidate</div>
+          <h3 data-i18n="race.driverBasar">Basar Ural</h3>
+          <p data-i18n="race.driverPending">Selection pending</p>
+        </article>
+        <article>
+          <div class="story-tag" data-i18n="race.candidate">Driver candidate</div>
+          <h3 data-i18n="race.driverMansour">Mansour Banna</h3>
+          <p data-i18n="race.driverPending">Selection pending</p>
+        </article>
+        <article>
+          <div class="story-tag" data-i18n="race.candidate">Driver candidate</div>
+          <h3 data-i18n="race.driverTaim">Taim Adi</h3>
+          <p data-i18n="race.driverPending">Selection pending</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="workshop-journal" aria-labelledby="race-sequence-title">
+      <div class="section-heading">
+        <div class="section-index"><bdi dir="ltr">03</bdi> / <span data-i18n="race.sequenceIndex">Provisional sequence</span></div>
+        <div>
+          <span class="section-kicker" data-i18n="race.sequenceKicker">Order, not official times</span>
+          <h2 id="race-sequence-title" data-i18n="race.sequenceTitle">How race day is expected to flow.</h2>
+          <p data-i18n="race.sequenceBody">The organizer's official schedule will replace this working sequence when it is published.</p>
+        </div>
+      </div>
+      <div class="journal-list">
+        <article><bdi dir="ltr">01</bdi><div><h3 data-i18n="race.seqArrival">Team arrival and setup</h3><p data-i18n="race.seqArrivalBody">Unload the car, tools, safety equipment, documents, and team station.</p></div></article>
+        <article><bdi dir="ltr">02</bdi><div><h3 data-i18n="race.seqCheckin">Registration and check-in</h3><p data-i18n="race.seqCheckinBody">Complete organizer and team administration when instructed.</p></div></article>
+        <article><bdi dir="ltr">03</bdi><div><h3 data-i18n="race.seqInspection">Technical and safety inspection</h3><p data-i18n="race.seqInspectionBody">Present the car and required documentation for official checks.</p></div></article>
+        <article><bdi dir="ltr">04</bdi><div><h3 data-i18n="race.seqBriefing">Driver and team briefing</h3><p data-i18n="race.seqBriefingBody">Review track procedures, communications, safety, and organizer instructions.</p></div></article>
+        <article><bdi dir="ltr">05</bdi><div><h3 data-i18n="race.seqPractice">Practice and setup checks</h3><p data-i18n="race.seqPracticeBody">Use any organizer-provided running opportunity to verify the car and driver.</p></div></article>
+        <article><bdi dir="ltr">06</bdi><div><h3 data-i18n="race.seqRace">Race session</h3><p data-i18n="race.seqRaceBody">Compete according to the confirmed EVGP format and instructions.</p></div></article>
+        <article><bdi dir="ltr">07</bdi><div><h3 data-i18n="race.seqClose">Results and team pack-down</h3><p data-i18n="race.seqCloseBody">Record official results, thank supporters, and return all equipment safely.</p></div></article>
+      </div>
+    </section>
+
+    <section class="car-dashboard" aria-labelledby="race-results-title">
+      <div class="section-heading">
+        <div class="section-index"><bdi dir="ltr">04</bdi> / <span data-i18n="race.resultsIndex">Official results</span></div>
+        <div>
+          <span class="section-kicker" data-i18n="race.resultsKicker">Published after the race</span>
+          <h2 id="race-results-title" data-i18n="race.resultsTitle">The record starts at the finish line.</h2>
+          <p data-i18n="race.resultsBody">These fields will show verified organizer results only. Nothing here is a prediction.</p>
+        </div>
+      </div>
+      <div class="dashboard-grid">
+        <article><span data-i18n="race.positionLabel">Official position</span><strong data-i18n="race.resultsPending">Pending until race</strong><i data-i18n="race.positionNote">Final organizer classification</i></article>
+        <article><span data-i18n="race.lapsLabel">Completed laps or distance</span><strong data-i18n="race.resultsPending">Pending until race</strong><i data-i18n="race.lapsNote">Recorded from official results</i></article>
+        <article><span data-i18n="race.timeLabel">Official race time</span><strong data-i18n="race.resultsPending">Pending until race</strong><i data-i18n="race.timeNote">Published only if supplied by EVGP</i></article>
+        <article><span data-i18n="race.awardsLabel">Awards or recognition</span><strong data-i18n="race.resultsPending">Pending until race</strong><i data-i18n="race.awardsNote">Added after official confirmation</i></article>
+      </div>
+    </section>
+
+    <section class="timeline-finish" aria-labelledby="race-recap-title">
+      <span class="section-kicker" data-i18n="race.recapKicker">After the finish</span>
+      <h2 id="race-recap-title" data-i18n="race.recapTitle">The race recap will live here.</h2>
+      <p data-i18n="race.recapBody">After the event, the team will publish what happened, what the car taught us, the official result, and the people who helped us reach the grid.</p>
+      <a class="primary-action" href="news.html" data-i18n="race.recapLink">Read team updates</a>
+    </section>
+
+    <section class="landing-cta" aria-labelledby="race-next-title">
+      <img src="cobra-race-mark.png" alt="" width="100" height="100" aria-hidden="true">
+      <div>
+        <span class="section-kicker" data-i18n="race.nextKicker">Prepare with the Cobras</span>
+        <h2 id="race-next-title" data-i18n="race.nextTitle">Follow every step to the starting grid.</h2>
+      </div>
+      <a class="primary-action" href="checklist.html" data-i18n="race.nextChecklist">Race checklist</a>
+      <a class="secondary-action" href="projects.html" data-i18n="race.nextProjects">Build timeline</a>
+      <a class="secondary-action" href="news.html" data-i18n="race.nextNews">Latest updates</a>
+    </section>
+
+    <button class="open-button" type="button" data-i18n="race.chatOpen">CarGPT</button>
+    <div class="chat-popup" id="myForm">
+      <div class="form-container">
+        <h1 data-i18n="race.chatTitle">CarGPT</h1>
+        <div id="chatMessages" class="chat-messages">
+          <div class="bot-msg" data-i18n="race.chatIntro">Ask me about the Cobras, EVGP, electric cars, or race preparation.</div>
+        </div>
+        <div class="chat-prompts">
+          <button type="button" data-i18n="race.chatPromptChecklist">What should we check before race day?</button>
+          <button type="button" data-i18n="race.chatPromptEVGP">What is EVGP?</button>
+        </div>
+        <textarea id="chatInput" maxlength="1200" aria-label="Message to CarGPT" placeholder="Ask about race day…" data-i18n-aria="race.chatInputLabel" data-i18n-placeholder="race.chatPlaceholder"></textarea>
+        <button type="button" class="btn" data-i18n="race.chatSend">Send</button>
+        <button type="button" class="btn cancel" data-i18n="race.chatClose">Close</button>
+      </div>
+    </div>
+  </main>
+
+  <footer></footer>
+  <script src="cobras-lib.js"></script>
+  <script src="arabic.js"></script>
+  <script src="site.js"></script>
+</body>
+</html>

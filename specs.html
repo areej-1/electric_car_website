@@ -13,22 +13,7 @@
   <title>Specs | SIS Al Jada Cobras</title>
 </head>
 <body>
-          <nav class="site-nav" aria-label="Main">
-    <a class="logo" href="index.html">SIS Al Jada Cobras</a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open menu">
-      <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
-    </button>
-    <ul id="site-menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="members.html">Members</a></li>
-      <li><a href="projects.html">Our Work</a></li>
-      <li><a href="game.html">Game</a></li>
-      <li><a href="101.html">Electric Cars 101</a></li>
-      <li><a href="specs.html" aria-current="page">Specs</a></li>
-      <li><a href="about.html">About Us</a></li>
-      <li><a href="sponsors.html">Sponsor Us</a></li>
-    </ul>
-  </nav>
+          <nav class="site-nav" data-i18n-aria="nav.main" aria-label="Main navigation"></nav>
         <main id="main" class="specs-page">
             <header class="specs-header">
                 <h1>Car Specifications</h1>
@@ -142,6 +127,21 @@
                     </table>
                 </section>
             </div>
+
+            <section class="test-data" aria-labelledby="test-data-title">
+                <div class="section-heading">
+                    <div class="section-index" data-i18n="data.index">Data / Test snapshot</div>
+                    <div><span class="section-kicker" data-i18n="data.kicker">Recorded, estimated, or pending</span><h2 id="test-data-title" data-i18n="data.title">Engineering data without invented trends.</h2><p data-i18n="data.lead">Bars show the latest published snapshot against a clearly labeled display scale. A run history will appear only after dated test logs exist.</p></div>
+                </div>
+                <div class="test-data-grid">
+                    <article><div class="metric-heading"><span data-i18n="data.voltage">System voltage</span><strong><bdi dir="ltr">48 V</bdi></strong></div><div class="metric-bar" style="--metric-fill:100%" aria-hidden="true"><span></span></div><p data-i18n="data.voltageScale">Display scale: 0–48 V · configured system</p></article>
+                    <article><div class="metric-heading"><span data-i18n="data.speed">Average test speed</span><strong><bdi dir="ltr">30 km/h</bdi></strong></div><div class="metric-bar" style="--metric-fill:60%" aria-hidden="true"><span></span></div><p data-i18n="data.speedScale">Display scale: 0–50 km/h · latest published benchmark</p></article>
+                    <article><div class="metric-heading"><span data-i18n="data.weight">Measured build weight</span><strong><bdi dir="ltr">186 kg</bdi></strong></div><div class="metric-bar" style="--metric-fill:74.4%" aria-hidden="true"><span></span></div><p data-i18n="data.weightScale">Display scale: 0–250 kg · re-weigh pending</p></article>
+                    <article><div class="metric-heading"><span data-i18n="data.runtime">Estimated runtime</span><strong><bdi dir="ltr">1–3 h</bdi></strong></div><div class="metric-bar is-estimate" style="--metric-fill:100%" aria-hidden="true"><span></span></div><p data-i18n="data.runtimeScale">Display scale: 0–3 hours · estimate depends on load</p></article>
+                    <article class="is-pending"><div class="metric-heading"><span data-i18n="data.reliability">Reliability rate</span><strong data-i18n="common.pending">Pending</strong></div><div class="metric-bar is-pending" aria-hidden="true"><span></span></div><p data-i18n="data.reliabilityNote">A percentage will be published after dated runs and fault counts are logged.</p></article>
+                </div>
+                <div class="data-empty"><span data-i18n="data.historyLabel">Test history</span><strong data-i18n="data.historyTitle">Awaiting logged runs</strong><p data-i18n="data.historyBody">No lap-time, voltage-under-load, acceleration, temperature, distance, or fault series has been published yet.</p></div>
+            </section>
         <button class="open-button" type="button">CarGPT</button>
         <div class="chat-popup" id="myForm">
         <div class="form-container">
@@ -167,6 +167,7 @@
         </div>
         </footer>
         <script src="cobras-lib.js"></script>
+  <script src="arabic.js"></script>
   <script src="site.js"></script>
   </body>
 </html>
