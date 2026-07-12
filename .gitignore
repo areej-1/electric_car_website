@@ -1,1 +1,6 @@
 .claude/
+
+node_modules/
+*.log
+
+cargpt.config.js

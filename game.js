@@ -3,6 +3,29 @@
   if (!canvas) return;
 
   const ctx = canvas.getContext('2d');
+  if (!ctx) {
+    console.error('Cobra Circuit: 2D canvas unsupported');
+    return;
+  }
+
+  const readJson = (key, fallback) => {
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw == null || raw === '') return fallback;
+      return JSON.parse(raw);
+    } catch {
+      try { localStorage.removeItem(key); } catch { /* ignore */ }
+      return fallback;
+    }
+  };
+  const writeJson = (key, value) => {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* ignore */ }
+  };
+  const readNumber = (key, fallback = 0) => {
+    const n = Number(localStorage.getItem(key));
+    return Number.isFinite(n) ? n : fallback;
+  };
+
   const overlay = document.getElementById('race-overlay');
   const overlayTitle = document.getElementById('race-overlay-title');
   const overlayCopy = document.getElementById('race-overlay-copy');
@@ -11,6 +34,10 @@
   const levelNode = document.getElementById('race-level');
   const bestNode = document.getElementById('race-best');
   const energyFill = document.getElementById('energy-fill');
+  if (!overlay || !overlayTitle || !overlayCopy || !scoreNode || !levelNode || !bestNode || !energyFill) {
+    console.error('Cobra Circuit: missing HUD nodes');
+    return;
+  }
 
   const W = 960;
   const H = 600;
@@ -39,7 +66,7 @@
     score: 0,
     level: 1,
     energy: 100,
-    best: Number(localStorage.getItem('cobraRaceBest') || 0),
+    best: readNumber('cobraRaceBest', 0),
     elapsed: 0,
     stripeOffset: 0,
     spawnClock: 0,
@@ -48,19 +75,26 @@
     particles: [],
     lastTime: 0,
     shake: 0,
-    mode: 'race',
+    mode: 'f2',
     playerLane: -.5,
     targetLane: -.5
   };
-  const modeSpeed = { rookie: .78, race: 1, elite: 1.28 };
+  // F3 easiest → F2 default → F1 hardest (legacy keys kept for cached pages)
+  const modeSpeed = { f3: .78, f2: 1, f1: 1.28, rookie: .78, race: 1, elite: 1.28 };
+  const modeLabel = { f3: 'F3', f2: 'F2', f1: 'F1', rookie: 'F3', race: 'F2', elite: 'F1' };
 
   const laneValues = [-1.5, -.5, .5, 1.5];
   bestNode.textContent = String(state.best).padStart(5, '0');
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+  const speedForMode = (mode) => modeSpeed[mode] || modeSpeed.f2;
   const roadWidthAt = progress => ROAD_TOP + (ROAD_BOTTOM - ROAD_TOP) * Math.pow(progress, .88);
   const roadYAt = progress => HORIZON + (H - HORIZON) * Math.pow(progress, 1.22);
   const laneXAt = (lane, progress) => W / 2 + lane * roadWidthAt(progress) / 4;
+
+  // Keep the race stage LTR even when the site is Arabic, so controls/canvas stay correct.
+  const raceShell = document.querySelector('.race-shell');
+  if (raceShell) raceShell.setAttribute('dir', 'ltr');
 
   function updateHud() {
     scoreNode.textContent = Math.floor(state.score).toString().padStart(5, '0');
@@ -95,14 +129,26 @@
     }
   }
 
+  function tr(key, fallback) {
+    const t = window.CobrasSite && window.CobrasSite.t;
+    if (typeof t === 'function') {
+      const value = t(key);
+      if (value && value !== key) return value;
+    }
+    return fallback;
+  }
+
   function beginRace() {
+    // Preserve selected difficulty mode across restarts.
+    const mode = state.mode in modeSpeed ? state.mode : 'f2';
     Object.assign(state, {
       running: true, score: 0, level: 1, energy: 100, elapsed: 0,
       stripeOffset: 0, spawnClock: .6, batteryClock: 2.4,
-      entities: [], particles: [], playerLane: -.5, targetLane: -.5
+      entities: [], particles: [], playerLane: -.5, targetLane: -.5, shake: 0,
+      mode
     });
     overlay.classList.add('hidden');
-    startButton.textContent = 'Restart race';
+    if (startButton) startButton.textContent = tr('game.restart', 'Restart race');
     updateHud();
   }
 
@@ -111,21 +157,31 @@
     state.running = false;
     state.shake = 18;
     const finalScore = Math.floor(state.score);
-    const scores = JSON.parse(localStorage.getItem('cobraRaceScores') || '[]');
-    scores.push(finalScore);
-    localStorage.setItem('cobraRaceScores', JSON.stringify(scores.sort((a, b) => b - a).slice(0, 5)));
+    const scores = readJson('cobraRaceScores', []);
+    if (Array.isArray(scores)) {
+      scores.push(finalScore);
+      writeJson('cobraRaceScores', scores.sort((a, b) => b - a).slice(0, 5));
+    } else {
+      writeJson('cobraRaceScores', [finalScore]);
+    }
     renderLeaderboard();
     burst(laneXAt(state.playerLane, 1), PLAYER_Y + 55, '#E6392B', 34);
 
     if (finalScore > state.best) {
       state.best = finalScore;
-      localStorage.setItem('cobraRaceBest', String(finalScore));
+      try { localStorage.setItem('cobraRaceBest', String(finalScore)); } catch { /* ignore */ }
       bestNode.textContent = String(finalScore).padStart(5, '0');
-      overlayTitle.textContent = 'New track record';
+      overlayTitle.textContent = tr('game.record', 'New track record');
     } else {
-      overlayTitle.textContent = reason === 'energy' ? 'Battery empty' : 'Race over';
+      overlayTitle.textContent = reason === 'energy'
+        ? tr('game.empty', 'Battery empty')
+        : tr('game.over', 'Race over');
     }
-    overlayCopy.textContent = `Score ${finalScore}. Track record ${state.best}. Hit the circuit again.`;
+    const mode = modeLabel[state.mode] || String(state.mode).toUpperCase();
+    overlayCopy.textContent = tr('game.finishCopy', `Score ${finalScore} · ${mode}. Best ${state.best}. Race again.`)
+      .replace('{score}', String(finalScore))
+      .replace('{mode}', mode)
+      .replace('{best}', String(state.best));
     setTimeout(() => overlay.classList.remove('hidden'), 450);
   }
 
@@ -159,7 +215,7 @@
       state.batteryClock = 2.4 + Math.random() * 1.8;
     }
 
-    const approachSpeed = (.25 + state.level * .025) * modeSpeed[state.mode];
+    const approachSpeed = (.25 + state.level * .025) * speedForMode(state.mode);
     for (const entity of state.entities) {
       entity.progress += dt * approachSpeed * (entity.type === 'battery' ? .92 : 1);
       entity.wobble += dt * 3;
@@ -282,10 +338,10 @@
     ctx.strokeRect(18, H - 76, 150, 58);
     ctx.fillStyle = '#C9A227';
     ctx.font = '700 12px Orbitron, monospace';
-    ctx.fillText('SPEED', 30, H - 52);
+    ctx.fillText(tr('game.speed', 'Speed').toUpperCase(), 30, H - 52);
     ctx.fillStyle = '#F5F0E8';
     ctx.font = '900 23px Orbitron, monospace';
-    ctx.fillText(`${speed} KM/H`, 30, H - 27);
+    ctx.fillText(`${speed} ${tr('game.kmh', 'km/h')}`, 30, H - 27);
   }
 
   function draw() {
@@ -308,9 +364,13 @@
     ctx.restore();
   }
 
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+
   function loop(timestamp) {
     const dt = Math.min(.033, (timestamp - state.lastTime) / 1000 || 0);
     state.lastTime = timestamp;
+    // Keep gameplay responsive, but dampen shake/particles when user prefers less motion.
+    if (reduceMotion) state.shake = 0;
     update(dt);
     draw();
     requestAnimationFrame(loop);
@@ -323,12 +383,36 @@
   });
   document.querySelector('[data-steer="left"]')?.addEventListener('pointerdown', () => steer(-1));
   document.querySelector('[data-steer="right"]')?.addEventListener('pointerdown', () => steer(1));
-  document.querySelectorAll('[data-mode]').forEach(button => button.addEventListener('click', () => {
-    state.mode = button.dataset.mode;
-    document.querySelectorAll('[data-mode]').forEach(item => item.classList.toggle('is-active', item === button));
-  }));
-  startButton.addEventListener('click', beginRace);
-  overlay.addEventListener('click', beginRace);
+  document.querySelectorAll('[data-mode]').forEach(button => {
+    button.setAttribute('aria-pressed', button.classList.contains('is-active') ? 'true' : 'false');
+    button.addEventListener('click', () => {
+      const next = button.dataset.mode;
+      state.mode = next in modeSpeed ? next : 'f2';
+      document.querySelectorAll('[data-mode]').forEach(item => {
+        const active = item === button;
+        item.classList.toggle('is-active', active);
+        item.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+    });
+  });
+  // Normalize legacy active mode buttons if HTML/SW cache is mixed.
+  const activeModeBtn = document.querySelector('[data-mode].is-active');
+  if (activeModeBtn?.dataset.mode) state.mode = activeModeBtn.dataset.mode in modeSpeed ? activeModeBtn.dataset.mode : 'f2';
+
+  startButton?.addEventListener('click', (event) => {
+    event.preventDefault();
+    beginRace();
+  });
+  overlay.querySelector('button')?.addEventListener('click', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    beginRace();
+  });
+  // Click empty overlay chrome to start; ignore mode/steer controls elsewhere.
+  overlay.addEventListener('click', event => {
+    if (event.target.closest('button')) return;
+    beginRace();
+  });
 
   let touchX = null;
   canvas.addEventListener('pointerdown', event => touchX = event.clientX);
@@ -342,19 +426,77 @@
   function renderLeaderboard() {
     const list = document.getElementById('race-leaderboard');
     if (!list) return;
-    const scores = JSON.parse(localStorage.getItem('cobraRaceScores') || '[]');
-    const rows = Array.from({ length: 5 }, (_, index) => {
+    const raw = readJson('cobraRaceScores', []);
+    const scores = Array.isArray(raw) ? raw : [];
+    while (list.firstChild) list.removeChild(list.firstChild);
+    for (let index = 0; index < 5; index++) {
       const item = document.createElement('li');
       const rank = document.createElement('span');
       const score = document.createElement('strong');
       rank.textContent = String(index + 1).padStart(2, '0');
-      score.textContent = String(scores[index] || 0).padStart(5, '0');
-      item.append(rank, score);
-      return item;
-    });
-    list.replaceChildren(...rows);
+      score.textContent = String(Number(scores[index]) || 0).padStart(5, '0');
+      item.appendChild(rank);
+      item.appendChild(score);
+      list.appendChild(item);
+    }
   }
-  updateHud();
-  renderLeaderboard();
-  requestAnimationFrame(loop);
+
+  function sharePayload() {
+    const scores = readJson('cobraRaceScores', []);
+    const top = Array.isArray(scores) && scores.length ? Number(scores[0]) || 0 : 0;
+    return {
+      score: Math.floor(state.score) || top,
+      best: state.best,
+      mode: state.mode,
+      level: state.level
+    };
+  }
+
+  async function shareScore() {
+    const build = (window.CobrasSite && window.CobrasSite.buildScoreShareText)
+      || (window.CobrasLib && window.CobrasLib.buildScoreShareText);
+    const payload = sharePayload();
+    const text = document.documentElement.lang === 'ar'
+      ? `حققت ${payload.score} نقطة في Cobra Circuit بنمط ${modeLabel[payload.mode] || payload.mode} — أفضل نتيجة ${payload.best}. #SISAlJadaCobras`
+      : (build ? build(payload) : `Cobra Circuit score ${Math.floor(state.score)}`);
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'Cobra Circuit', text });
+      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        showToast(tr('game.shareCopied', 'Score copied — paste anywhere to share'));
+      } else {
+        window.prompt('Copy your score share text:', text);
+      }
+    } catch {
+      /* user cancelled share */
+    }
+  }
+
+  function showToast(message) {
+    let toast = document.querySelector('.share-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'share-toast';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('is-visible');
+    setTimeout(() => toast.classList.remove('is-visible'), 2200);
+  }
+
+  const shareBtn = document.getElementById('share-score-btn');
+  if (shareBtn) shareBtn.addEventListener('click', shareScore);
+
+  try {
+    updateHud();
+    renderLeaderboard();
+    requestAnimationFrame(loop);
+  } catch (err) {
+    console.error('Cobra Circuit failed to start', err);
+    if (overlayCopy) {
+      overlayCopy.textContent = 'Game failed to start. Press Ctrl+F5 to hard-refresh, then try Start race again.';
+    }
+    overlay?.classList.remove('hidden');
+  }
 })();
