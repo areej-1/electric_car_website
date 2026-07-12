@@ -1441,6 +1441,17 @@ header:not(.home-hero),
 
 .race-day-page .race-day-hero { min-height: 620px; }
 .race-day-page .timeline-finish { width: min(var(--max-width), calc(100% - 40px)); margin: 0 auto 100px; }
+/* Race-day status/results cards use long phrases ("To be confirmed"), not short machine numbers.
+   Global .dashboard-grid strong is intentionally unchanged so home/specs tiles stay large. */
+.race-day-page .dashboard-grid strong {
+  font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.race-day-page .dashboard-grid article > span {
+  overflow-wrap: anywhere;
+}
 .metric-heading bdi,
 .dashboard-grid bdi,
 .race-day-page bdi[dir="ltr"] { direction: ltr; unicode-bidi: isolate; }
