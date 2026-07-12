@@ -30,6 +30,7 @@ Checks every HTML page for shared assets/branding, evaluates `site.js` in a sand
 | Home | `index.html` |
 | Members | `members.html` |
 | Our Work | `projects.html` |
+| Race Day hub | `race-day.html` |
 | News | `news.html` |
 | Game (Cobra Circuit) | `game.html` |
 | Electric Cars 101 | `101.html` |
@@ -43,6 +44,8 @@ Checks every HTML page for shared assets/branding, evaluates `site.js` in a sand
 ## Feature notes
 
 - **Collapsing sticky nav** shrinks after scroll (`is-collapsed` on `.site-nav`)
+- **Resources navigation** groups Race Day, News, Electric Cars 101, and the Race Checklist
+- **Build status + engineering data** use verified values and clearly labeled pending fields
 - **Shared chrome** rebuilt from `cobras-lib.js` + `site.js` on every page
 - **EN/AR toggle** stores `localStorage.cobras_lang`
 - **CarGPT live path**: set `localStorage.CARGPT_ENDPOINT` / `CARGPT_API_KEY` or copy `cargpt.config.example.js` → `cargpt.config.js` (gitignored)

@@ -40,6 +40,9 @@ check('shouldCollapseNav true after threshold', () => {
 check('t en/ar lookup', () => {
   assert.equal(Lib.t('en', 'nav.home'), 'Home');
   assert.equal(Lib.t('ar', 'nav.home'), 'الرئيسية');
+  assert.equal(Lib.t('en', 'nav.resources'), 'Resources');
+  assert.equal(Lib.t('ar', 'nav.resources'), 'الموارد');
+  assert.equal(Lib.t('ar', 'race.resultsPending'), 'بانتظار السباق');
   assert.equal(Lib.normalizeLang('AR-ae'), 'ar');
 });
 
@@ -113,10 +116,15 @@ check('trackPageView increments', () => {
 check('currentPageName + nav current', () => {
   assert.equal(Lib.currentPageName('/foo/news.html'), 'news.html');
   assert.equal(Lib.currentPageName('/members'), 'members.html');
+  assert.equal(Lib.currentPageName('/race-day'), 'race-day.html');
   assert.equal(Lib.currentPageName('/'), 'index.html');
-  const news = Lib.NAV_ITEMS.find((i) => i.href === 'news.html');
-  assert.ok(Lib.isCurrentNav(news, 'news.html'));
-  assert.equal(Lib.isCurrentNav(news, 'index.html'), false);
+  const resources = Lib.NAV_ITEMS.find((item) => item.id === 'resources');
+  assert.ok(resources);
+  assert.equal(resources.children.length, 4);
+  for (const page of ['race-day.html', 'news.html', '101.html', 'checklist.html']) {
+    assert.ok(Lib.isCurrentNav(resources, page));
+  }
+  assert.equal(Lib.isCurrentNav(resources, 'index.html'), false);
 });
 
 if (failures.length) {
