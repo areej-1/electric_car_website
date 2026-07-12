@@ -78,6 +78,9 @@ if (!read('game.html').includes('share-score-btn')) fail('score share ui', 'shar
 else pass('score share ui');
 if (!read('game.js').includes('buildScoreShareText') && !read('game.js').includes('shareScore')) fail('score share js', 'share logic missing');
 else pass('score share js');
+const projectVideos = [...read('projects.html').matchAll(/<video[^>]+src="([^"]+)"/g)].map(match => match[1]);
+if (projectVideos.length !== new Set(projectVideos).size) fail('project videos', 'timeline stages reuse the same video source');
+else pass('project timeline videos are distinct');
 if (/sk-[a-zA-Z0-9]{10,}|AIza[0-9A-Za-z_-]{20,}/.test(read('site.js') + read('cobras-lib.js'))) fail('secrets', 'possible API key committed');
 else pass('no obvious API secrets');
 
@@ -89,6 +92,9 @@ if (!css.includes('.nav-toggle') || !css.includes('@media (max-width: 1040px)'))
 if (!css.includes('--hot-red') || !css.includes('--gold')) {
   fail('css brand tokens', 'missing brand CSS variables');
 } else pass('css brand tokens');
+if (!/body\s*\{[\s\S]*?overflow-x:\s*clip;/.test(css)) {
+  fail('css sticky nav scroll container', 'body overflow must use clip so sticky nav remains attached');
+} else pass('css sticky nav keeps window scroll container');
 
 // --- Evaluate shipped site.js in a minimal browser sandbox ---
 function makeDocument() {
