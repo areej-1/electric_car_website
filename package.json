@@ -1,0 +1,12 @@
+{
+  "name": "electric-car-website",
+  "private": true,
+  "description": "SIS Al Jada Cobras static team website",
+  "scripts": {
+    "start": "npx --yes serve -l 3000",
+    "test": "node tests/cobras-lib.test.mjs && node tests/arabic.test.mjs && node tests/verify-site.mjs",
+    "test:lib": "node tests/cobras-lib.test.mjs",
+    "test:site": "node tests/verify-site.mjs",
+    "verify": "node tests/cobras-lib.test.mjs && node tests/arabic.test.mjs && node tests/verify-site.mjs"
+  }
+}
