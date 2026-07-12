@@ -13,7 +13,7 @@
 
   const PAGES = {
     'members.html': {
-      'Nineteen student builders across mechanics, electrical, safety, design, media, and driving—each owning a real piece of the Cobra race car.': 'تسعة عشر طالبًا وطالبة يعملون في الميكانيكا والكهرباء والسلامة والتصميم والإعلام والقيادة، ويتحمّل كل منهم مسؤولية جزء حقيقي من سيارة سباق كوبرا.'
+      'Nineteen student builders across mechanics, safety, innovation, media, and driving—each contributing to the Cobra race car.': 'تسعة عشر طالبًا وطالبة يساهمون في سيارة سباق كوبرا عبر الميكانيكا والسلامة والابتكار والإعلام والقيادة.'
     },
     'projects.html': {
       'From sketch': 'من الرسم', 'to starting grid.': 'إلى خط الانطلاق.',
@@ -123,7 +123,7 @@
   };
 
   const TITLES = {
-    'members.html': 'الأعضاء | فريق كوبرا سيس الجادة', 'projects.html': 'مشروعنا | فريق كوبرا سيس الجادة', '101.html': 'أساسيات السيارات الكهربائية | فريق كوبرا سيس الجادة', 'specs.html': 'المواصفات | فريق كوبرا سيس الجادة', 'about.html': 'من نحن | فريق كوبرا سيس الجادة', 'sponsors.html': 'رعاية الفريق | فريق كوبرا سيس الجادة', 'news.html': 'الأخبار | فريق كوبرا سيس الجادة', 'checklist.html': 'قائمة السباق | فريق كوبرا سيس الجادة', 'sponsor-package.html': 'باقة الرعاية | فريق كوبرا سيس الجادة', '404.html': 'الصفحة غير موجودة | فريق كوبرا سيس الجادة'
+    'members.html': 'الأعضاء | فريق كوبرا سيس الجادة', 'projects.html': 'مشروعنا | فريق كوبرا سيس الجادة', '101.html': 'أساسيات السيارات الكهربائية | فريق كوبرا سيس الجادة', 'specs.html': 'المواصفات | فريق كوبرا سيس الجادة', 'about.html': 'من نحن | فريق كوبرا سيس الجادة', 'sponsors.html': 'رعاية الفريق | فريق كوبرا سيس الجادة', 'news.html': 'الأخبار | فريق كوبرا سيس الجادة', 'checklist.html': 'قائمة السباق | فريق كوبرا سيس الجادة', 'race-day.html': 'يوم السباق | فريق كوبرا سيس الجادة', 'sponsor-package.html': 'باقة الرعاية | فريق كوبرا سيس الجادة', '404.html': 'الصفحة غير موجودة | فريق كوبرا سيس الجادة'
   };
 
   function translateText(page, text) {

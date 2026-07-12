@@ -13,22 +13,7 @@
   <title>Sponsor Us | SIS Al Jada Cobras</title>
 </head>
 <body>
-    <nav class="site-nav" aria-label="Main">
-    <a class="logo" href="index.html">SIS Al Jada Cobras</a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open menu">
-      <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
-    </button>
-    <ul id="site-menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="members.html">Members</a></li>
-      <li><a href="projects.html">Our Work</a></li>
-      <li><a href="game.html">Game</a></li>
-      <li><a href="101.html">Electric Cars 101</a></li>
-      <li><a href="specs.html">Specs</a></li>
-      <li><a href="about.html">About Us</a></li>
-      <li><a href="sponsors.html" aria-current="page">Sponsor Us</a></li>
-    </ul>
-  </nav>
+    <nav class="site-nav" data-i18n-aria="nav.main" aria-label="Main navigation"></nav>
 
   <main id="main" class="sponsor-page">
     <header class="sponsor-hero">
@@ -58,6 +43,23 @@
       </div>
     </section>
 
+    <section class="sponsor-progress" aria-labelledby="sponsor-progress-title">
+      <div class="section-heading"><div class="section-index" data-i18n="sponsor.progressIndex">02 / Support status</div><div><span class="section-kicker" data-i18n="sponsor.progressKicker">Transparent until figures are approved</span><h2 id="sponsor-progress-title" data-i18n="sponsor.progressTitle">What is secured—and what still needs a partner.</h2><p data-i18n="sponsor.progressLead">The team has not published an approved funding target, donation total, or partner list. Unknown figures stay clearly marked instead of being estimated.</p></div></div>
+      <div class="sponsor-summary">
+        <article><span data-i18n="sponsor.fundingTarget">Approved funding target</span><strong data-i18n="common.toBeConfirmed">To be confirmed</strong></article>
+        <article><span data-i18n="sponsor.secured">Publicly confirmed support</span><strong data-i18n="sponsor.noneListed">No commitments listed yet</strong></article>
+        <article><span data-i18n="sponsor.deadline">Funding deadline</span><strong data-i18n="common.toBeConfirmed">To be confirmed</strong></article>
+        <article><span data-i18n="sponsor.remaining">Remaining to goal</span><strong data-i18n="sponsor.cannotCalculate">Cannot calculate until figures are approved</strong></article>
+      </div>
+      <div class="support-board">
+        <article><div><span data-i18n="sponsor.need1">Car components and replacements</span><p data-i18n="sponsor.need1Body">Electrical, mechanical, drivetrain, and control parts.</p></div><strong class="status-badge is-open" data-i18n="sponsor.seekingPartner">Seeking partner</strong></article>
+        <article><div><span data-i18n="sponsor.need2">Safety and inspection equipment</span><p data-i18n="sponsor.need2Body">Driver protection, PPE, fire safety, and inspection tools.</p></div><strong class="status-badge is-review" data-i18n="sponsor.needsConfirmation">Quantities to be confirmed</strong></article>
+        <article><div><span data-i18n="sponsor.need3">Testing tools and consumables</span><p data-i18n="sponsor.need3Body">Diagnostics, data collection, track access, and consumables.</p></div><strong class="status-badge is-open" data-i18n="sponsor.seekingPartner">Seeking partner</strong></article>
+        <article><div><span data-i18n="sponsor.need4">Race transport and logistics</span><p data-i18n="sponsor.need4Body">Transport, team materials, documents, and event preparation.</p></div><strong class="status-badge is-review" data-i18n="sponsor.planning">Planning</strong></article>
+      </div>
+      <p class="data-note" data-i18n="sponsor.approvalNote">This board changes only when the school approves figures or a partnership for publication.</p>
+    </section>
+
     <section class="partner-levels">
       <div class="section-heading"><div class="section-index">03 / Partnership</div><div><span class="section-kicker">Ways to take part</span><h2>Choose the support that fits.</h2></div></div>
       <div class="level-grid">
@@ -74,12 +76,12 @@
     </section>
 
     <button class="open-button" type="button">CarGPT</button>
-    <div class="chat-popup" id="myForm"><div class="form-container"><h1>CarGPT</h1><div id="chatMessages" class="chat-messages"><div class="bot-msg">Ask how your organization can support the Cobras.</div></div><div class="chat-prompts"><button type="button">How can I sponsor the team?</button><button type="button">What support does the team need?</button></div><textarea id="chatInput" aria-label="Message to CarGPT" maxlength="1200" placeholder="Ask about sponsorship…"></textarea><button type="button" class="btn">Send</button><button type="button" class="btn cancel">Close</button></div></div>
+    <div class="chat-popup" id="myForm"><div class="form-container"><h1>CarGPT</h1><div id="chatMessages" class="chat-messages"><div class="bot-msg" data-i18n="sponsor.chatIntro">Ask how your organization can support the Cobras.</div></div><div class="chat-prompts"><button type="button" data-i18n="chat.promptSponsor">How can I sponsor the team?</button><button type="button" data-i18n="sponsor.chatPromptSupport">What support does the team need?</button></div><textarea id="chatInput" aria-label="Message to CarGPT" maxlength="1200" placeholder="Ask about sponsorship…"></textarea><button type="button" class="btn">Send</button><button type="button" class="btn cancel">Close</button></div></div>
   
-    <section class="contact-card" id="sponsor-contact" style="width:min(var(--max-width),calc(100% - 40px));margin:0 auto 80px">
-      <span class="section-kicker">Real contact</span>
-      <h2>Email the sponsorship desk</h2>
-      <p><a href="mailto:cobras.sponsors@sisaljada.example">cobras.sponsors@sisaljada.example</a> · social <strong>@sisaljadacobras</strong></p>
+    <section class="contact-card sponsor-contact" id="sponsor-contact">
+      <span class="section-kicker" data-i18n="sponsor.contactKicker">Verified public channel</span>
+      <h2 data-i18n="sponsor.contactTitle">Start with the Cobras social account.</h2>
+      <p data-i18n="sponsor.contactBody">An official school sponsorship email has not been approved for publication. Message @sisaljadacobras on Instagram or TikTok for routing to the right school contact.</p>
       <p><a class="primary-action" href="sponsor-package.html">Open sponsor package</a>
       <a class="secondary-action" href="sponsor-package.pdf" download>Download package PDF</a></p>
     </section>

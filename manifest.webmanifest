@@ -1,7 +1,7 @@
 {
   "name": "SIS Al Jada Cobras",
   "short_name": "Cobras",
-  "description": "Student electric race car team — EVGP build, specs, game, and sponsor info.",
+  "description": "Student electric race car team — EVGP build, race-day hub, specs, game, and sponsor information.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

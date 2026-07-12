@@ -55,11 +55,26 @@
   skip.textContent = Lib.t(lang, 'skip');
 
   /* ---------- Shared nav chrome ---------- */
+  function renderNavLink(item) {
+    const current = Lib.isCurrentNav(item, pageName);
+    return `<li><a href="${item.href}"${current ? ' aria-current="page"' : ''} data-i18n="${item.key}">${Lib.t(lang, item.key)}</a></li>`;
+  }
+
+  function renderNavItem(item) {
+    if (!Array.isArray(item.children)) return renderNavLink(item);
+    const current = Lib.isCurrentNav(item, pageName);
+    const buttonId = `nav-${item.id}-toggle`;
+    const menuId = `nav-${item.id}-menu`;
+    return `<li class="nav-group${current ? ' is-current' : ''}">
+      <button id="${buttonId}" class="nav-group-toggle" type="button" aria-expanded="false" aria-controls="${menuId}">
+        <span data-i18n="${item.key}">${Lib.t(lang, item.key)}</span><span class="nav-group-chevron" aria-hidden="true">⌄</span>
+      </button>
+      <ul id="${menuId}" class="nav-submenu" aria-labelledby="${buttonId}" hidden>${item.children.map(renderNavLink).join('')}</ul>
+    </li>`;
+  }
+
   function buildNavHtml() {
-    const items = Lib.NAV_ITEMS.map(item => {
-      const current = Lib.isCurrentNav(item, pageName);
-      return `<li><a href="${item.href}"${current ? ' aria-current="page"' : ''} data-i18n="${item.key}">${Lib.t(lang, item.key)}</a></li>`;
-    }).join('');
+    const items = Lib.NAV_ITEMS.map(renderNavItem).join('');
     return `
     <a class="logo" href="index.html">SIS Al Jada Cobras</a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu" data-i18n-aria="nav.menu" aria-label="${Lib.t(lang, 'nav.menu')}">
@@ -75,22 +90,34 @@
   if (!nav) {
     nav = document.createElement('nav');
     nav.className = 'site-nav';
-    nav.setAttribute('aria-label', 'Main');
+    nav.setAttribute('aria-label', Lib.t(lang, 'nav.main'));
     document.body.insertBefore(nav, document.body.firstChild?.nextSibling || null);
     if (skip && skip.nextSibling) document.body.insertBefore(nav, skip.nextSibling);
     else document.body.prepend(nav);
   }
   nav.classList.add('site-nav');
-  nav.setAttribute('aria-label', 'Main');
+  nav.setAttribute('data-i18n-aria', 'nav.main');
+  nav.setAttribute('aria-label', Lib.t(lang, 'nav.main'));
   nav.innerHTML = buildNavHtml();
 
   const toggle = nav.querySelector('.nav-toggle');
   const menu = nav.querySelector('#site-menu');
   const langBtn = nav.querySelector('.lang-toggle');
+  const resourceGroup = menu?.querySelector('.nav-group');
+  const resourceToggle = resourceGroup?.querySelector('.nav-group-toggle');
+  const resourceMenu = resourceGroup?.querySelector('.nav-submenu');
+
+  const setResourcesOpen = (open, restoreFocus = false) => {
+    if (!resourceGroup || !resourceToggle || !resourceMenu) return;
+    resourceGroup.classList.toggle('is-open', open);
+    resourceToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    resourceMenu.hidden = !open;
+    if (restoreFocus) resourceToggle.focus?.();
+  };
 
   const setMenuOpen = (open) => {
     nav.classList.toggle('is-open', open);
-    document.body.classList.toggle('nav-open', open);
+    if (!open) setResourcesOpen(false);
     if (toggle) {
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       toggle.setAttribute('aria-label', Lib.t(lang, open ? 'nav.menuClose' : 'nav.menu'));
@@ -98,9 +125,23 @@
   };
 
   toggle?.addEventListener('click', () => setMenuOpen(!nav.classList.contains('is-open')));
+  resourceToggle?.addEventListener('click', () => setResourcesOpen(resourceToggle.getAttribute('aria-expanded') !== 'true'));
   menu?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setMenuOpen(false)));
   document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && nav.classList.contains('is-open')) setMenuOpen(false);
+    if (event.key !== 'Escape') return;
+    if (resourceToggle?.getAttribute('aria-expanded') === 'true') {
+      setResourcesOpen(false, true);
+      return;
+    }
+    if (nav.classList.contains('is-open')) {
+      setMenuOpen(false);
+      toggle?.focus?.();
+    }
+  });
+  document.addEventListener('click', event => {
+    if (resourceGroup && resourceToggle?.getAttribute('aria-expanded') === 'true' && typeof resourceGroup.contains === 'function' && !resourceGroup.contains(event.target)) {
+      setResourcesOpen(false);
+    }
   });
 
   const mobileNavQuery = window.matchMedia('(max-width: 1040px)');
@@ -159,6 +200,7 @@
       </div>
       <div class="footer-links">
         <a href="index.html" data-i18n="nav.home">${Lib.t(lang, 'nav.home')}</a>
+        <a href="race-day.html" data-i18n="nav.raceDay">${Lib.t(lang, 'nav.raceDay')}</a>
         <a href="news.html" data-i18n="nav.news">${Lib.t(lang, 'nav.news')}</a>
         <a href="checklist.html" data-i18n="nav.checklist">${Lib.t(lang, 'nav.checklist')}</a>
         <a href="specs.html" data-i18n="nav.specs">${Lib.t(lang, 'nav.specs')}</a>
@@ -286,7 +328,7 @@
       input.value = '';
       input.disabled = true;
       popup.setAttribute('aria-busy', 'true');
-      const thinking = addMessage('CarGPT is thinking…', 'bot-msg is-thinking');
+      const thinking = addMessage(Lib.t(lang, 'chat.thinking'), 'bot-msg is-thinking');
 
       const showLocal = (extra) => {
         thinking.classList.remove('is-thinking');
@@ -312,10 +354,7 @@
         const data = await response.json().catch(() => ({}));
         if (!response.ok) {
           // Never surface raw "Failed to fetch" / server noise as the only answer.
-          const hint = data.error
-            ? `Live CarGPT unavailable (${data.error}). Using local answers.`
-            : `Live CarGPT unavailable (HTTP ${response.status}). Using local answers.`;
-          showLocal(hint);
+          showLocal(Lib.t(lang, 'chat.liveUnavailable'));
           return;
         }
         thinking.classList.remove('is-thinking');
@@ -324,13 +363,13 @@
           statusDot?.classList.add('is-online');
           statusDot?.classList.remove('is-offline');
         } else {
-          showLocal('Live CarGPT returned an empty reply. Using local answers.');
+          showLocal(Lib.t(lang, 'chat.emptyReply'));
         }
       } catch (err) {
         const name = err && err.name;
         const hint = name === 'AbortError'
-          ? 'Live CarGPT timed out. Using local answers.'
-          : 'Live CarGPT offline (network/CORS/worker). Using local answers.';
+          ? Lib.t(lang, 'chat.timeout')
+          : Lib.t(lang, 'chat.networkOffline');
         showLocal(hint);
       } finally {
         popup.removeAttribute('aria-busy');
@@ -351,7 +390,7 @@
     });
     document.querySelector('.sponsor-chat-trigger')?.addEventListener('click', () => {
       window.openForm();
-      input.value = 'How can I sponsor the team?';
+      input.value = Lib.t(lang, 'chat.promptSponsor');
     });
     input.addEventListener('keydown', event => {
       if (event.key === 'Enter' && !event.shiftKey) {
@@ -431,7 +470,24 @@
   const memberGrid = document.querySelector('.members-grid');
   if (memberGrid) {
     const cards = [...memberGrid.querySelectorAll('section')];
-    const roles = [...new Set(cards.map(card => card.querySelector('p')?.textContent.trim()).filter(Boolean))];
+    const roleKeys = ['Mechanic', 'Safety', 'Media', 'Driver', 'Innovation'];
+    cards.forEach(card => {
+      const roleNode = card.querySelector('p');
+      const alt = card.querySelector('img')?.alt || '';
+      const roleKey = roleKeys.find(key => roleNode?.textContent.trim() === key || alt.endsWith(`, ${key}`)) || roleNode?.textContent.trim();
+      if (roleKey) card.dataset.role = roleKey;
+      roleNode?.classList.add('member-role');
+      if (roleNode && roleKey) roleNode.textContent = Lib.t(lang, `role.${roleKey}`);
+      const nameNode = card.querySelector('h2');
+      if (nameNode) nameNode.setAttribute('dir', 'auto');
+      if (!card.querySelector('.member-contribution') && roleKey) {
+        const contribution = document.createElement('p');
+        contribution.className = 'member-contribution';
+        contribution.textContent = `${Lib.t(lang, 'member.focusLabel')}: ${Lib.t(lang, `member.focus.${roleKey}`)} · ${Lib.t(lang, 'member.assignmentLabel')}: ${Lib.t(lang, 'common.toBeConfirmed')}`;
+        card.appendChild(contribution);
+      }
+    });
+    const roles = [...new Set(cards.map(card => card.dataset.role).filter(Boolean))];
     document.querySelector('.member-filters')?.remove();
     document.querySelector('.members-empty')?.remove();
     document.querySelector('.member-filter-meta')?.remove();
@@ -442,7 +498,7 @@
     meta.className = 'member-filter-meta';
     const filters = document.createElement('div');
     filters.className = 'member-filters';
-    filters.setAttribute('role', 'toolbar');
+    filters.setAttribute('role', 'group');
     filters.setAttribute('aria-label', Lib.t(lang, 'filter.aria'));
 
     const empty = document.createElement('p');
@@ -452,6 +508,7 @@
     empty.setAttribute('data-i18n', 'filter.empty');
     empty.textContent = Lib.t(lang, 'filter.empty');
 
+    const roleLabel = role => role === 'All' ? Lib.t(lang, 'filter.all') : Lib.t(lang, `role.${role}`);
     const paint = (role) => {
       filters.querySelectorAll('button').forEach(btn => {
         const active = btn.dataset.role === role;
@@ -460,22 +517,22 @@
       });
       let visible = 0;
       cards.forEach(card => {
-        const cardRole = card.querySelector('p')?.textContent.trim();
+        const cardRole = card.dataset.role;
         const show = role === 'All' || cardRole === role;
         card.hidden = !show;
         if (show) visible += 1;
       });
       empty.hidden = visible > 0;
       meta.textContent = lang === 'ar'
-        ? (role === 'All' ? `عرض جميع الأعضاء: ${cards.length} · الأدوار: ${roles.length}` : `المعروض: ${visible} · الدور: ${role}`)
-        : (role === 'All' ? `Showing all ${cards.length} builders · ${roles.length} roles` : `Showing ${visible} · role: ${role}`);
+        ? (role === 'All' ? `عرض جميع الأعضاء: ${cards.length} · الأدوار: ${roles.length}` : `المعروض: ${visible} · الدور: ${roleLabel(role)}`)
+        : (role === 'All' ? `Showing all ${cards.length} builders · ${roles.length} roles` : `Showing ${visible} · role: ${roleLabel(role)}`);
     };
 
     ['All', ...roles].forEach(role => {
       const button = document.createElement('button');
       button.type = 'button';
       button.dataset.role = role;
-      button.textContent = role === 'All' ? Lib.t(lang, 'filter.all') : role;
+      button.textContent = roleLabel(role);
       if (role === 'All') button.setAttribute('data-i18n', 'filter.all');
       button.addEventListener('click', () => paint(role));
       filters.appendChild(button);
@@ -489,8 +546,7 @@
     else memberGrid.parentNode?.insertBefore(empty, memberGrid.nextSibling);
     cards.forEach(card => {
       const name = card.querySelector('h2')?.textContent.trim();
-      const role = card.querySelector('p')?.textContent.trim();
-      if (role) card.dataset.role = role;
+      const role = card.dataset.role;
       const img = card.querySelector('img');
       if (img && name) {
         const generic = !img.alt || /^(ducky|description|image)$/i.test(img.alt.trim());
