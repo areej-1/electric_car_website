@@ -5,7 +5,7 @@
     'Mechanic': 'الميكانيكا', 'Safety': 'السلامة', 'Media': 'الإعلام', 'Driver': 'القيادة', 'Innovation': 'الابتكار',
     'Hi! Ask me anything about the Cobras team or electric cars. 🏎️⚡': 'مرحبًا! اسألني عن فريق كوبرا أو السيارات الكهربائية. 🏎️⚡',
     'Message to CarGPT': 'رسالة إلى CarGPT', 'Ask CarGPT…': 'اسأل CarGPT…', 'Send': 'إرسال', 'Close': 'إغلاق',
-    'Made by Areej': 'تصميم وتطوير عريج', 'Copyright 2026 SIS Al Jada Cobras': 'حقوق النشر 2026 لفريق كوبرا سيس الجادة',
+    'Made by Areej and Mirza': 'تصميم وتطوير عريج وميرزا', 'Copyright 2026 SIS Al Jada Cobras': 'حقوق النشر 2026 لفريق كوبرا سيس الجادة',
     'Difficulty': 'الصعوبة', 'F3 difficulty': 'صعوبة F3', 'F2 difficulty': 'صعوبة F2', 'F1 difficulty': 'صعوبة F1',
     'Download specs PDF': 'تنزيل ملف المواصفات بصيغة PDF', 'Sponsor package': 'باقة الرعاية',
     'Back home': 'العودة إلى الرئيسية', 'Our Work': 'مشروعنا'
