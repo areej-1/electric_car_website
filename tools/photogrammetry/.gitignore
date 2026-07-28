@@ -1,0 +1,10 @@
+# compiled binaries — rebuild with the swiftc lines in README.md
+capture
+frames
+*.dSYM/
+# working output
+photos/
+*.obj
+*.mtl
+*.usdz
+*.glb
