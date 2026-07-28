@@ -247,35 +247,71 @@ export function buildKart() {
   // automotive paint: low roughness base under a clearcoat
   const bodyMat = mat(C.body, { roughness: 0.35, metalness: 0.02, clearcoat: 1.0, clearcoatRoughness: 0.06, envMapIntensity: 1.2 });
 
-  // Low bathtub shell: narrow outline with the cockpit cut out of it. Thin walls —
-  // this is a composite shell, not a moulded block.
-  const shell = bodyProfile(0);
-  const inner = [
-    [-0.72, 0.22], [-0.40, 0.29], [0.05, 0.31], [0.50, 0.30], [0.82, 0.24],
-  ];
-  const cockpit = new THREE.Path();
-  cockpit.moveTo(-inner[0][1], -inner[0][0]);
-  inner.forEach(([z, hw]) => cockpit.lineTo(-hw, -z));
-  for (let i = inner.length - 1; i >= 0; i--) cockpit.lineTo(inner[i][1], -inner[i][0]);
-  cockpit.closePath();
-  shell.holes.push(cockpit);
+  // Side panels, built as a silhouette in the (length, height) plane and extruded
+  // across. This is the only construction that gives real wheel arches — the tyres
+  // stand proud through a notch in the panel, exactly as in bodied-side-profile.jpg.
+  // A closed extruded tub cannot express an arch at all.
+  function sidePanel() {
+    const s = new THREE.Shape();
+    const yb = PAN_Y + 0.012;          // bottom edge, just above the pan
+    const arch = (zc, r) => {          // semicircular notch in the bottom edge
+      const pts = [];
+      for (let i = 0; i <= 14; i++) {
+        const a = Math.PI - (i / 14) * Math.PI;
+        pts.push([zc + Math.cos(a) * r, yb + Math.sin(a) * r * 0.86]);
+      }
+      return pts;
+    };
+    // bottom edge, nose -> tail, notched over each wheel
+    s.moveTo(-1.14, yb);
+    arch(-0.72, 0.235).forEach(([z, y]) => s.lineTo(z, y));
+    s.lineTo(0.30, yb);
+    arch(0.80, 0.275).forEach(([z, y]) => s.lineTo(z, y));
+    s.lineTo(1.12, yb);
+    // tail, then shoulder line forward, then down the nose
+    s.lineTo(1.14, yb + 0.15);
+    s.lineTo(1.06, yb + 0.235);
+    s.lineTo(0.60, yb + 0.255);
+    s.lineTo(0.10, yb + 0.265);
+    s.lineTo(-0.42, yb + 0.262);
+    s.lineTo(-0.84, yb + 0.235);
+    s.lineTo(-1.10, yb + 0.165);
+    s.closePath();
+    return s;
+  }
 
-  const shellMesh = new THREE.Mesh(
-    new THREE.ExtrudeGeometry(shell, { depth: 0.25, bevelEnabled: true, bevelSize: 0.006, bevelThickness: 0.006, bevelSegments: 1 }),
-    bodyMat,
-  );
-  shellMesh.rotation.x = -Math.PI / 2;
-  shellMesh.position.y = PAN_Y + 0.024;
-  body.add(shellMesh);
+  [-1, 1].forEach((sgn) => {
+    const panel = new THREE.Mesh(
+      new THREE.ExtrudeGeometry(sidePanel(), { depth: 0.022, bevelEnabled: true, bevelSize: 0.005, bevelThickness: 0.005, bevelSegments: 1 }),
+      bodyMat,
+    );
+    panel.rotation.y = -Math.PI / 2;
+    panel.position.x = sgn * 0.40;
+    body.add(panel);
+  });
 
-  // red trim strip along the lower body edge
-  const strip = new THREE.Mesh(
-    new THREE.ExtrudeGeometry(bodyProfile(-0.012), { depth: 0.024, bevelEnabled: false }),
-    mat(C.bodyTrim, { roughness: 0.4 }),
+  // nose cap closing the two panels at the front
+  const nose = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.40, 0.34, 0.20, 20, 1, true, Math.PI * 0.62, Math.PI * 0.76),
+    mat(C.body, { roughness: 0.35, metalness: 0.02, clearcoat: 1.0, clearcoatRoughness: 0.06, side: THREE.DoubleSide }),
   );
-  strip.rotation.x = -Math.PI / 2;
-  strip.position.y = PAN_Y + 0.022;
-  body.add(strip);
+  nose.position.set(0, PAN_Y + 0.13, -0.98);
+  body.add(nose);
+
+  // Tail panel closing the two sides at the back.
+  const tail = new THREE.Mesh(new THREE.BoxGeometry(0.80, 0.22, 0.03), bodyMat);
+  tail.position.set(0, PAN_Y + 0.135, 1.12);
+  body.add(tail);
+
+  // Red trim strip along each lower body edge, following the panel bottom between
+  // the arches rather than ringing the whole plan outline.
+  [-1, 1].forEach((sgn) => {
+    [[-0.22, 0.52], [1.06, 0.10]].forEach(([zc, len]) => {
+      const t = new THREE.Mesh(new THREE.BoxGeometry(0.028, 0.030, len), mat(C.bodyTrim, { roughness: 0.4 }));
+      t.position.set(sgn * 0.402, PAN_Y + 0.024, zc);
+      body.add(t);
+    });
+  });
 
   // Hand-painted livery. Applied as decal planes on each flank rather than as UVs on
   // the extruded shell, because the artwork IS a flat painted panel on a white body —
