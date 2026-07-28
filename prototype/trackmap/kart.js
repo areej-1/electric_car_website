@@ -48,37 +48,39 @@ function mat(color, o = {}) {
   return new Ctor(p);
 }
 
+// Shapes are authored as [longitudinal z, half-width] pairs, but ExtrudeGeometry
+// builds in XY and we lay it flat with rotation.x = -PI/2, which maps
+// (shape.x, shape.y) -> (world.x, -world.z). So the shape must be emitted as
+// (±halfWidth, -z) for the car's length to run along Z, matching where the wheels,
+// seat and handlebars are placed. Emitting (z, ±halfWidth) puts the body across
+// the wheelbase instead.
+function outline(half, inset) {
+  const s = new THREE.Shape();
+  const pts = half.map(([z, hw]) => [z, Math.max(0.02, hw - inset)]);
+  s.moveTo(-pts[0][1], -pts[0][0]);
+  pts.forEach(([z, hw]) => s.lineTo(-hw, -z));
+  for (let i = pts.length - 1; i >= 0; i--) s.lineTo(pts[i][1], -pts[i][0]);
+  s.closePath();
+  return s;
+}
+
 // Floor pan outline: rounded nose, widening to a square tail. From wiring.JPG.
 function panProfile(inset = 0) {
-  const half = [
+  return outline([
     [-1.20, 0.10], [-1.14, 0.26], [-1.02, 0.38], [-0.84, 0.47],
     [-0.55, 0.54], [-0.15, 0.58], [0.30, 0.59], [0.75, 0.58],
     [1.00, 0.55], [1.14, 0.48], [1.18, 0.36],
-  ];
-  const s = new THREE.Shape();
-  const pts = half.map(([z, hw]) => [z, Math.max(0.03, hw - inset)]);
-  s.moveTo(pts[0][0], -pts[0][1]);
-  pts.forEach(([z, hw]) => s.lineTo(z, -hw));
-  for (let i = pts.length - 1; i >= 0; i--) s.lineTo(pts[i][0], pts[i][1]);
-  s.closePath();
-  return s;
+  ], inset);
 }
 
 // Bodywork outline: markedly narrower than the pan so the wheels stand outboard
 // on their stub axles, and longer and lower than the chassis. From the team's
 // photograph of the bodied car.
 function bodyProfile(inset = 0) {
-  const half = [
+  return outline([
     [-1.16, 0.05], [-1.08, 0.18], [-0.94, 0.28], [-0.70, 0.35],
     [-0.30, 0.39], [0.15, 0.40], [0.60, 0.39], [0.90, 0.35], [1.08, 0.27], [1.14, 0.16],
-  ];
-  const s = new THREE.Shape();
-  const pts = half.map(([z, hw]) => [z, Math.max(0.02, hw - inset)]);
-  s.moveTo(pts[0][0], -pts[0][1]);
-  pts.forEach(([z, hw]) => s.lineTo(z, -hw));
-  for (let i = pts.length - 1; i >= 0; i--) s.lineTo(pts[i][0], pts[i][1]);
-  s.closePath();
-  return s;
+  ], inset);
 }
 
 function tube(points, radius, material) {
@@ -91,23 +93,33 @@ function tube(points, radius, material) {
 // Chrome 5-spoke mag on a stub axle. Front and rear differ in width and diameter.
 function wheel(x, z, r, w) {
   const g = new THREE.Group();
+  // torus reads as a tyre with a sidewall; a plain cylinder reads as a hockey puck
   const tyre = new THREE.Mesh(
-    new THREE.CylinderGeometry(r, r, w, 24), mat(C.tyre, { roughness: 0.92, metalness: 0.04 }),
+    new THREE.TorusGeometry(r * 0.80, r * 0.22, 12, 30), mat(C.tyre, { roughness: 0.92, metalness: 0.04 }),
   );
-  tyre.rotation.z = Math.PI / 2;
+  tyre.rotation.y = Math.PI / 2;
+  tyre.scale.x = Math.max(0.5, w / (r * 0.44));
   g.add(tyre);
 
   const rimMat = mat(C.rim, { roughness: 0.14, metalness: 1.0, envMapIntensity: 1.5 });
-  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.62, r * 0.62, w * 0.92, 22), rimMat);
-  barrel.rotation.z = Math.PI / 2;
-  g.add(barrel);
+
+  // Open 5-spoke mag: a rim ring, five spokes reaching it, and a small hub. The
+  // spokes must reach PAST the barrel radius or they are buried inside it and the
+  // wheel reads as a plain black disc.
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(r * 0.66, r * 0.075, 10, 28), rimMat);
+  ring.rotation.y = Math.PI / 2;
+  g.add(ring);
+
+  const dish = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.20, r * 0.20, w * 0.70, 18), rimMat);
+  dish.rotation.z = Math.PI / 2;
+  g.add(dish);
 
   for (let i = 0; i < 5; i++) {
-    const sp = new THREE.Mesh(new THREE.BoxGeometry(w * 0.80, r * 1.12, r * 0.16), rimMat);
+    const sp = new THREE.Mesh(new THREE.BoxGeometry(w * 0.42, r * 1.36, r * 0.15), rimMat);
     sp.rotation.x = (i / 5) * Math.PI;
     g.add(sp);
   }
-  const hub = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.20, r * 0.20, w * 1.18, 16), mat(C.hub, { metalness: 0.85, roughness: 0.3 }));
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.12, r * 0.12, w * 1.30, 14), mat(C.hub, { metalness: 0.9, roughness: 0.28 }));
   hub.rotation.z = Math.PI / 2;
   g.add(hub);
 
@@ -238,13 +250,13 @@ export function buildKart() {
   // Low bathtub shell: narrow outline with the cockpit cut out of it. Thin walls —
   // this is a composite shell, not a moulded block.
   const shell = bodyProfile(0);
-  const cockpit = new THREE.Path();
   const inner = [
     [-0.72, 0.22], [-0.40, 0.29], [0.05, 0.31], [0.50, 0.30], [0.82, 0.24],
   ];
-  cockpit.moveTo(inner[0][0], -inner[0][1]);
-  inner.forEach(([z, hw]) => cockpit.lineTo(z, -hw));
-  for (let i = inner.length - 1; i >= 0; i--) cockpit.lineTo(inner[i][0], inner[i][1]);
+  const cockpit = new THREE.Path();
+  cockpit.moveTo(-inner[0][1], -inner[0][0]);
+  inner.forEach(([z, hw]) => cockpit.lineTo(-hw, -z));
+  for (let i = inner.length - 1; i >= 0; i--) cockpit.lineTo(inner[i][1], -inner[i][0]);
   cockpit.closePath();
   shell.holes.push(cockpit);
 
@@ -265,16 +277,68 @@ export function buildKart() {
   strip.position.y = PAN_Y + 0.022;
   body.add(strip);
 
-  // hand-painted livery, standing in as gold marks until the panels are shot flat-on
+  // Hand-painted livery. Applied as decal planes on each flank rather than as UVs on
+  // the extruded shell, because the artwork IS a flat painted panel on a white body —
+  // a decal is what it physically is, and it survives the geometry changing underneath.
+  //
+  // Until a perspective-corrected crop of the real panel exists, these show the gold
+  // placeholder marks. setLivery() swaps in the real artwork.
+  const decals = [];
+  [-1, 1].forEach((s) => {
+    const g = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.215, 0.215),
+      mat(C.livery, { roughness: 0.5, side: THREE.DoubleSide, envMapIntensity: 0.4 }),
+    );
+    g.position.set(s * 0.404, PAN_Y + 0.145, -0.34);
+    g.rotation.y = s * Math.PI / 2;
+    g.visible = false;
+    g.userData.side = s;
+    body.add(g);
+    decals.push(g);
+  });
+
+  // placeholder marks, retired the moment artwork is supplied
+  const placeholders = [];
   [-1, 1].forEach((s) => {
     const mark = new THREE.Mesh(
       new THREE.CircleGeometry(0.085, 24),
       mat(C.livery, { roughness: 0.5, side: THREE.DoubleSide }),
     );
-    mark.position.set(s * 0.395, PAN_Y + 0.15, -0.45);
+    mark.position.set(s * 0.398, PAN_Y + 0.15, -0.34);
     mark.rotation.y = s * Math.PI / 2;
     body.add(mark);
+    placeholders.push(mark);
   });
+
+  // convenience: load the team's brand mark straight off the site
+  kart.userData.loadLivery = (url = '../trackmap/assets/livery-cobra.png') => {
+    new THREE.TextureLoader().load(url, (tex) => kart.userData.setLivery(tex));
+  };
+
+  // texture: an RGBA image of the painted flank, straightened and cut out.
+  // mirrorRight is honest about a real limitation — one photograph only shows one
+  // flank, so until the other side is shot we either mirror it or leave it plain.
+  kart.userData.setLivery = (texture, { mirrorRight = true } = {}) => {
+    if (!texture) {
+      decals.forEach((d) => { d.visible = false; });
+      placeholders.forEach((p) => { p.visible = true; });
+      return;
+    }
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = 8;
+    decals.forEach((d) => {
+      if (d.userData.side > 0 && !mirrorRight) { d.visible = false; return; }
+      const t = d.userData.side > 0 ? texture.clone() : texture;
+      if (d.userData.side > 0) { t.wrapS = THREE.RepeatWrapping; t.repeat.x = -1; t.offset.x = 1; t.needsUpdate = true; }
+      d.material = new THREE.MeshStandardMaterial({
+        map: t, transparent: true, alphaTest: 0.04,
+        roughness: 0.32, metalness: 0.0, envMapIntensity: 0.5,
+        side: THREE.DoubleSide,
+      });
+      d.visible = true;
+    });
+    placeholders.forEach((p) => { p.visible = false; });
+  };
 
   kart.add(body);
   kart.userData.body = body;

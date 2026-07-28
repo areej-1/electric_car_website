@@ -41,7 +41,7 @@
   <button id="viewFront" type="button">Front</button>
   <button id="viewTop" type="button">Top</button>
 </div>
-<p id="note">A model, not a photograph.<br>Livery marks are placeholders until the painted panels are shot flat-on.</p>
+<p id="note">A model, not a photograph.<br>Wearing the team's brand mark. The physical car's paint is hand-done and differs.</p>
 
 <script type="module">
 import * as THREE from '../trackmap/vendor/three.module.js';
@@ -60,6 +60,7 @@ scene.background = new THREE.Color(0x0a0a0a);
 const kart = buildKart();
 kart.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
 scene.add(kart);
+kart.userData.loadLivery('../trackmap/assets/livery-cobra.png');
 
 // Studio environment built procedurally and pre-filtered, so chrome and paint have
 // something real to reflect. Without this, metal reads as flat grey plastic.
