@@ -267,6 +267,8 @@ function frame(now) {
   const kt = `translate(${(px * PW).toFixed(1)}px,${(py * PH).toFixed(1)}px)`;
   if (kt !== lastKart) { kartCanvas.style.translate = `${(px * PW - MK / 2).toFixed(1)}px ${(py * PH - MK / 2).toFixed(1)}px`; lastKart = kt; }
   marker.setHeading(Math.atan2(-dx, -dy));
+  // the car gains its white bodywork as the build stages progress
+  marker.setBodywork(lapT);
   marker.render();
 
   requestAnimationFrame(frame);
