@@ -4,9 +4,26 @@
 Not a resize — Astro handles those. This is a crop, a 90-degree rotation and a
 duotone ramp, documented in prototype/trackmap/assets/LICENSE-imagery.md.
 Output is CC BY-SA 4.0, same as the source.
+
+Requires Pillow (PIL) on whichever `python3` the `env` shebang resolves to.
+That is a PATH-dependent choice, not necessarily the interpreter Pillow was
+installed for — see the import guard below for the concrete fix if this
+exits immediately with an import error.
 """
 import sys
-from PIL import Image, ImageEnhance
+
+try:
+    from PIL import Image, ImageEnhance
+except ImportError:
+    sys.exit(
+        "error: Pillow is required but not installed for this interpreter "
+        f"({sys.executable}).\n"
+        "  - If another interpreter on this machine already has it "
+        "(e.g. /usr/bin/python3 on macOS), run:\n"
+        "        /usr/bin/python3 tools/grade-plate.py <master.jpg> <out.jpg>\n"
+        "  - Otherwise, install it for this interpreter:\n"
+        "        python3 -m pip install Pillow"
+    )
 
 CROP = (1180, 60, 3080, 2249)
 BOX = (100, 200, 2160, 1420)
