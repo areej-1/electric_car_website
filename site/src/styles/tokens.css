@@ -1,0 +1,25 @@
+:root {
+  --ink: #0A0A0A;
+  --panel: #141414;
+  --raised: #1A1A1A;
+  --cobra: #7C0A02;
+  --hot: #E6392B;
+  --gold: #C9A227;
+  --soft-gold: #E8B923;
+  --cream: #F5F0E8;
+  --steel: #9AA3A8;
+
+  --font-display: 'Orbitron', system-ui, sans-serif;
+  --font-body: 'Poppins', system-ui, sans-serif;
+
+  --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.85rem);
+  --step-0: clamp(0.95rem, 0.92rem + 0.15vw, 1rem);
+  --step-1: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
+  --step-2: clamp(1.35rem, 1.1rem + 1.2vw, 2.35rem);
+  --step-3: clamp(1.8rem, 1.2rem + 2.6vw, 3.4rem);
+  --step-4: clamp(2.5rem, 1.4rem + 6vw, 5.6rem);
+
+  --measure: 62ch;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --shell: 1180px;
+}
