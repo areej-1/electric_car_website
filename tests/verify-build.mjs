@@ -52,14 +52,39 @@ check('translation content survived the move', () => {
 check('no unapproved hex in built CSS', () => {
   const allowed = new Set(['#0a0a0a','#141414','#1a1a1a','#7c0a02','#e6392b',
                            '#c9a227','#e8b923','#f5f0e8','#9aa3a8']);
+  const strayHexIn = (css) => {
+    const hexes = (css.match(/#[0-9a-fA-F]{6}\b/g) || []).map((h) => h.toLowerCase());
+    return [...new Set(hexes)].filter((h) => !allowed.has(h));
+  };
+
+  // Path 1: CSS Astro emitted as separate stylesheet chunks.
   const cssDir = path.join(dist, '_astro');
-  if (!fs.existsSync(cssDir)) return;
-  for (const f of fs.readdirSync(cssDir).filter((f) => f.endsWith('.css'))) {
-    const hexes = (fs.readFileSync(path.join(cssDir, f), 'utf8').match(/#[0-9a-fA-F]{6}\b/g) || [])
-      .map((h) => h.toLowerCase());
-    const stray = [...new Set(hexes)].filter((h) => !allowed.has(h));
-    assert.deepEqual(stray, [], `${f} has unapproved hex: ${stray.join(', ')}`);
+  if (fs.existsSync(cssDir)) {
+    for (const f of fs.readdirSync(cssDir).filter((f) => f.endsWith('.css'))) {
+      const stray = strayHexIn(fs.readFileSync(path.join(cssDir, f), 'utf8'));
+      assert.deepEqual(stray, [], `${f} has unapproved hex: ${stray.join(', ')}`);
+    }
   }
+
+  // Path 2: CSS Astro inlined into <style> tags. Astro's inlineStylesheets: 'auto' default
+  // inlines a page's CSS straight into the HTML when the chunk is small (true for both
+  // phase-1 pages today), so dist/_astro/*.css can be empty while real CSS still ships in
+  // the HTML. Walk every built page and scan only inside <style> element contents — not
+  // the whole document — so hex-like strings elsewhere in the markup can't trip this check.
+  const walk = (d) => {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) walk(p);
+      else if (e.name.endsWith('.html')) {
+        const html = fs.readFileSync(p, 'utf8');
+        const styleContent = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)]
+          .map((m) => m[1]).join('\n');
+        const stray = strayHexIn(styleContent);
+        assert.deepEqual(stray, [], `${path.relative(dist, p)} inline <style> has unapproved hex: ${stray.join(', ')}`);
+      }
+    }
+  };
+  walk(dist);
 });
 
 check('mobile page weight budget', () => {
