@@ -74,6 +74,85 @@ check('translation content survived the move', () => {
   assert.ok(Object.keys(TITLES).length >= 5, 'TITLES lost entries');
 });
 
+check('zero JavaScript in the build output', () => {
+  // "Renders at build time, ships no JavaScript" is phase 1's headline property —
+  // it's what replaced 62 KB of runtime nav construction (site.js) and 32 KB of
+  // runtime DOM-walking translation (arabic.js's apply()). Nothing before this
+  // check asserted it in the suite; every confirmation of a JS-free build was a
+  // manual grep. Walk the whole tree, not just the two pages known today, so a
+  // future page can't slip a script past this unnoticed.
+  const scriptFiles = [];
+  const pagesWithScriptTags = [];
+  const walk = (d) => {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) { walk(p); continue; }
+      if (/\.m?js$/i.test(e.name)) scriptFiles.push(path.relative(dist, p));
+      if (e.name.endsWith('.html')) {
+        const html = fs.readFileSync(p, 'utf8');
+        if (/<script\b/i.test(html)) pagesWithScriptTags.push(path.relative(dist, p));
+      }
+    }
+  };
+  walk(dist);
+  assert.deepEqual(scriptFiles, [], `.js/.mjs file(s) shipped: ${scriptFiles.join(', ')}`);
+  assert.deepEqual(pagesWithScriptTags, [], `<script> tag found in: ${pagesWithScriptTags.join(', ')}`);
+});
+
+check('no translation module reaches the browser', () => {
+  // keys.js (cobras-lib.js's STRINGS — 365 keys per language) and strings.js
+  // (arabic.js's COMMON/PAGES/TITLES) are meant to be build-time-only ES modules:
+  // imported only from .astro frontmatter, which Astro/Vite executes while
+  // building and never ships. Two independent signals, over every shipped
+  // text-ish file (not just the two known HTML pages, and not just HTML — a
+  // reintroduced client bundle would land in a .js chunk, not the markup):
+  //   1. the module filenames, referenced by name — cheap, but a bundler
+  //      renames/hashes chunks, so this alone would miss a renamed leak;
+  //   2. content unique to the maps themselves, which survives renaming.
+  const TEXT_EXT = /\.(html|js|mjs|css)$/i;
+
+  // Distinctive values belonging to pages phase 1 has not built yet — today
+  // dist/ only has index.html and ar/index.html. Deliberately NOT a nav/footer/
+  // skip string: those are shared chrome, rendered via tk() on every page by
+  // design, so they'd fire on legitimate future pages and make useless probes.
+  // Each probe below is long and page-specific enough that no legitimate page
+  // could contain it by coincidence. If a later phase genuinely builds the Game
+  // or Members page, this check should start failing on real content — when
+  // that happens, point the probe at a still-unbuilt page rather than deleting
+  // the check.
+  const PROBES = [
+    // keys.js: the Game page's hero title. SiteNav.astro's own comment says
+    // `game` "has no phase-1 home yet."
+    { source: 'keys.js (game.title)', text: 'دائرة الكوبرا' },
+    // strings.js: Members page hero body, arabic.js PAGES['members.html'].
+    // No members page exists under site/src/pages yet.
+    { source: "strings.js (PAGES['members.html'])",
+      text: 'تسعة عشر طالبًا وطالبة يساهمون في سيارة سباق كوبرا عبر الميكانيكا والسلامة والابتكار والإعلام والقيادة.' },
+  ];
+
+  const filenameOffenders = [];
+  const contentOffenders = [];
+  const walk = (d) => {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) { walk(p); continue; }
+      if (!TEXT_EXT.test(e.name)) continue;
+      const text = fs.readFileSync(p, 'utf8');
+      const rel = path.relative(dist, p);
+      if (/keys\.js|strings\.js/.test(text)) filenameOffenders.push(rel);
+      for (const probe of PROBES) {
+        if (text.includes(probe.text)) contentOffenders.push(`${rel} contains ${probe.source}`);
+      }
+    }
+  };
+  walk(dist);
+
+  assert.deepEqual(filenameOffenders, [],
+    `keys.js/strings.js referenced by name in: ${filenameOffenders.join(', ')}`);
+  assert.deepEqual(contentOffenders, [],
+    `translation content for an unbuilt page leaked into shipped output: ${contentOffenders.join('; ')}`);
+});
+
 check('no unapproved hex in built CSS', () => {
   const allowed = new Set(['#0a0a0a','#141414','#1a1a1a','#7c0a02','#e6392b',
                            '#c9a227','#e8b923','#f5f0e8','#9aa3a8']);
