@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{--ink:#0A0A0A;--panel:#141414;--hot:#E6392B;--gold:#C9A227;--cream:#F5F0E8;--steel:#9AA3A8;
+  :root{--ink:#0A0A0A;--hot:#E6392B;--gold:#C9A227;--cream:#F5F0E8;--steel:#9AA3A8;
         --disp:'Orbitron',system-ui,sans-serif;--body:'Poppins',system-ui,sans-serif}
   *{box-sizing:border-box}
   html,body{height:100%;margin:0}
@@ -24,15 +24,16 @@
   button:hover{border-color:var(--gold)}
   button[aria-pressed="true"]{background:var(--hot);border-color:var(--hot)}
   button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
-  #note{position:fixed;right:22px;bottom:22px;color:var(--steel);font-size:11.5px;text-align:right;max-width:34ch;line-height:1.5}
+  #note{position:fixed;right:22px;bottom:22px;color:var(--steel);font-size:11.5px;text-align:right;max-width:36ch;line-height:1.5}
+  #fps{position:fixed;right:22px;top:22px;color:var(--steel);font-family:var(--disp);font-size:12px;letter-spacing:.1em}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
 <div id="hud">
   <h1>KART MODEL</h1>
-  <p>Procedural geometry traced from <code>wiring.JPG</code>, the testing frames and the
-     team's photograph of the bodied car. Drag to orbit, scroll to zoom.</p>
+  <p>Three wheels — two front, one rear. Geometry traced from docs/car-reference.
+     Drag to orbit, scroll to zoom.</p>
 </div>
 <div id="ctl">
   <button id="bodyBtn" type="button" aria-pressed="true">Bodywork</button>
@@ -40,76 +41,150 @@
   <button id="viewSide" type="button">Side</button>
   <button id="viewFront" type="button">Front</button>
   <button id="viewTop" type="button">Top</button>
+  <button id="fxBtn" type="button" aria-pressed="true">Post FX</button>
 </div>
+<p id="fps"></p>
 <p id="note">A model, not a photograph.<br>Wearing the team's brand mark. The physical car's paint is hand-done and differs.</p>
 
+<script type="importmap">
+{
+  "imports": {
+    "three": "../trackmap/vendor/three.module.js",
+    "three/addons/": "../trackmap/vendor/addons/"
+  }
+}
+</script>
 <script type="module">
-import * as THREE from '../trackmap/vendor/three.module.js';
+import * as THREE from 'three';
 import { buildKart } from '../trackmap/kart.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { SSAOPass } from 'three/addons/postprocessing/SSAOPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 const canvas = document.getElementById('c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+renderer.toneMappingExposure = 1.0;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0a0a0a);
+scene.background = new THREE.Color(0x0b0b0c);
+scene.fog = new THREE.Fog(0x0b0b0c, 6.5, 17);
 const kart = buildKart();
 kart.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
 scene.add(kart);
-kart.userData.loadLivery('../trackmap/assets/livery-cobra.png');
 
-// Studio environment built procedurally and pre-filtered, so chrome and paint have
-// something real to reflect. Without this, metal reads as flat grey plastic.
+// Studio environment, pre-filtered. Chrome and clearcoat need something real to
+// reflect — without it metal reads as flat grey plastic no matter how it is lit.
 const pmrem = new THREE.PMREMGenerator(renderer);
 pmrem.compileEquirectangularShader();
 const envScene = new THREE.Scene();
-envScene.background = new THREE.Color(0x1b1e22);
-function softbox(w, h, d, x, y, z, intensity) {
-  const m = new THREE.Mesh(
-    new THREE.BoxGeometry(w, h, d),
-    new THREE.MeshBasicMaterial({ color: new THREE.Color(intensity, intensity, intensity) }),
-  );
-  m.position.set(x, y, z);
-  envScene.add(m);
-}
-softbox(9, 0.1, 9, 0, 6.5, 0, 3.4);      // overhead
-softbox(0.1, 5, 7, -6, 3, 0, 1.5);       // left wall
-softbox(0.1, 5, 7, 6, 3, 0, 1.1);        // right wall
-softbox(7, 5, 0.1, 0, 3, -6.5, 0.55);    // back
-scene.environment = pmrem.fromScene(envScene, 0.03).texture;
+envScene.background = new THREE.Color(0x14171b);
+const box = (w, h, d, x, y, z, i) => {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d),
+    new THREE.MeshBasicMaterial({ color: new THREE.Color(i, i, i) }));
+  m.position.set(x, y, z); envScene.add(m);
+};
+box(9, 0.1, 5, 0, 6.2, 1.5, 3.6);     // main overhead softbox
+box(5, 0.1, 4, 1, 5.0, -3.5, 1.7);    // secondary overhead, offset
+box(0.1, 4.5, 7, -6, 3, 0, 1.6);      // left wall
+box(0.1, 4.5, 7, 6, 3, 0, 1.0);       // right wall
+box(7, 3.5, 0.1, 0, 2.6, -6.5, 0.5);  // back
+box(7, 2.0, 0.1, 0, 1.4, 6.5, 0.3);   // front bounce
+scene.environment = pmrem.fromScene(envScene, 0.02).texture;
 
 const floor = new THREE.Mesh(
-  new THREE.CircleGeometry(7, 64),
-  new THREE.MeshStandardMaterial({ color: 0x0e0e0e, roughness: 0.82, metalness: 0.10 }),
+  new THREE.CircleGeometry(34, 128),
+  new THREE.MeshStandardMaterial({ color: 0x0d0d0e, roughness: 0.55, metalness: 0.22 }),
 );
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
-const key = new THREE.DirectionalLight(0xfff3e4, 2.6);
+// Soft contact darkening under the car. A directional shadow alone leaves the model
+// looking pasted onto the floor; the occlusion right under the tyres is what grounds it.
+const blobCanvas = document.createElement('canvas');
+blobCanvas.width = blobCanvas.height = 256;
+const bctx = blobCanvas.getContext('2d');
+const grad = bctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+grad.addColorStop(0, 'rgba(0,0,0,0.72)');
+grad.addColorStop(0.45, 'rgba(0,0,0,0.34)');
+grad.addColorStop(1, 'rgba(0,0,0,0)');
+bctx.fillStyle = grad; bctx.fillRect(0, 0, 256, 256);
+const blob = new THREE.Mesh(
+  new THREE.PlaneGeometry(3.4, 2.2),
+  new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(blobCanvas), transparent: true, depthWrite: false }),
+);
+blob.rotation.x = -Math.PI / 2;
+blob.position.y = 0.004;
+scene.add(blob);
+
+const key = new THREE.DirectionalLight(0xfff4e6, 2.4);
 key.position.set(3.2, 5.5, 2.6);
 key.castShadow = true;
 key.shadow.mapSize.set(2048, 2048);
 key.shadow.camera.near = 0.5; key.shadow.camera.far = 20;
 key.shadow.camera.left = -3; key.shadow.camera.right = 3;
 key.shadow.camera.top = 3; key.shadow.camera.bottom = -3;
-key.shadow.bias = -0.0009;
-key.shadow.radius = 3;
+key.shadow.bias = -0.0007;
+key.shadow.radius = 4;
 scene.add(key);
-const fill = new THREE.DirectionalLight(0xbcd2f0, 0.35); fill.position.set(-3, 2, 3); scene.add(fill);
-const rim = new THREE.DirectionalLight(0xe6392b, 0.9); rim.position.set(-2.5, 1.6, -3.5); scene.add(rim);
+// NB: Object3D.position has no setter — it must be mutated via .set(), never assigned.
+const fill = new THREE.DirectionalLight(0xbcd2f0, 0.3);
+fill.position.set(-3, 2, 3);
+scene.add(fill);
+const rim = new THREE.DirectionalLight(0xe6392b, 0.22);
+rim.position.set(-2.5, 1.4, -3.5);
+scene.add(rim);
 
-const camera = new THREE.PerspectiveCamera(38, 1, 0.05, 100);
-const orbit = { az: 0.75, el: 0.42, dist: 5.2 };
+const camera = new THREE.PerspectiveCamera(36, 1, 0.05, 100);
+const orbit = { az: 0.75, el: 0.26, dist: 5.9 };
 const target = { ...orbit };
 
+// Grain + vignette. Every photograph has both; a render with neither reads as CG
+// even when the lighting is right.
+const FilmShader = {
+  uniforms: { tDiffuse: { value: null }, amount: { value: 0.052 }, vig: { value: 0.78 }, time: { value: 0 } },
+  vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+  fragmentShader: `
+    uniform sampler2D tDiffuse; uniform float amount; uniform float vig; uniform float time;
+    varying vec2 vUv;
+    float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }
+    void main(){
+      vec4 c = texture2D(tDiffuse, vUv);
+      float d = distance(vUv, vec2(0.5));
+      c.rgb *= smoothstep(0.92, vig * 0.42, d) * 0.35 + 0.65;
+      float g = hash(vUv * 1024.0 + time) - 0.5;
+      c.rgb += g * amount;
+      gl_FragColor = c;
+    }`,
+};
+
+const composer = new EffectComposer(renderer);
+const renderPass = new RenderPass(scene, camera);
+composer.addPass(renderPass);
+const ssao = new SSAOPass(scene, camera);
+ssao.kernelRadius = 0.10;
+ssao.minDistance = 0.0009;
+ssao.maxDistance = 0.09;
+composer.addPass(ssao);
+const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.13, 0.75, 0.985);
+composer.addPass(bloom);
+const film = new ShaderPass(FilmShader);
+composer.addPass(film);
+composer.addPass(new OutputPass());
+
+let fx = true;
 function resize() {
   const w = innerWidth, h = innerHeight;
   renderer.setSize(w, h, false);
+  composer.setSize(w, h);
+  bloom.resolution.set(w, h);
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
 }
@@ -120,17 +195,18 @@ canvas.addEventListener('pointerdown', (e) => { drag = true; lx = e.clientX; ly 
 canvas.addEventListener('pointermove', (e) => {
   if (!drag) return;
   target.az -= (e.clientX - lx) * 0.006;
-  target.el = Math.min(1.45, Math.max(-0.15, target.el + (e.clientY - ly) * 0.005));
+  target.el = Math.min(1.45, Math.max(-0.05, target.el + (e.clientY - ly) * 0.005));
   lx = e.clientX; ly = e.clientY;
 });
 canvas.addEventListener('pointerup', (e) => { drag = false; canvas.classList.remove('drag'); try { canvas.releasePointerCapture(e.pointerId); } catch {} });
 canvas.addEventListener('wheel', (e) => {
   e.preventDefault();
-  target.dist = Math.min(12, Math.max(2.2, target.dist * Math.exp(e.deltaY * 0.0012)));
+  target.dist = Math.min(12, Math.max(2.0, target.dist * Math.exp(e.deltaY * 0.0012)));
 }, { passive: false });
 
 const bodyBtn = document.getElementById('bodyBtn');
 const spinBtn = document.getElementById('spinBtn');
+const fxBtn = document.getElementById('fxBtn');
 bodyBtn.addEventListener('click', () => {
   const on = bodyBtn.getAttribute('aria-pressed') !== 'true';
   bodyBtn.setAttribute('aria-pressed', String(on));
@@ -140,7 +216,11 @@ spinBtn.addEventListener('click', () => {
   spin = spinBtn.getAttribute('aria-pressed') !== 'true';
   spinBtn.setAttribute('aria-pressed', String(spin));
 });
-const views = { viewSide: [0, 0.10, 4.6], viewFront: [Math.PI / 2, 0.12, 4.4], viewTop: [0.75, 1.40, 5.0] };
+fxBtn.addEventListener('click', () => {
+  fx = fxBtn.getAttribute('aria-pressed') !== 'true';
+  fxBtn.setAttribute('aria-pressed', String(fx));
+});
+const views = { viewSide: [0, 0.06, 4.4], viewFront: [Math.PI / 2, 0.10, 4.2], viewTop: [0.75, 1.42, 5.0] };
 Object.entries(views).forEach(([id, [az, el, dist]]) => {
   document.getElementById(id).addEventListener('click', () => {
     Object.assign(target, { az, el, dist });
@@ -148,14 +228,19 @@ Object.entries(views).forEach(([id, [az, el, dist]]) => {
   });
 });
 
-let prev = performance.now();
+kart.userData.loadLivery('../trackmap/assets/livery-cobra.png');
+
+const fpsEl = document.getElementById('fps');
+let prev = performance.now(), acc = 0, frames = 0;
 const samples = [];
 function frame(now) {
   const dt = Math.min(0.05, (now - prev) / 1000); prev = now;
   samples.push(dt * 1000); if (samples.length > 240) samples.shift();
   window.__frameSamples = samples;
+  acc += dt; frames++;
+  if (acc > 0.5) { fpsEl.textContent = `${Math.round(frames / acc)} FPS`; acc = 0; frames = 0; }
 
-  if (spin && !drag) target.az += dt * 0.28;
+  if (spin && !drag) target.az += dt * 0.24;
   const k = 1 - Math.exp(-dt * 8);
   orbit.az += (target.az - orbit.az) * k;
   orbit.el += (target.el - orbit.el) * k;
@@ -163,11 +248,13 @@ function frame(now) {
 
   camera.position.set(
     Math.cos(orbit.az) * Math.cos(orbit.el) * orbit.dist,
-    Math.sin(orbit.el) * orbit.dist + 0.25,
+    Math.sin(orbit.el) * orbit.dist + 0.20,
     Math.sin(orbit.az) * Math.cos(orbit.el) * orbit.dist,
   );
-  camera.lookAt(0, 0.42, 0);
-  renderer.render(scene, camera);
+  camera.lookAt(0, 0.38, 0);
+  film.uniforms.time.value = now * 0.001;
+
+  if (fx) composer.render(); else renderer.render(scene, camera);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);

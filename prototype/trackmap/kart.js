@@ -54,14 +54,67 @@ function mat(color, o = {}) {
 // (±halfWidth, -z) for the car's length to run along Z, matching where the wheels,
 // seat and handlebars are placed. Emitting (z, ±halfWidth) puts the body across
 // the wheelbase instead.
+// Catmull-Rom resample of a polyline. The authored profiles are a dozen points; run
+// straight into ExtrudeGeometry they produce visibly faceted panel edges, which is the
+// single loudest "this is CG" cue on the whole model.
+function smooth(pts, perSeg = 9) {
+  const n = pts.length;
+  const P = (i) => pts[Math.min(n - 1, Math.max(0, i))];
+  const out = [];
+  for (let i = 0; i < n - 1; i++) {
+    const p0 = P(i - 1), p1 = P(i), p2 = P(i + 1), p3 = P(i + 2);
+    for (let j = 0; j < perSeg; j++) {
+      const t = j / perSeg, t2 = t * t, t3 = t2 * t;
+      out.push([
+        0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3),
+        0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3),
+      ]);
+    }
+  }
+  out.push(pts[n - 1]);
+  return out;
+}
+
 function outline(half, inset) {
   const s = new THREE.Shape();
-  const pts = half.map(([z, hw]) => [z, Math.max(0.02, hw - inset)]);
+  const pts = smooth(half.map(([z, hw]) => [z, Math.max(0.02, hw - inset)]));
   s.moveTo(-pts[0][1], -pts[0][0]);
   pts.forEach(([z, hw]) => s.lineTo(-hw, -z));
   for (let i = pts.length - 1; i >= 0; i--) s.lineTo(pts[i][1], -pts[i][0]);
   s.closePath();
   return s;
+}
+
+// Procedural roughness variation. Perfectly uniform roughness is unphotographic —
+// real paint has cloudiness, real tyres have wear. Cheap, and it breaks the plastic look.
+function noiseTexture(size = 256, base = 0.5, amp = 0.22, scale = 5) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const ctx = c.getContext('2d');
+  const img = ctx.createImageData(size, size);
+  let seed = 1337;
+  const rnd = () => (seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296;
+  const grid = scale + 1;
+  const lattice = Array.from({ length: grid * grid }, () => rnd());
+  const at = (x, y) => lattice[(y % grid) * grid + (x % grid)];
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const fx = (x / size) * scale, fy = (y / size) * scale;
+      const x0 = Math.floor(fx), y0 = Math.floor(fy);
+      const tx = fx - x0, ty = fy - y0;
+      const sx = tx * tx * (3 - 2 * tx), sy = ty * ty * (3 - 2 * ty);
+      const v = (at(x0, y0) * (1 - sx) + at(x0 + 1, y0) * sx) * (1 - sy)
+              + (at(x0, y0 + 1) * (1 - sx) + at(x0 + 1, y0 + 1) * sx) * sy;
+      const g = Math.max(0, Math.min(255, (base + (v - 0.5) * amp) * 255));
+      const i = (y * size + x) * 4;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = g;
+      img.data[i + 3] = 255;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  return t;
 }
 
 // Floor pan outline: rounded nose, widening to a square tail. From wiring.JPG.
@@ -87,16 +140,18 @@ function tube(points, radius, material) {
   const curve = new THREE.CatmullRomCurve3(
     points.map((p) => new THREE.Vector3(...p)), false, 'catmullrom', 0.35,
   );
-  return new THREE.Mesh(new THREE.TubeGeometry(curve, 40, radius, 8, false), material);
+  return new THREE.Mesh(new THREE.TubeGeometry(curve, 72, radius, 16, false), material);
 }
 
 // Chrome 5-spoke mag on a stub axle. Front and rear differ in width and diameter.
 function wheel(x, z, r, w) {
   const g = new THREE.Group();
   // torus reads as a tyre with a sidewall; a plain cylinder reads as a hockey puck
-  const tyre = new THREE.Mesh(
-    new THREE.TorusGeometry(r * 0.80, r * 0.22, 12, 30), mat(C.tyre, { roughness: 0.92, metalness: 0.04 }),
-  );
+  const tyreMat = mat(C.tyre, { roughness: 0.92, metalness: 0.04 });
+  const tyreRough = noiseTexture(128, 0.88, 0.26, 9);
+  tyreRough.repeat.set(8, 2);
+  tyreMat.roughnessMap = tyreRough;
+  const tyre = new THREE.Mesh(new THREE.TorusGeometry(r * 0.80, r * 0.22, 22, 56), tyreMat);
   tyre.rotation.y = Math.PI / 2;
   tyre.scale.x = Math.max(0.5, w / (r * 0.44));
   g.add(tyre);
@@ -106,11 +161,11 @@ function wheel(x, z, r, w) {
   // Open 5-spoke mag: a rim ring, five spokes reaching it, and a small hub. The
   // spokes must reach PAST the barrel radius or they are buried inside it and the
   // wheel reads as a plain black disc.
-  const ring = new THREE.Mesh(new THREE.TorusGeometry(r * 0.66, r * 0.075, 10, 28), rimMat);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(r * 0.66, r * 0.075, 16, 48), rimMat);
   ring.rotation.y = Math.PI / 2;
   g.add(ring);
 
-  const dish = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.20, r * 0.20, w * 0.70, 18), rimMat);
+  const dish = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.20, r * 0.20, w * 0.70, 40), rimMat);
   dish.rotation.z = Math.PI / 2;
   g.add(dish);
 
@@ -119,7 +174,7 @@ function wheel(x, z, r, w) {
     sp.rotation.x = (i / 5) * Math.PI;
     g.add(sp);
   }
-  const hub = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.12, r * 0.12, w * 1.30, 14), mat(C.hub, { metalness: 0.9, roughness: 0.28 }));
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.12, r * 0.12, w * 1.30, 28), mat(C.hub, { metalness: 0.9, roughness: 0.28 }));
   hub.rotation.z = Math.PI / 2;
   g.add(hub);
 
@@ -198,7 +253,7 @@ export function buildKart() {
 
   // ---- handlebar steering (NOT a wheel) ----
   const barMat = mat(0x1e1e1e, { roughness: 0.45, metalness: 0.4 });
-  const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.03, 0.40, 12), barMat);
+  const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.03, 0.40, 24), barMat);
   stem.position.set(0, y0 + 0.22, -0.30);
   stem.rotation.x = 0.42;
   kart.add(stem);
@@ -207,7 +262,7 @@ export function buildKart() {
     [0.14, y0 + 0.42, -0.44], [0.30, y0 + 0.38, -0.34],
   ], 0.017, barMat));
   [-1, 1].forEach((s) => {
-    const grip = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.13, 12), mat(0x0d0d0d, { roughness: 0.9 }));
+    const grip = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.13, 24), mat(0x0d0d0d, { roughness: 0.9 }));
     grip.position.set(s * 0.26, y0 + 0.39, -0.36);
     grip.rotation.set(0, 0, Math.PI / 2 - s * 0.32);
     kart.add(grip);
@@ -215,7 +270,7 @@ export function buildKart() {
 
   // ---- steering tie-rods along the pan ----
   [-1, 1].forEach((s) => {
-    const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.52, 8), mat(0xb6babe, { metalness: 0.85, roughness: 0.3 }));
+    const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.52, 16), mat(0xb6babe, { metalness: 0.85, roughness: 0.3 }));
     rod.position.set(s * 0.22, PAN_Y + 0.06, -0.66);
     rod.rotation.set(Math.PI / 2, 0, s * 0.30);
     kart.add(rod);
@@ -235,7 +290,7 @@ export function buildKart() {
 
   // front stub axles bridging pan edge to hub
   [-1, 1].forEach((s) => {
-    const ax = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.18, 10), mat(0x2a2a2a, { metalness: 0.7, roughness: 0.4 }));
+    const ax = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.18, 20), mat(0x2a2a2a, { metalness: 0.7, roughness: 0.4 }));
     ax.rotation.z = Math.PI / 2;
     ax.position.set(s * (TRACK / 2 - 0.10), R_FRONT, -0.72);
     kart.add(ax);
@@ -250,8 +305,13 @@ export function buildKart() {
 
   // ---- white composite bodywork (toggleable) ----
   const body = new THREE.Group();
-  // automotive paint: low roughness base under a clearcoat
+  // Automotive paint: low-roughness base under a clearcoat, with cloudy roughness
+  // variation so the panels aren't uniform plastic.
   const bodyMat = mat(C.body, { roughness: 0.35, metalness: 0.02, clearcoat: 1.0, clearcoatRoughness: 0.06, envMapIntensity: 1.2 });
+  const paintRough = noiseTexture(256, 0.42, 0.30, 4);
+  paintRough.repeat.set(2, 2);
+  bodyMat.roughnessMap = paintRough;
+  bodyMat.clearcoatRoughnessMap = paintRough;
 
   // Side panels, built as a silhouette in the (length, height) plane and extruded
   // across. This is the only construction that gives real wheel arches — the tyres
@@ -270,24 +330,23 @@ export function buildKart() {
     };
     // Bottom edge, nose -> tail. Only the front wheels need an arch; the single rear
     // wheel is centred behind the tail, so the flanks run unbroken to the back.
-    s.moveTo(-1.14, yb);
-    arch(-0.72, 0.235).forEach(([z, y]) => s.lineTo(z, y));
-    s.lineTo(0.86, yb);
-    // tail tapers in toward the centreline, then shoulder line forward
-    s.lineTo(0.98, yb + 0.10);
-    s.lineTo(1.02, yb + 0.20);
-    s.lineTo(0.60, yb + 0.255);
-    s.lineTo(0.10, yb + 0.265);
-    s.lineTo(-0.42, yb + 0.262);
-    s.lineTo(-0.84, yb + 0.235);
-    s.lineTo(-1.10, yb + 0.165);
+    // The arch stays sharp-edged (it is a cut edge on the real car); the shoulder line
+    // is splined, because that is a moulded curve.
+    const pts = [[-1.14, yb], ...arch(-0.72, 0.235), [0.86, yb]];
+    const shoulder = smooth([
+      [0.98, yb + 0.10], [1.02, yb + 0.20], [0.60, yb + 0.255], [0.10, yb + 0.265],
+      [-0.42, yb + 0.262], [-0.84, yb + 0.235], [-1.10, yb + 0.165],
+    ], 7);
+    s.moveTo(pts[0][0], pts[0][1]);
+    pts.forEach(([z, y]) => s.lineTo(z, y));
+    shoulder.forEach(([z, y]) => s.lineTo(z, y));
     s.closePath();
     return s;
   }
 
   [-1, 1].forEach((sgn) => {
     const panel = new THREE.Mesh(
-      new THREE.ExtrudeGeometry(sidePanel(), { depth: 0.022, bevelEnabled: true, bevelSize: 0.005, bevelThickness: 0.005, bevelSegments: 1 }),
+      new THREE.ExtrudeGeometry(sidePanel(), { depth: 0.022, bevelEnabled: true, bevelSize: 0.006, bevelThickness: 0.006, bevelSegments: 4, curveSegments: 24 }),
       bodyMat,
     );
     panel.rotation.y = -Math.PI / 2;
@@ -297,7 +356,7 @@ export function buildKart() {
 
   // nose cap closing the two panels at the front
   const nose = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.40, 0.34, 0.20, 20, 1, true, Math.PI * 0.62, Math.PI * 0.76),
+    new THREE.CylinderGeometry(0.40, 0.34, 0.20, 48, 1, true, Math.PI * 0.62, Math.PI * 0.76),
     mat(C.body, { roughness: 0.35, metalness: 0.02, clearcoat: 1.0, clearcoatRoughness: 0.06, side: THREE.DoubleSide }),
   );
   nose.position.set(0, PAN_Y + 0.13, -0.98);
@@ -342,7 +401,7 @@ export function buildKart() {
   const placeholders = [];
   [-1, 1].forEach((s) => {
     const mark = new THREE.Mesh(
-      new THREE.CircleGeometry(0.085, 24),
+      new THREE.CircleGeometry(0.085, 48),
       mat(C.livery, { roughness: 0.5, side: THREE.DoubleSide }),
     );
     mark.position.set(s * 0.398, PAN_Y + 0.15, -0.34);
