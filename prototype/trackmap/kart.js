@@ -227,19 +227,25 @@ export function buildKart() {
   kart.add(ctl);
 
   // ---- wheels ----
-  // Wheels sit outboard of the bodywork on stub axles — clear of the shell, as in
-  // the photographs, not tucked under it.
+  // Three wheels, confirmed by the team: two at the front on outboard stub axles,
+  // one centred at the rear. The car is a trike, not a four-wheeler.
   kart.add(wheel(-(TRACK / 2), -0.72, R_FRONT, 0.09));
   kart.add(wheel(TRACK / 2, -0.72, R_FRONT, 0.09));
-  kart.add(wheel(-(TRACK / 2), 0.80, R_REAR, 0.13));
-  kart.add(wheel(TRACK / 2, 0.80, R_REAR, 0.13));
+  kart.add(wheel(0, 0.94, R_REAR, 0.11));
 
-  // stub axles bridging pan edge to hub
-  [[-1, -0.72, R_FRONT], [1, -0.72, R_FRONT], [-1, 0.80, R_REAR], [1, 0.80, R_REAR]].forEach(([s, z, r]) => {
+  // front stub axles bridging pan edge to hub
+  [-1, 1].forEach((s) => {
     const ax = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.18, 10), mat(0x2a2a2a, { metalness: 0.7, roughness: 0.4 }));
     ax.rotation.z = Math.PI / 2;
-    ax.position.set(s * (TRACK / 2 - 0.10), r, z);
+    ax.position.set(s * (TRACK / 2 - 0.10), R_FRONT, -0.72);
     kart.add(ax);
+  });
+
+  // rear swingarm carrying the single wheel behind the tapered tail
+  [-1, 1].forEach((s) => {
+    kart.add(tube([
+      [s * 0.14, PAN_Y + 0.02, 0.62], [s * 0.10, R_REAR * 0.9, 0.82], [s * 0.055, R_REAR, 0.94],
+    ], 0.020, tubeMat));
   });
 
   // ---- white composite bodywork (toggleable) ----
@@ -262,15 +268,14 @@ export function buildKart() {
       }
       return pts;
     };
-    // bottom edge, nose -> tail, notched over each wheel
+    // Bottom edge, nose -> tail. Only the front wheels need an arch; the single rear
+    // wheel is centred behind the tail, so the flanks run unbroken to the back.
     s.moveTo(-1.14, yb);
     arch(-0.72, 0.235).forEach(([z, y]) => s.lineTo(z, y));
-    s.lineTo(0.30, yb);
-    arch(0.80, 0.275).forEach(([z, y]) => s.lineTo(z, y));
-    s.lineTo(1.12, yb);
-    // tail, then shoulder line forward, then down the nose
-    s.lineTo(1.14, yb + 0.15);
-    s.lineTo(1.06, yb + 0.235);
+    s.lineTo(0.86, yb);
+    // tail tapers in toward the centreline, then shoulder line forward
+    s.lineTo(0.98, yb + 0.10);
+    s.lineTo(1.02, yb + 0.20);
     s.lineTo(0.60, yb + 0.255);
     s.lineTo(0.10, yb + 0.265);
     s.lineTo(-0.42, yb + 0.262);

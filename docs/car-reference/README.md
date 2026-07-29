@@ -4,6 +4,15 @@ Everything here exists so the 3D kart is a faithful reconstruction of the team's
 actual car and not an invention. Rule: nothing goes into the model that cannot be
 traced to an image in this folder or in the repo.
 
+## Confirmed by the team
+
+- **The car is a trike.** Two wheels at the front on outboard stub axles, one wheel
+  centred at the rear. Not a four-wheeler. Every side-on and three-quarter photograph
+  is ambiguous about this, so it is written down here rather than re-derived.
+- **There are two liveries.** The current car is white composite with the hand-painted
+  cobra artwork. The earlier one was black and red, car number 010 — see `old-livery/`.
+  Both are this team's car. Neither may be captioned as the other.
+
 ## The car has two states
 
 This matters more than anything else here, and the site should use it.
