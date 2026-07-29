@@ -53,8 +53,25 @@ check('no unapproved hex in built CSS', () => {
   const allowed = new Set(['#0a0a0a','#141414','#1a1a1a','#7c0a02','#e6392b',
                            '#c9a227','#e8b923','#f5f0e8','#9aa3a8']);
   const strayHexIn = (css) => {
-    const hexes = (css.match(/#[0-9a-fA-F]{6}\b/g) || []).map((h) => h.toLowerCase());
-    return [...new Set(hexes)].filter((h) => !allowed.has(h));
+    // Match 3- and 6-digit hex with one pattern, normalise 3-digit shorthand to its 6-digit
+    // form by doubling each character, and run every match through the same allow-list
+    // comparison — one path, not a second parallel branch for shorthand. Every approved
+    // value's three character-pairs are non-doubled (e.g. #0a0a0a is 0a,0a,0a — 0 != a), so
+    // no approved colour can ever collapse to shorthand and normalising can't produce a
+    // false positive against the allow-list.
+    const matches = css.match(/#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/g) || [];
+    const byNormalized = new Map(); // normalised 6-digit value -> original hex as typed
+    for (const raw of matches) {
+      const original = raw.toLowerCase();
+      const digits = original.slice(1);
+      const normalized = digits.length === 3
+        ? `#${digits[0]}${digits[0]}${digits[1]}${digits[1]}${digits[2]}${digits[2]}`
+        : original;
+      if (!byNormalized.has(normalized)) byNormalized.set(normalized, original);
+    }
+    return [...byNormalized.entries()]
+      .filter(([normalized]) => !allowed.has(normalized))
+      .map(([normalized, original]) => (original === normalized ? normalized : `${original} (expands to ${normalized})`));
   };
 
   // Path 1: CSS Astro emitted as separate stylesheet chunks.
