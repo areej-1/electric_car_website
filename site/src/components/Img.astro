@@ -1,0 +1,11 @@
+---
+import { Image } from 'astro:assets';
+const {
+  src, alt, widths = [640, 1024, 1600],
+  sizes = '(max-width: 760px) 100vw, 1180px',
+  loading = 'lazy', class: className,
+} = Astro.props;
+if (alt == null) throw new Error('Img requires alt. Decorative images must pass alt="".');
+---
+<Image src={src} alt={alt} widths={widths} sizes={sizes}
+       loading={loading} decoding="async" format="webp" class={className} />
