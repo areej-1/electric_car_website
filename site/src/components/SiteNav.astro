@@ -1,0 +1,62 @@
+---
+import { t } from '../i18n/t.js';
+const { lang = 'en', page = 'index' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const prefix = lang === 'ar' ? `${base}/ar` : base;
+
+// Mirrors NAV_ITEMS / RESOURCE_ITEMS in cobras-lib.js. Kept identical in phase 1;
+// information architecture changes belong to phases 3 and 4.
+const NAV = [
+  { key: 'index', label: 'Home', href: '/' },
+  { key: 'members', label: 'Members', href: '/members' },
+  { key: 'projects', label: 'Our Work', href: '/projects' },
+  { key: 'specs', label: 'Specs', href: '/specs' },
+  { key: 'sponsors', label: 'Sponsor Us', href: '/sponsors' },
+];
+const RESOURCES = [
+  { key: 'race-day', label: 'Race Day', href: '/race-day' },
+  { key: 'news', label: 'News', href: '/news' },
+  { key: '101', label: 'Electric Cars 101', href: '/101' },
+  { key: 'checklist', label: 'Race checklist', href: '/checklist' },
+];
+const other = lang === 'ar' ? 'English' : 'العربية';
+const otherHref = lang === 'ar' ? `${base}/` : `${base}/ar/`;
+---
+<nav class="site-nav" aria-label={t(lang, page, 'Main')}>
+  <div class="shell nav-inner">
+    <a class="brand" href={prefix || '/'}>
+      <img src={`${base}/cobra-race-mark.png`} alt="SIS Al Jada Cobras" width="36" height="36" />
+    </a>
+    <ul class="nav-list">
+      {NAV.map((item) => (
+        <li>
+          <a href={`${prefix}${item.href}`} aria-current={item.key === page ? 'page' : undefined}>
+            {t(lang, page, item.label)}
+          </a>
+        </li>
+      ))}
+      <li class="has-sub">
+        <span>{t(lang, page, 'Resources')}</span>
+        <ul>
+          {RESOURCES.map((item) => (
+            <li><a href={`${prefix}${item.href}`}>{t(lang, page, item.label)}</a></li>
+          ))}
+        </ul>
+      </li>
+    </ul>
+    <a class="lang-switch" href={otherHref} lang={lang === 'ar' ? 'en' : 'ar'}>{other}</a>
+  </div>
+</nav>
+
+<style>
+  .site-nav { position: sticky; top: 0; z-index: 40; background: rgba(10,10,10,.88);
+              backdrop-filter: blur(8px); border-bottom: 1px solid rgba(154,163,168,.18); }
+  .nav-inner { display: flex; align-items: center; gap: 1.5rem; min-height: 60px; }
+  .nav-list { display: flex; gap: 1.25rem; list-style: none; margin: 0; padding: 0; flex: 1; }
+  .nav-list a { text-decoration: none; font-size: var(--step--1); }
+  .nav-list a[aria-current='page'] { color: var(--hot); }
+  .lang-switch { font-family: var(--font-display); font-size: var(--step--1);
+                 border: 1px solid var(--gold); padding: 6px 12px; text-decoration: none; }
+  .brand img { display: block; }
+  @media (max-width: 760px) { .nav-list { display: none; } }
+</style>
