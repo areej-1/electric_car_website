@@ -48,6 +48,28 @@ visible in the reference photos.
 
 ---
 
+## Where these can and cannot be used
+
+Read this before generating or using anything below. Generated images are
+**synthetic depictions of the product**, which is the same category as
+`car-rear.png` — the stock render currently on the site that we are deleting
+precisely because it isn't the team's car.
+
+**Fine:** concept and mood work, livery studies, backgrounds, page furniture, and
+anything captioned as a concept or visualisation. Also fine as reference to build
+accurate geometry from.
+
+**Not fine:** anywhere a sponsor or an EVGP judge would reasonably read the image as
+a photograph of the actual car — the homepage hero, the specs page, sponsor material,
+or anything next to a technical claim. Those need real photographs of the real car.
+
+The safest split: generated imagery for atmosphere, real photographs wherever the car
+is the subject of a claim. The page labels on the prompts below (Car page, specs, and
+so on) describe the shot composition each one is useful for, not a licence to publish
+the output as if it were a photograph on that page — the rule above still governs.
+
+---
+
 ## The prompts
 
 ### 1. Hero — dark studio (Car page)
@@ -72,7 +94,8 @@ visible in the reference photos.
 > Same car photographed from directly overhead, perfectly perpendicular, no
 > perspective distortion, car pointing straight up in frame. Plain mid-grey
 > background, soft even light, small contact shadow directly under the tyres only.
-> The full car in frame including all four wheels. Square.
+> The full car in frame including all three wheels — two front on outboard stub
+> axles, one centred at the rear. It is a trike, not a four-wheeler. Square.
 
 ### 4. Detail — front wheel and arch
 
@@ -103,22 +126,3 @@ visible in the reference photos.
 Consistency across eight generations is the weak point. If it holds, those eight
 frames drive a drag-to-spin viewer on the site. If it drifts, keep whichever single
 angle came out best and use it as a still.
-
----
-
-## Where these can and cannot be used
-
-Generated images are **synthetic depictions of the product**, which is the same
-category as `car-rear.png` — the stock render currently on the site that we are
-deleting precisely because it isn't the team's car.
-
-**Fine:** concept and mood work, livery studies, backgrounds, page furniture, and
-anything captioned as a concept or visualisation. Also fine as reference to build
-accurate geometry from.
-
-**Not fine:** anywhere a sponsor or an EVGP judge would reasonably read the image as
-a photograph of the actual car — the homepage hero, the specs page, sponsor material,
-or anything next to a technical claim. Those need real photographs of the real car.
-
-The safest split: generated imagery for atmosphere, real photographs wherever the car
-is the subject of a claim.
