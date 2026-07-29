@@ -155,7 +155,7 @@ heavier than the entire media problem this phase exists to fix."
 - Test: `tests/tokens.test.mjs`
 
 **Interfaces:**
-- Produces: CSS custom properties `--ink --panel --raised --cobra --hot --gold --soft-gold --cream --steel`, `--font-display`, `--font-body`, and the type scale `--step--1` through `--step-5`. Every later component reads these and never hardcodes a hex.
+- Produces: CSS custom properties `--ink --panel --raised --cobra --hot --gold --soft-gold --cream --steel`, `--font-display`, `--font-body`, and the type scale `--step--1` through `--step-4`. Every later component reads these and never hardcodes a hex.
 
 - [ ] **Step 1: Write the failing test**
 
