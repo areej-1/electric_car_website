@@ -8,12 +8,13 @@
 
 ## 1. What we are building
 
-A full rebuild of the SIS Al Jada Cobras website on Astro, with two WebGL surfaces:
+A full rebuild of the SIS Al Jada Cobras website on Astro, built around:
 
 - a **Track Map** page — a real satellite plate of Silverstone Circuit, graded to the
   Cobra palette, carrying the team's five build stages as clickable turns;
-- a **procedural 3D model of the team's actual kart**, which serves as the marker that
-  drives the Track Map lap and is also the hero of the Car page.
+- a **car asset produced by a designer**, integrated as the marker that drives the Track
+  Map lap and as the hero of the Car page. It arrives from outside this codebase — see
+  the integration contract in §5 — and a procedural stand-in holds its place meanwhile.
 
 All 14 existing pages are rebuilt. The work is phased (§10); each phase gets its own
 spec and its own pull request.
