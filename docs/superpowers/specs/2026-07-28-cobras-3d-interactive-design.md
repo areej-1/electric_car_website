@@ -34,6 +34,15 @@ All three are first-class, and they want different things:
 
 The site currently presents a car that is not the team's car.
 
+**The car is a trike** — two wheels at the front on outboard stub axles, one centred at the
+rear. Confirmed by the team. Every side-on and three-quarter photograph is ambiguous about
+this, so it is stated here rather than left to be re-derived.
+
+**There are two liveries.** The current car is white composite with hand-painted cobra
+artwork. The earlier one was black and red, car number 010 (`docs/car-reference/old-livery/`).
+Both are this team's car; neither may be captioned as the other. Early build-stage imagery
+legitimately shows the old livery.
+
 **The real kart**, evidenced by `wiring.JPG`, `adjust.MP4`, `home3.MP4` and `testing.MP4`:
 a silver aluminium flat floor pan with a red edge stripe, black tubular steel frame and
 roll structure, black bucket seat, **red 4-point racing harness**, bicycle-style spoked
@@ -163,12 +172,39 @@ the whole 5.9 km circuit in roughly 600 px — far short of what the page needs.
 
 ## 5. The kart module
 
-**Procedural three.js geometry authored in code. No binary model, no modelling tool.**
+**The car asset is owned by a designer, not by this codebase.** Our job is to integrate
+whatever they deliver, not to author it.
 
-This is not a fallback. The real car is tube frame, flat plate, cylinders and a seat, which
-maps directly onto `TubeGeometry` along curves, `ExtrudeGeometry`, and `CylinderGeometry`.
-The result is a few KB of readable, diffable, reviewable source instead of a multi-megabyte
-opaque binary, and there is no Blender on the build machine (§8).
+This changed during design. The original plan was procedural three.js geometry, and that
+was built — it lives at `prototype/kart/` and `prototype/trackmap/kart.js`. It is accurate
+about layout and components, and it is not photorealistic. Hand-placed primitives cannot
+be, no matter how far the lighting and post-processing are pushed, and they were pushed a
+long way.
+
+**Integration contract.** Whatever arrives — a mesh, a turntable image sequence, or a set
+of rendered stills — must satisfy:
+
+- Under **3 MB** total for mesh plus textures on the Car page, per the budget in §9
+- A **top-down** view, for the Track Map marker
+- A **square-on side profile**, to replace `car-rear.png`
+- Correct on the two facts every reference gets wrong: the car is a **trike** (two front
+  wheels on outboard stub axles, one centred at the rear), and the current livery is the
+  **white** car with hand-painted cobras, not the earlier black-and-red 010 car
+
+The procedural model stays as the stand-in until that lands, so no page is blocked. If the
+designer delivers a mesh, `kart.js` is deleted; if they deliver stills or a turntable, it
+is deleted too and the marker becomes an image. Either way it is scaffolding, not product.
+
+Reference for the designer is in `docs/car-reference/`, and prompts for generated
+concept imagery in `docs/car-reference/IMAGE-PROMPTS.md`.
+
+### Generated imagery
+
+Generated images are synthetic depictions of the product — the same category as
+`car-rear.png`, which §2 deletes. They are permitted for concept, mood, backgrounds and
+page furniture, and as reference to build accurate geometry from. They are **not**
+permitted on the homepage hero, the specs page, sponsor material, or anywhere adjacent to
+a technical claim, where a sponsor or judge would reasonably read them as a photograph.
 
 Components, authored from the real photographs and video:
 
@@ -298,10 +334,14 @@ Each phase is its own spec, its own plan, and its own pull request off `main`.
 
 | Phase | Contents | Depends on |
 |---|---|---|
-| 1 | Astro scaffold, design system, tokens, typography, shared shell, nav, footer, EN/AR routing, image pipeline, Actions workflow | — |
-| 2 | Kart module — procedural geometry, camera API, explode, hotspots, reduced-motion path | 1 |
-| 3 | Home, Track Map, Car/Specs, Our Work, Members | 1, 2 |
+| 1 | Astro scaffold, design system, tokens, typography, shared shell, nav, footer, EN/AR routing, image pipeline, Actions workflow, and the §2 deletions | — |
+| 2 | Track Map page — plate, turns, camera, detail panel, keyboard, reduced-motion | 1 |
+| 3 | Home, Car/Specs, Our Work, Members | 1 |
 | 4 | Race Day, News, Electric Cars 101, Checklist, About, Sponsors, Sponsor package, Game, 404 | 1 |
+
+The kart is no longer a phase. It is a **dependency arriving from outside** (§5), integrated
+wherever it lands, with the procedural stand-in holding its place until then. Nothing in
+phases 1–4 blocks on it.
 
 The Pages `legacy` → `workflow` switch lands in phase 1, separately verified.
 
