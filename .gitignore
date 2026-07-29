@@ -4,3 +4,11 @@ node_modules/
 *.log
 
 cargpt.config.js
+
+# HQ turntable source frames — 59 MB, processed into responsive output instead
+assets/car-turntable-hq/
+
+# Astro
+site/dist/
+site/.astro/
+site/node_modules/
