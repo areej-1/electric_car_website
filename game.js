@@ -51,7 +51,7 @@
 
   const images = {};
   [
-    ['car', 'car-rear.png'],
+    ['car', 'placeholder.png'],
     ['snake', 'cobra-front.png'],
     ['battery', 'battery-perspective.png'],
     ['skyline', 'dubai-pixel-skyline.png']

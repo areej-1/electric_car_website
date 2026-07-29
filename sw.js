@@ -13,7 +13,6 @@ const SHELL = [
   './manifest.webmanifest',
   './cobra-race-mark.png',
   './favicon.png',
-  './car-rear.png',
   './cobra-front.png',
   './battery-perspective.png',
   './dubai-pixel-skyline.png'
