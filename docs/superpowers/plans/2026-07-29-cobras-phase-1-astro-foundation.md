@@ -6,7 +6,7 @@
 
 **Architecture:** An Astro static site whose shared chrome resolves at build time, replacing the 62 KB `cobras-lib.js` that currently rebuilds nav and footer in the browser on every page load. Arabic stops being a 32 KB runtime DOM-walk and becomes real `/ar/` routes generated from the same translation data. Images go through Astro's built-in optimizer. The 14 pages are ported in phases 2–4; phase 1 ships the foundation plus one proving page.
 
-**Tech Stack:** Astro 5 (static output), sharp (bundled with Astro), Node 26.4.0, npm 11.17.0, GitHub Actions → GitHub Pages. Python/Pillow 11.3.0 retained only for the bespoke Silverstone colour grade.
+**Tech Stack:** Astro 7.1.5 (static output), sharp (bundled with Astro), Node 26.4.0, npm 11.17.0, GitHub Actions → GitHub Pages. Python/Pillow 11.3.0 retained only for the bespoke Silverstone colour grade.
 
 ## Global Constraints
 
