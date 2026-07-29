@@ -40,7 +40,7 @@ const otherHref = lang === 'ar' ? `${base}/` : `${base}/ar/`;
         </li>
       ))}
       <li class="has-sub">
-        <span>{t(lang, page, 'Resources')}</span>
+        <button type="button" class="has-sub-trigger" aria-haspopup="true">{t(lang, page, 'Resources')}</button>
         <ul>
           {RESOURCES.map((item) => (
             <li><a href={`${prefix}${item.href}`}>{t(lang, page, item.label)}</a></li>
@@ -62,5 +62,24 @@ const otherHref = lang === 'ar' ? `${base}/` : `${base}/ar/`;
   .lang-switch { font-family: var(--font-display); font-size: var(--step--1);
                  border: 1px solid var(--gold); padding: 6px 12px; text-decoration: none; }
   .brand img { display: block; }
+
+  /* Resources is a CSS-only disclosure, not a raw nested list: the trigger is a
+     real <button> (keyboard-reachable by default), and the submenu is positioned
+     off-flow and hidden via opacity/pointer-events rather than display/visibility,
+     so it stays in the tab order and opens the instant the button — its first
+     descendant — receives focus, before Tab moves any further into it. */
+  .has-sub { position: relative; }
+  .has-sub-trigger { font: inherit; font-size: var(--step--1); color: inherit;
+                      background: none; border: 0; padding: 0; cursor: pointer; }
+  .has-sub > ul { position: absolute; top: 100%; inset-inline-start: 0; z-index: 10;
+                  min-width: 180px; margin: 8px 0 0; padding: 8px 0; list-style: none;
+                  background: var(--panel); border: 1px solid rgba(154,163,168,.18);
+                  opacity: 0; pointer-events: none; transform: translateY(-4px);
+                  transition: opacity .15s ease, transform .15s ease; }
+  .has-sub:hover > ul, .has-sub:focus-within > ul {
+    opacity: 1; pointer-events: auto; transform: translateY(0);
+  }
+  .has-sub > ul a { display: block; padding: 8px 16px; white-space: nowrap; }
+
   @media (max-width: 760px) { .nav-list { display: none; } }
 </style>
