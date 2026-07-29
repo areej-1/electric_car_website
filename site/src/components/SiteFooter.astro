@@ -1,19 +1,18 @@
 ---
-import { t } from '../i18n/t.js';
-const { lang = 'en', page = 'index' } = Astro.props;
+import { tk } from '../i18n/t.js';
+const { lang = 'en' } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const prefix = lang === 'ar' ? `${base}/ar` : base;
-const year = 2026;
 ---
 <footer class="site-footer">
   <div class="shell foot-inner">
-    <p class="credit">{t(lang, page, 'Made by Areej and Mirza')}</p>
+    <p class="credit">{tk(lang, 'footer.made')}</p>
     <ul>
-      <li><a href={`${prefix}/about`}>{t(lang, page, 'About')}</a></li>
-      <li><a href={`${prefix}/sponsors`}>{t(lang, page, 'Sponsor Us')}</a></li>
-      <li><a href={`${prefix}/race-day`}>{t(lang, page, 'Race Day')}</a></li>
+      <li><a href={`${prefix}/about`}>{tk(lang, 'nav.about')}</a></li>
+      <li><a href={`${prefix}/sponsors`}>{tk(lang, 'nav.sponsors')}</a></li>
+      <li><a href={`${prefix}/race-day`}>{tk(lang, 'nav.raceDay')}</a></li>
     </ul>
-    <p class="copy">{t(lang, page, `Copyright ${year} SIS Al Jada Cobras`)}</p>
+    <p class="copy">{tk(lang, 'footer.rights')}</p>
   </div>
 </footer>
 

@@ -2,7 +2,7 @@
 import '../styles/base.css';
 import SiteNav from '../components/SiteNav.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { t, dirFor, title as trTitle } from '../i18n/t.js';
+import { tk, dirFor, title as trTitle } from '../i18n/t.js';
 
 const { lang = 'en', page = 'index', title, description } = Astro.props;
 const dir = dirFor(lang);
@@ -23,7 +23,7 @@ const base = import.meta.env.BASE_URL;
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;500;600&display=swap" />
 </head>
 <body>
-  <a class="skip-link" href="#main">{t(lang, page, 'Skip to content')}</a>
+  <a class="skip-link" href="#main">{tk(lang, 'skip')}</a>
   <SiteNav lang={lang} page={page} />
   <main id="main"><slot /></main>
   <SiteFooter lang={lang} page={page} />
