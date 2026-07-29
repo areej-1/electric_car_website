@@ -4,8 +4,10 @@ const { lang = 'en', page = 'index' } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const prefix = lang === 'ar' ? `${base}/ar` : base;
 
-// Mirrors NAV_ITEMS / RESOURCE_ITEMS in cobras-lib.js. Kept identical in phase 1;
-// information architecture changes belong to phases 3 and 4.
+// A reduced phase-1 shell, not a straight port of cobras-lib.js's NAV_ITEMS.
+// `game` and `about` are intentionally left out of the top nav — `about` lives
+// in the footer instead, and `game` has no phase-1 home yet. The full
+// information architecture is settled in phase 3, against the complete page set.
 const NAV = [
   { key: 'index', label: 'Home', href: '/' },
   { key: 'members', label: 'Members', href: '/members' },
