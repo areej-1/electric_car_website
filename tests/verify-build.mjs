@@ -16,6 +16,19 @@ check('build output exists', () => {
   assert.ok(fs.existsSync(path.join(dist, 'ar/index.html')), 'missing dist/ar/index.html');
 });
 
+// Composition of the nav's <a> tags, all rendered by SiteNav.astro: brand (1) +
+// NAV entries (5: Home, Members, Our Work, Specs, Sponsor Us) + RESOURCES entries
+// (4: Race Day, News, Electric Cars 101, Race checklist) + language switch (1) = 11.
+// Emptying NAV/RESOURCES — the exact mutation a previous review used to defeat this
+// check — leaves `class="site-nav"` and `site-footer` intact while dropping every
+// link, so a link count and specific routes are what actually prove real navigation
+// shipped, not just a correctly-classed empty shell.
+const EXPECTED_NAV_LINK_COUNT = 11;
+const EXPECTED_NAV_ROUTES = [
+  '/members', '/projects', '/specs', '/sponsors',
+  '/race-day', '/news', '/101', '/checklist',
+];
+
 for (const [page, lang, dir] of [['index.html', 'en', 'ltr'], ['ar/index.html', 'ar', 'rtl']]) {
   check(`${page} document language`, () => {
     const html = read(page);
@@ -26,6 +39,19 @@ for (const [page, lang, dir] of [['index.html', 'en', 'ltr'], ['ar/index.html', 
     const html = read(page);
     assert.match(html, /class="site-nav"/, 'nav missing from HTML');
     assert.match(html, /site-footer/, 'footer missing from HTML');
+
+    const navMatch = html.match(/<nav\b[^>]*class="site-nav"[\s\S]*?<\/nav>/);
+    assert.ok(navMatch, 'could not isolate <nav>...</nav> markup to inspect its links');
+    const navHtml = navMatch[0];
+
+    const linkCount = (navHtml.match(/<a\s/g) || []).length;
+    assert.equal(linkCount, EXPECTED_NAV_LINK_COUNT,
+      `expected ${EXPECTED_NAV_LINK_COUNT} links inside <nav> (brand + nav + resources ` +
+      `+ language switch), got ${linkCount} — an emptied NAV or RESOURCES array lands here`);
+
+    for (const route of EXPECTED_NAV_ROUTES) {
+      assert.match(navHtml, new RegExp(`href="[^"]*${route}"`), `nav is missing a link to ${route}`);
+    }
   });
   check(`${page} head`, () => {
     const html = read(page);
@@ -35,13 +61,12 @@ for (const [page, lang, dir] of [['index.html', 'en', 'ltr'], ['ar/index.html', 
   check(`${page} skip link`, () => {
     assert.match(read(page), /class="skip-link"/, 'missing skip link');
   });
+  check(`${page} no runtime chrome or translation blobs shipped`, () => {
+    const html = read(page);
+    assert.doesNotMatch(html, /cobras-lib\.js/, 'cobras-lib.js must not ship');
+    assert.doesNotMatch(html, /arabic\.js/, 'arabic.js must not ship');
+  });
 }
-
-check('no runtime chrome or translation blobs shipped', () => {
-  const html = read('index.html');
-  assert.doesNotMatch(html, /cobras-lib\.js/, 'cobras-lib.js must not ship');
-  assert.doesNotMatch(html, /arabic\.js/, 'arabic.js must not ship');
-});
 
 check('translation content survived the move', () => {
   assert.ok(Object.keys(COMMON).length >= 20, 'COMMON lost entries');
