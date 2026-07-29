@@ -130,17 +130,22 @@ check('no unapproved hex in built CSS', () => {
 });
 
 check('mobile page weight budget', () => {
+  // Covers HTML, CSS, JS *and* images. A budget that stops at markup and code
+  // is blind to exactly the kind of asset most likely to blow it — a 778 KB
+  // logo sitting in public/ once passed this check reporting 13 KB, because
+  // public/ bypasses the Astro optimizer and .png wasn't in the extension
+  // list. Every file actually shipped to the browser counts now.
   let total = 0;
   const walk = (d) => {
     for (const e of fs.readdirSync(d, { withFileTypes: true })) {
       const p = path.join(d, e.name);
       if (e.isDirectory()) walk(p);
-      else if (/\.(html|css|js)$/.test(e.name)) total += fs.statSync(p).size;
+      else if (/\.(html|css|js|png|jpe?g|webp|avif|gif|svg|ico)$/i.test(e.name)) total += fs.statSync(p).size;
     }
   };
   walk(dist);
   const kb = Math.round(total / 1024);
-  console.log(`      HTML+CSS+JS total: ${kb} KB`);
+  console.log(`      Total shipped (HTML+CSS+JS+images): ${kb} KB`);
   assert.ok(kb < 500, `budget is 500 KB, got ${kb} KB`);
 });
 
