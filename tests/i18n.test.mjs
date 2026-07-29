@@ -27,17 +27,20 @@ assert.equal(TITLES['members.html'], 'الأعضاء | فريق كوبرا سي�
 
 // Page-specific entries win over COMMON in t(). No key in the current extracted data overlaps
 // between COMMON and any PAGES[page] (checked directly against arabic.js's source objects —
-// zero overlaps), so no real string exercises both branches of t()'s if/else-if on the same
-// key. What real data lets us test is each branch independently: a page-only key resolves
-// through the PAGES branch (below), and a COMMON-only key resolves through the COMMON branch
-// ('Our Team' above, which no page overrides). Since t() checks perPage first and returns
-// immediately on a hit — never falling through to COMMON — these two independently-verified
-// branches establish the precedence by construction of the code, not by a real overlapping-key
-// example.
-assert.equal(
-  t('ar', 'members', membersOverrideKey),
-  'تسعة عشر طالبًا وطالبة يساهمون في سيارة سباق كوبرا عبر الميكانيكا والسلامة والابتكار والإعلام والقيادة.'
-);
+// zero overlaps), which is why the overlap is constructed here rather than found in real data.
+// COMMON and PAGES are plain, unfrozen objects, so a synthetic key — one that cannot collide
+// with real content — is injected into both, t() is called through the real page-resolution
+// path, and both injected entries are removed again in a finally block so the suite leaves no
+// residue whether the assertion passes or throws.
+const precedenceKey = '__i18n_precedence_probe__';
+COMMON[precedenceKey] = 'COMMON-VALUE';
+PAGES['members.html'][precedenceKey] = 'PAGE-VALUE';
+try {
+  assert.equal(t('ar', 'members', precedenceKey), 'PAGE-VALUE');
+} finally {
+  delete COMMON[precedenceKey];
+  delete PAGES['members.html'][precedenceKey];
+}
 
 // The credit line is required by DESIGN.md section 5 and must survive the move.
 assert.equal(t('ar', 'index', 'Made by Areej and Mirza'), 'تصميم وتطوير عريج وميرزا');
