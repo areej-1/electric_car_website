@@ -5,7 +5,8 @@ node_modules/
 
 cargpt.config.js
 
-# HQ turntable source frames — 59 MB, processed into responsive output instead
+# HQ turntable source frames — 59 MB, kept out of git; no responsive output
+# exists yet, this just pre-empts an accidental commit if the frames land here
 assets/car-turntable-hq/
 
 # Astro
