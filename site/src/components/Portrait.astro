@@ -1,0 +1,28 @@
+---
+const { name, role, photo } = Astro.props;
+const initials = String(name || '')
+  .split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
+---
+<figure class="portrait">
+  {photo
+    ? <img src={photo} alt={`${name}, ${role}`} width="320" height="400" loading="lazy" />
+    : <div class="ph" role="img" aria-label={`${name}, ${role}. Photograph pending.`}>
+        <span class="initials">{initials}</span>
+      </div>}
+  <figcaption>
+    <span class="name">{name}</span>
+    <span class="role">{role}</span>
+  </figcaption>
+</figure>
+
+<style>
+  .portrait { margin: 0; }
+  .ph { aspect-ratio: 4 / 5; display: grid; place-items: center;
+        background: var(--panel); border: 1px solid rgba(201,162,39,.28);
+        border-top: 2px solid var(--hot); }
+  .initials { font-family: var(--font-display); font-weight: 900;
+              font-size: var(--step-2); color: var(--gold); letter-spacing: .06em; }
+  figcaption { display: flex; flex-direction: column; padding-top: 10px; }
+  .name { font-family: var(--font-display); font-size: var(--step--1); }
+  .role { color: var(--steel); font-size: var(--step--1); }
+</style>
