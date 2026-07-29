@@ -1064,18 +1064,26 @@ Replace the `scripts` block in `package.json`:
 
 ```json
   "scripts": {
-    "build:viewer": "node tools/build-kart-viewer.mjs",
     "start": "npx --yes serve -l 3000",
     "dev": "npm --prefix site run dev",
     "build": "npm --prefix site run build",
+    "test:legacy": "node tests/cobras-lib.test.mjs && node tests/arabic.test.mjs",
     "test:unit": "node tests/tokens.test.mjs && node tests/i18n.test.mjs && node tests/honesty.test.mjs",
     "test:build": "node tests/verify-build.mjs && node tests/images.test.mjs",
-    "test": "npm run test:unit && npm run build && npm run test:build",
+    "test": "npm run test:legacy && npm run test:unit && npm run build && npm run test:build",
     "verify": "npm test"
   }
 ```
 
-`build:viewer` is preserved — it belongs to the concurrent car session and must not be dropped.
+**`test:legacy` is deliberately retained.** `cobras-lib.js` and `arabic.js` are still
+referenced by 13 legacy pages that phase 1 does not touch — they stop shipping only when
+phase 4 removes the last of those pages. Dropping their tests now would leave live code
+unguarded for three phases.
+
+**Do not add `build:viewer`.** It and `tools/build-kart-viewer.mjs` belong to a concurrent
+session and are uncommitted on another working tree; they do not exist at this branch's
+base. Adding the script here would point npm at a missing file. It arrives on its own when
+the two branches merge.
 
 - [ ] **Step 3: Run the whole suite**
 
@@ -1092,6 +1100,8 @@ git mv tests/verify-site.mjs tests/legacy-verify-site.mjs.bak
 ```
 
 Kept rather than deleted — phases 3 and 4 port its page-level assertions as each page moves across. It is out of `npm test` because it asserts against source HTML that those phases delete.
+
+**Merge note:** a concurrent session has uncommitted modifications to `tests/verify-site.mjs` on another working tree. This rename will collide with those edits when the branches merge. Resolve by taking their modified file and re-applying the rename — their added assertions belong to the car viewer and must not be lost to this rename.
 
 - [ ] **Step 5: Commit**
 
