@@ -1,6 +1,7 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Meet the SIS Al Jada Cobras, a student electric race car team building for the Electric Vehicle Grand Prix.">
@@ -41,156 +42,65 @@
   <link rel="prefetch" href="projects.html">
   <link rel="prefetch" href="members.html">
   <link rel="prefetch" href="sponsors.html">
+  <link rel="stylesheet" href="assets/home/homepage.css">
 </head>
 <body>
-    <nav class="site-nav" data-i18n-aria="nav.main" aria-label="Main navigation"></nav>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="site-nav" data-i18n-aria="nav.main" aria-label="Main navigation"></nav>
 
-  <main id="main">
-    <header class="home-hero">
-      <span class="eyebrow" data-i18n="home.eyebrow">EVGP · SABIS® Al Jada · Sharjah</span>
-      <h1><span data-i18n="home.title1">Built to strike.</span><br><span data-i18n="home.title2">Engineered to race.</span></h1>
-      <p data-i18n="home.lead">We are a Grades 11–12 student team turning classroom knowledge into a competition-ready electric race car—one design, test, and hard-earned improvement at a time.</p>
-      <div class="hero-actions">
-        <a class="primary-action" href="projects.html" data-i18n="home.ctaBuild">Follow the build</a>
-        <a class="secondary-action" href="members.html" data-i18n="home.ctaCrew">Meet the crew</a>
-      </div>
-      <div class="hero-proof" aria-label="Team highlights">
-        <div><strong>19</strong><span data-i18n="home.builders">Student builders</span></div>
-        <div><strong>48V</strong><span data-i18n="home.system">Electric system</span></div>
-        <div><strong>EVGP</strong><span data-i18n="home.target">Competition target</span></div>
-      </div>
-    </header>
-
-    <section class="race-countdown" data-race-date="2027-02-13T00:00:00+04:00">
-      <div><span class="section-kicker" data-i18n="home.countKicker">Target race date · February 13, 2027</span><h2 data-i18n="home.countTitle">The countdown to EVGP is on.</h2></div>
-      <div class="countdown-grid" role="timer" aria-label="EVGP countdown">
-        <div><strong data-countdown="days">---</strong><span data-i18n="home.days">Days</span></div>
-        <div><strong data-countdown="hours">--</strong><span data-i18n="home.hours">Hours</span></div>
-        <div><strong data-countdown="minutes">--</strong><span data-i18n="home.minutes">Minutes</span></div>
-        <div><strong data-countdown="seconds">--</strong><span data-i18n="home.seconds">Seconds</span></div>
-      </div>
-    </section>
-
-    <section class="build-status" aria-labelledby="build-status-title">
-      <div class="section-heading">
-        <div class="section-index" data-i18n="home.statusIndex">Current / Build status</div>
-        <div><span class="section-kicker" data-i18n="home.statusKicker">Published workshop snapshot</span><h2 id="build-status-title" data-i18n="home.statusTitle">Current priority: system testing.</h2><p data-i18n="home.statusNote">This status comes from the latest workshop log, not a live telemetry feed.</p></div>
-      </div>
-      <div class="status-grid">
-        <article><span data-i18n="home.statusCompletion">Completion percentage</span><strong data-i18n="common.awaitingSignoff">Awaiting team sign-off</strong></article>
-        <article><span data-i18n="home.statusCurrent">Current task</span><strong data-i18n="home.nowT">System testing</strong><p data-i18n="home.nowB">Verify controls, electrical connections, and safe shutdown behavior.</p></article>
-        <article><span data-i18n="home.statusNext">Next milestone</span><strong data-i18n="home.nextT">Track refinement</strong><p data-i18n="home.nextB">Use driving feedback to improve stability, balance, and consistency.</p></article>
-        <article><span data-i18n="home.statusCrew">Crew assignment</span><strong data-i18n="common.toBeConfirmed">To be confirmed</strong><p data-i18n="home.statusUpdated">Latest published update: 1 July 2026</p></article>
-      </div>
-      <a class="text-link" href="news.html"><span data-i18n="home.statusLink">Read the dated workshop log</span> <span>→</span></a>
-    </section>
-
-    <section class="landing-intro">
-      <div class="section-index" data-i18n="home.teamIndex">01 / The team</div>
-      <div class="landing-intro-copy">
-        <span class="section-kicker" data-i18n="home.teamKicker">More than a school project</span>
-        <h2 data-i18n="home.teamTitle">One car. Many disciplines. A real starting grid.</h2>
-        <p data-i18n="home.teamBody">The Cobras bring mechanics, electrical systems, safety, design, media, and race strategy into one student-led program. Every member owns part of the result—and every decision has to work on the track.</p>
-        <a class="text-link" href="about.html"><span data-i18n="home.teamLink">Discover our mission</span> <span>→</span></a>
-      </div>
-      <figure class="landing-feature-image">
-        <img src="design.JPG" alt="SIS Al Jada Cobras students gathered in the electric car project room" loading="eager" fetchpriority="high" decoding="async">
-        <figcaption data-i18n="home.teamCap">The Cobras team inside the electric car project room.</figcaption>
-      </figure>
-    </section>
-
-    <section class="landing-pillars">
-      <div class="section-heading">
-        <div class="section-index" data-i18n="home.driveIndex">02 / What drives us</div>
-        <div><span class="section-kicker" data-i18n="home.driveKicker">The Cobra standard</span><h2 data-i18n="home.driveTitle">Built around real engineering.</h2></div>
-      </div>
-      <div class="pillar-grid">
-        <article><span>01</span><h3 data-i18n="home.p1t">Design with purpose</h3><p data-i18n="home.p1b">We translate competition rules, driver needs, and safety constraints into a practical car layout.</p></article>
-        <article><span>02</span><h3 data-i18n="home.p2t">Build as one team</h3><p data-i18n="home.p2b">Mechanical, electrical, safety, and media crews work together instead of operating in isolation.</p></article>
-        <article><span>03</span><h3 data-i18n="home.p3t">Test. Learn. Repeat.</h3><p data-i18n="home.p3b">Every run gives us data. We troubleshoot, adjust, and return stronger for the next test.</p></article>
-      </div>
-    </section>
-
-    <section class="car-dashboard">
-      <div class="section-heading">
-        <div class="section-index" data-i18n="home.machIndex">03 / The machine</div>
-        <div><span class="section-kicker" data-i18n="home.machKicker">Current build dashboard</span><h2 data-i18n="home.machTitle">The Cobra by the numbers.</h2><p data-i18n="home.machBody">These figures reflect the current build and will evolve as testing continues.</p></div>
-      </div>
-      <div class="dashboard-grid">
-        <article><span data-i18n="home.vLabel">System voltage</span><strong>48<small>V</small></strong><i data-i18n="home.vNote">4 × 12V batteries</i></article>
-        <article><span data-i18n="home.wLabel">Total weight</span><strong>186<small>kg</small></strong><i data-i18n="home.wNote">Current measured build</i></article>
-        <article><span data-i18n="home.sLabel">Average speed</span><strong>30<small>km/h</small></strong><i data-i18n="home.sNote">Testing benchmark</i></article>
-        <article><span data-i18n="home.rLabel">Estimated runtime</span><strong>1–3<small>hrs</small></strong><i data-i18n="home.rNote">Depending on load</i></article>
-      </div>
-      <a class="text-link" href="specs.html"><span data-i18n="home.specsLink">Open the complete specification sheet</span> <span>→</span></a>
-    </section>
-
-    <section class="landing-journey">
-      <div class="journey-visual">
-        <img src="wiring.JPG" alt="Electrical wiring work on the Cobras race car" loading="lazy" decoding="async">
-      </div>
-      <div class="journey-copy">
-        <div class="section-index" data-i18n="home.buildIndex">04 / The build</div>
-        <span class="section-kicker" data-i18n="home.buildKicker">From sketch to circuit</span>
-        <h2 data-i18n="home.buildTitle">We build the car—and the skills behind it.</h2>
-        <ol>
-          <li><span>01</span><div><strong data-i18n="home.plan">Plan</strong><p data-i18n="home.planBody">Define the targets, rules, layout, parts, and safety requirements.</p></div></li>
-          <li><span>02</span><div><strong data-i18n="home.assemble">Assemble</strong><p data-i18n="home.assembleBody">Turn the design into a physical chassis, power system, and controls.</p></div></li>
-          <li><span>03</span><div><strong data-i18n="home.prove">Prove</strong><p data-i18n="home.proveBody">Test performance, diagnose problems, and refine the car for EVGP.</p></div></li>
-        </ol>
-        <a class="primary-action" href="projects.html" data-i18n="home.phases">See every phase</a>
-      </div>
-    </section>
-
-    <section class="engineering-stories">
-      <div class="section-heading">
-        <div class="section-index" data-i18n="home.engIndex">05 / Engineering</div>
-        <div><span class="section-kicker" data-i18n="home.engKicker">Problems become progress</span><h2 data-i18n="home.engTitle">What we learn when the first idea fails.</h2></div>
-      </div>
-      <div class="story-grid">
-        <article><div class="story-tag" data-i18n="home.ch1">Weight balance</div><div class="decision-step"><span data-i18n="home.problem">Problem</span><p data-i18n="home.ch1Problem">Uneven weight can change how the car turns and behaves at speed.</p></div><div class="decision-step"><span data-i18n="home.decision">Decision</span><p data-i18n="home.ch1Decision">Mechanics shifted battery placement after low-speed runs.</p></div><div class="decision-step is-result"><span data-i18n="home.result">Result / next test</span><p data-i18n="home.ch1Result">Weight remains near 186 kg; a new weigh-in is pending after the next parts change.</p></div></article>
-        <article><div class="story-tag" data-i18n="home.ch2">Reliable wiring</div><div class="decision-step"><span data-i18n="home.problem">Problem</span><p data-i18n="home.ch2Problem">Loose or unclear connections make troubleshooting slower and less safe.</p></div><div class="decision-step"><span data-i18n="home.decision">Decision</span><p data-i18n="home.ch2Decision">The electrical crew re-checked the 48V layout, secured connectors, and re-labeled critical runs.</p></div><div class="decision-step is-result"><span data-i18n="home.result">Result / next test</span><p data-i18n="home.ch2Result">The next test day has a clearer, faster troubleshooting path.</p></div></article>
-        <article><div class="story-tag" data-i18n="home.ch3">Driver protection</div><div class="decision-step"><span data-i18n="home.problem">Problem</span><p data-i18n="home.ch3Problem">Performance only matters when the driver and crew can operate safely.</p></div><div class="decision-step"><span data-i18n="home.decision">Decision</span><p data-i18n="home.ch3Decision">Use an emergency kill switch, seat belt, helmet, and repeatable pre-run checks.</p></div><div class="decision-step is-result"><span data-i18n="home.result">Result / next test</span><p data-i18n="home.ch3Result">The hardware is documented; final race-day safety sign-off is still tracked in the checklist.</p></div></article>
-      </div>
-    </section>
-
-    <section class="workshop-journal">
-      <div class="section-heading">
-        <div class="section-index" data-i18n="home.logIndex">06 / Workshop log</div>
-        <div><span class="section-kicker" data-i18n="home.logKicker">Dated workshop notes</span><h2 data-i18n="home.logTitle">Latest verified updates.</h2></div>
-      </div>
-      <div class="journal-list">
-        <article><time datetime="2026-07-01" data-i18n="home.logDate1">1 Jul 2026</time><div><span class="log-tag" data-i18n="home.logTag1">Electrical</span><h3 data-i18n="home.logEntry1">Kill switch and critical-run labels checked</h3><p data-i18n="home.logBody1">Connectors were secured and the 48V layout was re-labeled for faster troubleshooting.</p></div></article>
-        <article><time datetime="2026-06-18" data-i18n="home.logDate2">18 Jun 2026</time><div><span class="log-tag" data-i18n="home.logTag2">Mechanical</span><h3 data-i18n="home.logEntry2">Battery placement shifted after low-speed runs</h3><p data-i18n="home.logBody2">The build remains near 186 kg; the next parts change will be followed by another weigh-in.</p></div></article>
-        <article><time datetime="2026-06-04" data-i18n="home.logDate3">4 Jun 2026</time><div><span class="log-tag" data-i18n="home.logTag3">Media</span><h3 data-i18n="home.logEntry3">Sponsor package prepared</h3><p data-i18n="home.logBody3">The media crew published the sponsor PDF and refreshed outreach materials.</p></div></article>
-      </div>
-      <a class="text-link" href="news.html"><span data-i18n="home.logLink">Open the complete workshop log</span> <span>→</span></a>
-    </section>
-
-    <section class="landing-cta">
-      <img src="cobra-race-mark.png" alt="" width="100" height="100" aria-hidden="true">
-      <div><span class="section-kicker" data-i18n="home.ctaKicker">Ready for the grid</span><h2 data-i18n="home.ctaTitle">Follow the Cobras from workshop to race day.</h2></div>
-      <a class="secondary-action" href="race-day.html" data-i18n="nav.raceDay">Race Day</a>
-      <a class="primary-action" href="news.html" data-i18n="home.ctaNews">Latest news</a>
-      <a class="secondary-action" href="specs.html" data-i18n="home.ctaSpecs">Explore the car specs</a>
-    </section>
-
-    <button class="open-button" type="button">CarGPT</button>
-    <div class="chat-popup" id="myForm">
-      <div class="form-container">
-        <h1>CarGPT</h1>
-        <div id="chatMessages" class="chat-messages"><div class="bot-msg" data-i18n="chat.intro">Ask me about the team, EVGP, or electric cars.</div></div>
-        <div class="chat-prompts">
-          <button type="button" data-i18n="chat.prompt48">How does the 48V system work?</button>
-          <button type="button" data-i18n="chat.promptEVGP">What is EVGP?</button>
-          <button type="button" data-i18n="chat.promptSponsor">How can I sponsor the team?</button>
-        </div>
-        <textarea id="chatInput" aria-label="Message to CarGPT" maxlength="1200" placeholder="Ask CarGPT…"></textarea>
-        <button type="button" class="btn">Send</button>
-        <button type="button" class="btn cancel">Close</button>
-      </div>
-    </div>
-  </main>
+  <!-- The homepage, lifted from the Astro build. The nav above and the footer
+       below are the live site's own, built at runtime by site.js exactly as on
+       every other page — only what sits between them is new. `cobras-home`
+       carries the design tokens this content needs without leaking them. -->
+  <main id="main" class="cobras-home"><header class="home-world" data-home-world style="--hero-mark:url(assets/home/cobra-race-mark.BrGCG4cY.png)" data-astro-cid-zkhec6xw><div class="world-pin" data-astro-cid-zkhec6xw><!-- The car itself, crossing the hero. Not a cut-out: see
+         tools/build-side-profile.mjs for why one cannot be made honestly from
+         these frames. The sweep it is shot on matches --ink closely enough that
+         a soft edge mask is all it takes to read as a silhouette here. --><img class="world-car" data-world-car src="assets/home/car-side.CB839PJm.webp" width="1400" height="933" alt="" aria-hidden="true" decoding="async" loading="lazy" draggable="false" data-astro-cid-zkhec6xw><div class="world-strip" data-world style="--panels:6" data-astro-cid-zkhec6xw><section class="world-panel world-intro" data-world-panel data-astro-cid-zkhec6xw><span class="eyebrow" data-astro-cid-zkhec6xw>EVGP · SABIS® Al Jada · Sharjah</span><h1 data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Built to strike.</span><br data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Engineered to race.</span></h1><p class="hero-lead" data-astro-cid-zkhec6xw>We are a Grades 11–12 student team turning classroom knowledge into a competition-ready electric race car—one design, test, and hard-earned improvement at a time.</p><div class="hero-actions" data-astro-cid-zkhec6xw><a class="btn-primary" href="projects.html" data-astro-cid-zkhec6xw>Follow the build</a><a class="btn-secondary" href="members.html" data-astro-cid-zkhec6xw>Meet the crew</a></div></section><section class="world-panel world-stage" data-world-panel style="--ghost:&quot;01&quot;" data-astro-cid-zkhec6xw><div class="world-stage-copy" data-astro-cid-zkhec6xw><span class="world-n" data-astro-cid-zkhec6xw>01</span><span class="world-kicker" data-astro-cid-zkhec6xw>Define the mission</span><h2 data-astro-cid-zkhec6xw>Design + planning</h2><p data-astro-cid-zkhec6xw>Set performance targets, study EVGP requirements, choose parts, and turn constraints into a buildable layout.</p><ul class="world-tags" data-astro-cid-zkhec6xw><li data-astro-cid-zkhec6xw>Competition rules</li><li data-astro-cid-zkhec6xw>Component selection</li><li data-astro-cid-zkhec6xw>Safety planning</li></ul></div><figure class="world-stage-figure" data-astro-cid-zkhec6xw><!-- `img-skeleton` (see base.css) fills the reserved box with a panel colour
+     until the picture decodes over it. On by default, because every image this
+     component renders is an opaque photograph. Pass skeleton={false} for a mark
+     with transparency: a panel fill behind one of those is not a placeholder
+     that disappears, it is a grey tile that never goes away. --><img src="assets/home/design.stK4FURP_Z7s6QE.webp" srcset="assets/home/design.stK4FURP_1hqhFr.webp 420w, assets/home/design.stK4FURP_Z7s6QE.webp 720w" alt="Cobras students at the project room noticeboard" sizes="(max-width: 900px) 90vw, 420px" loading="lazy" decoding="async" width="720" height="1280" class="img-skeleton"></figure></section><section class="world-panel world-stage" data-world-panel style="--ghost:&quot;02&quot;" data-astro-cid-zkhec6xw><div class="world-stage-copy" data-astro-cid-zkhec6xw><span class="world-n" data-astro-cid-zkhec6xw>02</span><span class="world-kicker" data-astro-cid-zkhec6xw>Make it physical</span><h2 data-astro-cid-zkhec6xw>Build + assembly</h2><p data-astro-cid-zkhec6xw>Fit the frame, steering, seat, wheels, controls, and mechanical systems into one working machine.</p><ul class="world-tags" data-astro-cid-zkhec6xw><li data-astro-cid-zkhec6xw>Chassis assembly</li><li data-astro-cid-zkhec6xw>Driver ergonomics</li><li data-astro-cid-zkhec6xw>Mechanical fit</li></ul></div><figure class="world-stage-figure" data-astro-cid-zkhec6xw><!-- `img-skeleton` (see base.css) fills the reserved box with a panel colour
+     until the picture decodes over it. On by default, because every image this
+     component renders is an opaque photograph. Pass skeleton={false} for a mark
+     with transparency: a panel fill behind one of those is not a placeholder
+     that disappears, it is a grey tile that never goes away. --><img src="assets/home/build-frame.DW1iSp2y_26H8sG.webp" srcset="assets/home/build-frame.DW1iSp2y_ZKSSxd.webp 420w, assets/home/build-frame.DW1iSp2y_26H8sG.webp 480w" alt="Still from the team’s assembly video: a bracket being drilled beside the seat frame, red harness webbing behind it" sizes="(max-width: 900px) 90vw, 420px" loading="lazy" decoding="async" width="480" height="848" class="img-skeleton"></figure></section><section class="world-panel world-stage" data-world-panel style="--ghost:&quot;03&quot;" data-astro-cid-zkhec6xw><div class="world-stage-copy" data-astro-cid-zkhec6xw><span class="world-n" data-astro-cid-zkhec6xw>03</span><span class="world-kicker" data-astro-cid-zkhec6xw>Bring it to life</span><h2 data-astro-cid-zkhec6xw>Wiring + controls</h2><p data-astro-cid-zkhec6xw>Connect batteries, controller, motor, kill switch, and driver inputs into an organized 48V system.</p><ul class="world-tags" data-astro-cid-zkhec6xw><li data-astro-cid-zkhec6xw>Power distribution</li><li data-astro-cid-zkhec6xw>Control wiring</li><li data-astro-cid-zkhec6xw>Safe shutdown</li></ul></div><figure class="world-stage-figure" data-astro-cid-zkhec6xw><!-- `img-skeleton` (see base.css) fills the reserved box with a panel colour
+     until the picture decodes over it. On by default, because every image this
+     component renders is an opaque photograph. Pass skeleton={false} for a mark
+     with transparency: a panel fill behind one of those is not a placeholder
+     that disappears, it is a grey tile that never goes away. --><img src="assets/home/wiring.ConTXz6K_dPKgz.webp" srcset="assets/home/wiring.ConTXz6K_1CJ9NF.webp 420w, assets/home/wiring.ConTXz6K_dPKgz.webp 720w" alt="The bare chassis indoors with its seat, red four-point harness and one rear wheel fitted, three students sitting beside it" sizes="(max-width: 900px) 90vw, 420px" loading="lazy" decoding="async" width="720" height="1280" class="img-skeleton"></figure></section><section class="world-panel world-stage" data-world-panel style="--ghost:&quot;04&quot;" data-astro-cid-zkhec6xw><div class="world-stage-copy" data-astro-cid-zkhec6xw><span class="world-n" data-astro-cid-zkhec6xw>04</span><span class="world-kicker" data-astro-cid-zkhec6xw>Find the weak points</span><h2 data-astro-cid-zkhec6xw>Testing + troubleshooting</h2><p data-astro-cid-zkhec6xw>Run the car, observe its behavior, diagnose failures, and record what must change before the next session.</p><ul class="world-tags" data-astro-cid-zkhec6xw><li data-astro-cid-zkhec6xw>Functional tests</li><li data-astro-cid-zkhec6xw>Driver feedback</li><li data-astro-cid-zkhec6xw>Fault diagnosis</li></ul></div><figure class="world-stage-figure" data-astro-cid-zkhec6xw><!-- `img-skeleton` (see base.css) fills the reserved box with a panel colour
+     until the picture decodes over it. On by default, because every image this
+     component renders is an opaque photograph. Pass skeleton={false} for a mark
+     with transparency: a panel fill behind one of those is not a placeholder
+     that disappears, it is a grey tile that never goes away. --><img src="assets/home/testing-frame.BhIl2N8s_Z2eDdh9.webp" srcset="assets/home/testing-frame.BhIl2N8s_1yvmMj.webp 420w, assets/home/testing-frame.BhIl2N8s_Z2eDdh9.webp 432w" alt="The car stopped on paving beside a running track, a helmeted driver seated in it while one team member rests a hand on the roll bar and another holds a clipboard" sizes="(max-width: 900px) 90vw, 420px" loading="lazy" decoding="async" width="432" height="832" class="img-skeleton"></figure></section><section class="world-panel world-stage" data-world-panel style="--ghost:&quot;05&quot;" data-astro-cid-zkhec6xw><div class="world-stage-copy" data-astro-cid-zkhec6xw><span class="world-n" data-astro-cid-zkhec6xw>05</span><span class="world-kicker" data-astro-cid-zkhec6xw>Prepare to compete</span><h2 data-astro-cid-zkhec6xw>Final adjustments</h2><p data-astro-cid-zkhec6xw>Refine balance, reliability, safety, and presentation so the car and team are ready for EVGP.</p><ul class="world-tags" data-astro-cid-zkhec6xw><li data-astro-cid-zkhec6xw>Weight balance</li><li data-astro-cid-zkhec6xw>Reliability checks</li><li data-astro-cid-zkhec6xw>Race preparation</li></ul></div><figure class="world-stage-figure" data-astro-cid-zkhec6xw><!-- `img-skeleton` (see base.css) fills the reserved box with a panel colour
+     until the picture decodes over it. On by default, because every image this
+     component renders is an opaque photograph. Pass skeleton={false} for a mark
+     with transparency: a panel fill behind one of those is not a placeholder
+     that disappears, it is a grey tile that never goes away. --><img src="assets/home/adjust-frame.CMXCLzPg_Z1XRcOG.webp" srcset="assets/home/adjust-frame.CMXCLzPg_1tjoj9.webp 420w, assets/home/adjust-frame.CMXCLzPg_Z1XRcOG.webp 464w" alt="Three team members working around the car’s seat and harness indoors, one holding a helmet, beneath an Al Jada Cobras banner" sizes="(max-width: 900px) 90vw, 420px" loading="lazy" decoding="async" width="464" height="832" class="img-skeleton"></figure></section><!-- The panel the drop lands on. It sits directly beneath the last stage
+           rather than after the world, so the descent at the end of the run
+           arrives on real content instead of on a black rectangle. --><section class="world-panel world-outro" data-world-panel data-world-outro data-astro-cid-zkhec6xw><div class="count-copy" data-astro-cid-zkhec6xw><span class="section-kicker" data-astro-cid-zkhec6xw>Target race date · February 13, 2027</span><h2 id="countdown-title" data-astro-cid-zkhec6xw>The countdown to EVGP is on.</h2></div><div class="count-stat" data-astro-cid-zkhec6xw><strong data-astro-cid-zkhec6xw><bdi data-astro-cid-zkhec6xw>197</bdi></strong><span data-astro-cid-zkhec6xw>Days</span><!-- English-only by design: see the countdown note in the module
+               comment above. No key in either source covers this sentence. --><p class="count-note" data-astro-cid-zkhec6xw>Recalculated at each publish — not a live, second-by-second countdown.</p></div></section></div><!-- Where you are in the build, always on screen. Marks progress through the
+         five stages, not through the scrollbar. --><ol class="world-rail" aria-label="Build stages" data-astro-cid-zkhec6xw><li data-astro-cid-zkhec6xw>01</li><li data-astro-cid-zkhec6xw>02</li><li data-astro-cid-zkhec6xw>03</li><li data-astro-cid-zkhec6xw>04</li><li data-astro-cid-zkhec6xw>05</li></ol></div></header><section class="build-status shell" aria-labelledby="build-status-title" data-astro-cid-zkhec6xw><div class="section-heading" data-astro-cid-zkhec6xw><p class="section-index" data-astro-cid-zkhec6xw>Current / Build status</p><div data-astro-cid-zkhec6xw><span class="section-kicker" data-astro-cid-zkhec6xw>Published workshop snapshot</span><h2 id="build-status-title" data-astro-cid-zkhec6xw>Current priority: system testing.</h2><p class="section-note" data-astro-cid-zkhec6xw>This status comes from the latest workshop log, not a live telemetry feed.</p></div></div><div class="status-grid" data-astro-cid-zkhec6xw><article data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Completion percentage</span><strong data-astro-cid-zkhec6xw>Awaiting team sign-off</strong></article><article data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Current task</span><strong data-astro-cid-zkhec6xw>System testing</strong><p data-astro-cid-zkhec6xw>Verify controls, electrical connections, and safe shutdown behavior.</p></article><article data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Next milestone</span><strong data-astro-cid-zkhec6xw>Track refinement</strong><p data-astro-cid-zkhec6xw>Use driving feedback to improve stability, balance, and consistency.</p></article><article data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Crew assignment</span><strong data-astro-cid-zkhec6xw>To be confirmed</strong><p data-astro-cid-zkhec6xw>Latest published update: 1 July 2026</p></article></div><a class="text-link" href="news.html" data-astro-cid-zkhec6xw>Read the dated workshop log <span aria-hidden="true" data-astro-cid-zkhec6xw>→</span></a></section><section class="landing-intro shell" aria-labelledby="team-title" data-astro-cid-zkhec6xw><p class="section-index" data-astro-cid-zkhec6xw>01 / The team</p><div class="team-copy" data-astro-cid-zkhec6xw><span class="section-kicker" data-astro-cid-zkhec6xw>More than a school project</span><h2 id="team-title" data-astro-cid-zkhec6xw>One car. Many disciplines. A real starting grid.</h2><p data-astro-cid-zkhec6xw>The Cobras bring mechanics, electrical systems, safety, design, media, and race strategy into one student-led program. Every member owns part of the result—and every decision has to work on the track.</p><a class="text-link" href="about.html" data-astro-cid-zkhec6xw>Discover our mission <span aria-hidden="true" data-astro-cid-zkhec6xw>→</span></a></div><!-- What fills this half. It used to be design.JPG with a caption about the
+       project room — the same photograph build stage 01 uses in the hero, one of
+       two images that appeared twice on this page. Rather than repeat it, or
+       leave the space empty, the section that talks about the crew now shows the
+       crew: the real roles from the team's own members.html, counted from
+       data/roster.js rather than written down here. The figures cannot drift
+       from the Members page, and "19" is the sum rather than a claim. --><div class="team-crew" data-astro-cid-zkhec6xw><p class="team-crew-head" data-astro-cid-zkhec6xw><strong data-astro-cid-zkhec6xw><bdi data-astro-cid-zkhec6xw>19</bdi></strong><span data-astro-cid-zkhec6xw>Student builders</span></p><ul class="team-roles" data-astro-cid-zkhec6xw><li data-astro-cid-zkhec6xw><strong data-astro-cid-zkhec6xw><bdi data-astro-cid-zkhec6xw>8</bdi></strong><span data-astro-cid-zkhec6xw>Mechanic</span></li><li data-astro-cid-zkhec6xw><strong data-astro-cid-zkhec6xw><bdi data-astro-cid-zkhec6xw>4</bdi></strong><span data-astro-cid-zkhec6xw>Media</span></li><li data-astro-cid-zkhec6xw><strong data-astro-cid-zkhec6xw><bdi data-astro-cid-zkhec6xw>3</bdi></strong><span data-astro-cid-zkhec6xw>Driver</span></li><li data-astro-cid-zkhec6xw><strong data-astro-cid-zkhec6xw><bdi data-astro-cid-zkhec6xw>2</bdi></strong><span data-astro-cid-zkhec6xw>Safety</span></li><li data-astro-cid-zkhec6xw><strong data-astro-cid-zkhec6xw><bdi data-astro-cid-zkhec6xw>2</bdi></strong><span data-astro-cid-zkhec6xw>Innovation</span></li></ul></div></section><section class="landing-pillars shell" aria-labelledby="pillars-title" data-astro-cid-zkhec6xw><div class="section-heading" data-astro-cid-zkhec6xw><p class="section-index" data-astro-cid-zkhec6xw>02 / What drives us</p><div data-astro-cid-zkhec6xw><span class="section-kicker" data-astro-cid-zkhec6xw>The Cobra standard</span><h2 id="pillars-title" data-astro-cid-zkhec6xw>Built around real engineering.</h2></div></div><div class="pillar-grid" data-astro-cid-zkhec6xw><article data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>01</span><h3 data-astro-cid-zkhec6xw>Design with purpose</h3><p data-astro-cid-zkhec6xw>We translate competition rules, driver needs, and safety constraints into a practical car layout.</p></article><article data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>02</span><h3 data-astro-cid-zkhec6xw>Build as one team</h3><p data-astro-cid-zkhec6xw>Mechanical, electrical, safety, and media crews work together instead of operating in isolation.</p></article><article data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>03</span><h3 data-astro-cid-zkhec6xw>Test. Learn. Repeat.</h3><p data-astro-cid-zkhec6xw>Every run gives us data. We troubleshoot, adjust, and return stronger for the next test.</p></article></div></section><section class="car-dashboard shell" aria-labelledby="dashboard-title" data-astro-cid-zkhec6xw><div class="section-heading" data-astro-cid-zkhec6xw><p class="section-index" data-astro-cid-zkhec6xw>03 / The machine</p><div data-astro-cid-zkhec6xw><span class="section-kicker" data-astro-cid-zkhec6xw>Current build dashboard</span><h2 id="dashboard-title" data-astro-cid-zkhec6xw>The Cobra by the numbers.</h2><p class="section-note" data-astro-cid-zkhec6xw>These figures reflect the current build and will evolve as testing continues.</p></div></div><div class="dashboard-grid" data-astro-cid-zkhec6xw><article data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>System voltage</span><strong data-astro-cid-zkhec6xw><bdi data-astro-cid-zkhec6xw>48<small data-astro-cid-zkhec6xw>V</small></bdi></strong><p data-astro-cid-zkhec6xw>4 × 12V batteries</p></article><article data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Total weight</span><strong data-astro-cid-zkhec6xw><bdi data-astro-cid-zkhec6xw>186<small data-astro-cid-zkhec6xw>kg</small></bdi></strong><p data-astro-cid-zkhec6xw>Current measured build</p></article><article data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Average speed</span><strong data-astro-cid-zkhec6xw><bdi data-astro-cid-zkhec6xw>30<small data-astro-cid-zkhec6xw>km/h</small></bdi></strong><p data-astro-cid-zkhec6xw>Testing benchmark</p></article><article data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Estimated runtime</span><strong data-astro-cid-zkhec6xw><bdi data-astro-cid-zkhec6xw>1–3<small data-astro-cid-zkhec6xw>hrs</small></bdi></strong><p data-astro-cid-zkhec6xw>Depending on load</p></article></div><a class="text-link" href="specs.html" data-astro-cid-zkhec6xw>Open the complete specification sheet <span aria-hidden="true" data-astro-cid-zkhec6xw>→</span></a></section><section class="landing-journey shell" aria-labelledby="journey-title" data-astro-cid-zkhec6xw><div class="journey-visual" data-astro-cid-zkhec6xw><!-- A turntable frame rather than the wiring photograph, which build stage
+         03 owns in the hero. This is the visualisation, not a photograph, and
+         the credit under this section says so. --><!-- `img-skeleton` (see base.css) fills the reserved box with a panel colour
+     until the picture decodes over it. On by default, because every image this
+     component renders is an opaque photograph. Pass skeleton={false} for a mark
+     with transparency: a panel fill behind one of those is not a placeholder
+     that disappears, it is a grey tile that never goes away. --><img src="assets/home/car-quarter.BF6g6oqp_1oKFCi.webp" srcset="assets/home/car-quarter.BF6g6oqp_ZVYTMH.webp 420w, assets/home/car-quarter.BF6g6oqp_Zkfww8.webp 560w, assets/home/car-quarter.BF6g6oqp_Z5vNBA.webp 720w" alt="The team's electric race car seen from the front left, an AI-assisted visualisation built from the team's own reference photographs" sizes="(max-width: 760px) 100vw, 560px" loading="lazy" decoding="async" width="1100" height="733" class="img-skeleton"></div><div class="journey-copy" data-astro-cid-zkhec6xw><p class="section-index" data-astro-cid-zkhec6xw>04 / The build</p><span class="section-kicker" data-astro-cid-zkhec6xw>From sketch to circuit</span><h2 id="journey-title" data-astro-cid-zkhec6xw>We build the car—and the skills behind it.</h2><ol data-astro-cid-zkhec6xw><li data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>01</span><div data-astro-cid-zkhec6xw><strong data-astro-cid-zkhec6xw>Plan</strong><p data-astro-cid-zkhec6xw>Define the targets, rules, layout, parts, and safety requirements.</p></div></li><li data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>02</span><div data-astro-cid-zkhec6xw><strong data-astro-cid-zkhec6xw>Assemble</strong><p data-astro-cid-zkhec6xw>Turn the design into a physical chassis, power system, and controls.</p></div></li><li data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>03</span><div data-astro-cid-zkhec6xw><strong data-astro-cid-zkhec6xw>Prove</strong><p data-astro-cid-zkhec6xw>Test performance, diagnose problems, and refine the car for EVGP.</p></div></li></ol><a class="btn-primary" href="projects.html" data-astro-cid-zkhec6xw>See every phase</a><!-- Two pictures on this page are the visualisation rather than photographs:
+         the car crossing the hero, and the one above. The car page leads with
+         this same disclosure; a render this size has to carry it wherever it
+         appears. English on both routes — neither source carries it, and an
+         honesty statement is the last string to paraphrase without a
+         translator. --><p class="journey-credit" data-astro-cid-zkhec6xw>Renders of the car on this page are an AI-assisted visualisation built from the team&#39;s own reference photographs, not photographs of the car.<a href="car.html" data-astro-cid-zkhec6xw>See the Cobra in 360°</a></p></div></section><section class="engineering-stories shell" aria-labelledby="stories-title" data-astro-cid-zkhec6xw><div class="section-heading" data-astro-cid-zkhec6xw><p class="section-index" data-astro-cid-zkhec6xw>05 / Engineering</p><div data-astro-cid-zkhec6xw><span class="section-kicker" data-astro-cid-zkhec6xw>Problems become progress</span><h2 id="stories-title" data-astro-cid-zkhec6xw>What we learn when the first idea fails.</h2></div></div><div class="story-grid" data-astro-cid-zkhec6xw><article data-astro-cid-zkhec6xw><p class="story-tag" data-astro-cid-zkhec6xw>Weight balance</p><div class="decision-step" data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Problem</span><p data-astro-cid-zkhec6xw>Uneven weight can change how the car turns and behaves at speed.</p></div><div class="decision-step" data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Decision</span><p data-astro-cid-zkhec6xw>Mechanics shifted battery placement after low-speed runs.</p></div><div class="decision-step is-result" data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Result / next test</span><p data-astro-cid-zkhec6xw>Weight remains near 186 kg; a new weigh-in is pending after the next parts change.</p></div></article><article data-astro-cid-zkhec6xw><p class="story-tag" data-astro-cid-zkhec6xw>Reliable wiring</p><div class="decision-step" data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Problem</span><p data-astro-cid-zkhec6xw>Loose or unclear connections make troubleshooting slower and less safe.</p></div><div class="decision-step" data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Decision</span><p data-astro-cid-zkhec6xw>The electrical crew re-checked the 48V layout, secured connectors, and re-labeled critical runs.</p></div><div class="decision-step is-result" data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Result / next test</span><p data-astro-cid-zkhec6xw>The next test day has a clearer, faster troubleshooting path.</p></div></article><article data-astro-cid-zkhec6xw><p class="story-tag" data-astro-cid-zkhec6xw>Driver protection</p><div class="decision-step" data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Problem</span><p data-astro-cid-zkhec6xw>Performance only matters when the driver and crew can operate safely.</p></div><div class="decision-step" data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Decision</span><p data-astro-cid-zkhec6xw>Use an emergency kill switch, seat belt, helmet, and repeatable pre-run checks.</p></div><div class="decision-step is-result" data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Result / next test</span><p data-astro-cid-zkhec6xw>The hardware is documented; final race-day safety sign-off is still tracked in the checklist.</p></div></article></div></section><section class="workshop-journal shell" aria-labelledby="journal-title" data-astro-cid-zkhec6xw><div class="section-heading" data-astro-cid-zkhec6xw><p class="section-index" data-astro-cid-zkhec6xw>06 / Workshop log</p><div data-astro-cid-zkhec6xw><span class="section-kicker" data-astro-cid-zkhec6xw>Dated workshop notes</span><h2 id="journal-title" data-astro-cid-zkhec6xw>Latest verified updates.</h2></div></div><div class="journal-list" data-astro-cid-zkhec6xw><article data-astro-cid-zkhec6xw><time datetime="2026-07-01" data-astro-cid-zkhec6xw>1 Jul 2026</time><div data-astro-cid-zkhec6xw><span class="log-tag" data-astro-cid-zkhec6xw>Electrical</span><h3 data-astro-cid-zkhec6xw>Kill switch and critical-run labels checked</h3><p data-astro-cid-zkhec6xw>Connectors were secured and the 48V layout was re-labeled for faster troubleshooting.</p></div></article><article data-astro-cid-zkhec6xw><time datetime="2026-06-18" data-astro-cid-zkhec6xw>18 Jun 2026</time><div data-astro-cid-zkhec6xw><span class="log-tag" data-astro-cid-zkhec6xw>Mechanical</span><h3 data-astro-cid-zkhec6xw>Battery placement shifted after low-speed runs</h3><p data-astro-cid-zkhec6xw>The build remains near 186 kg; the next parts change will be followed by another weigh-in.</p></div></article><article data-astro-cid-zkhec6xw><time datetime="2026-06-04" data-astro-cid-zkhec6xw>4 Jun 2026</time><div data-astro-cid-zkhec6xw><span class="log-tag" data-astro-cid-zkhec6xw>Media</span><h3 data-astro-cid-zkhec6xw>Sponsor package prepared</h3><p data-astro-cid-zkhec6xw>The media crew published the sponsor PDF and refreshed outreach materials.</p></div></article></div><a class="text-link" href="news.html" data-astro-cid-zkhec6xw>Open the complete workshop log <span aria-hidden="true" data-astro-cid-zkhec6xw>→</span></a></section><section class="landing-cta shell" aria-labelledby="cta-title" data-astro-cid-zkhec6xw><!-- `img-skeleton` (see base.css) fills the reserved box with a panel colour
+     until the picture decodes over it. On by default, because every image this
+     component renders is an opaque photograph. Pass skeleton={false} for a mark
+     with transparency: a panel fill behind one of those is not a placeholder
+     that disappears, it is a grey tile that never goes away. --><img src="assets/home/cobra-race-mark.BrGCG4cY_Z1yY3Gi.webp" srcset="assets/home/cobra-race-mark.BrGCG4cY_ZRGsqB.webp 84w, assets/home/cobra-race-mark.BrGCG4cY_qInDK.webp 168w" alt sizes="84px" loading="lazy" decoding="async" width="1254" height="1254"><div data-astro-cid-zkhec6xw><span class="section-kicker" data-astro-cid-zkhec6xw>Ready for the grid</span><h2 id="cta-title" data-astro-cid-zkhec6xw>Follow the Cobras from workshop to race day.</h2></div><div class="cta-actions" data-astro-cid-zkhec6xw><a class="btn-secondary" href="race-day.html" data-astro-cid-zkhec6xw>Race Day</a><a class="btn-primary" href="news.html" data-astro-cid-zkhec6xw>Latest news</a><a class="btn-secondary" href="trackmap.html" data-astro-cid-zkhec6xw>Track Map</a></div></section><script type="module">function e(e){if(!e||matchMedia(`(prefers-reduced-motion: reduce)`).matches)return;let t=e.querySelector(`[data-world]`),n=[...e.querySelectorAll(`[data-world-panel]:not([data-world-outro])`)],r=e.querySelector(`[data-world-car]`);if(!t||n.length<2)return;let i=getComputedStyle(document.documentElement).direction===`rtl`?1:-1,a=.86,o=!1;function s(){o=!1;let s=e.getBoundingClientRect(),c=s.height-window.innerHeight;if(c<=0)return;let l=Math.min(1,Math.max(0,-s.top/c)),u=Math.min(1,l/a),d=Math.max(0,(l-a)/(1-a)),f=u*(n.length-1)*window.innerWidth,p=d*window.innerHeight;if(t.style.transform=`translate3d(${(i*f).toFixed(2)}px,${(-p).toFixed(2)}px,0)`,e.style.setProperty(`--world-progress`,l.toFixed(4)),r){let e=window.innerWidth*(-.52+l*.95);r.style.transform=`translate3d(${e.toFixed(2)}px,0,0)`}let m=Math.min(n.length-1,Math.round(u*(n.length-1)));n.forEach((e,t)=>e.classList.toggle(`is-active`,t===m)),e.style.setProperty(`--world-panel`,String(m))}function c(){o||(o=!0,requestAnimationFrame(s))}e.classList.add(`is-enhanced`),addEventListener(`scroll`,c,{passive:!0}),addEventListener(`resize`,c,{passive:!0}),s()}e(document.querySelector(`[data-home-world]`));</script></main>
 
   <footer>
     <div>
@@ -212,8 +122,6 @@
       </div>
     </div>
   </footer>
-  <script src="cobras-lib.js"></script>
-  <script src="arabic.js"></script>
-  <script src="site.js"></script>
-  </body>
+<script src="cobras-lib.js"></script><script src="arabic.js"></script><script src="site.js"></script>  <script src="assets/home/homepage.js"></script>
+</body>
 </html>

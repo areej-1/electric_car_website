@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Follow the SIS Al Jada Cobras build from turn one to the chequered flag on an interactive circuit map.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="cobra-race-mark.png" type="image/png">
+  <title>Track Map | SIS Al Jada Cobras</title>
+  <style>
+    /* Same shell as car.html, so the two new pages sit together and neither
+       introduces a layout the rest of the site does not already use. */
+    .map-page{min-height:100vh;background:#0a0a0a;color:#f5f0e8;padding-top:84px}
+    .map-shell{width:min(1440px,calc(100% - 32px));margin:0 auto;padding:42px 0 72px}
+    .map-intro{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:24px}
+    .map-intro h1{margin:0;font-family:Orbitron,system-ui,sans-serif;font-size:clamp(2rem,5vw,4.5rem);line-height:.98}
+    .map-intro p{max-width:42ch;color:#9aa3a8;line-height:1.6;margin:12px 0 0}
+    .map-kicker{color:#e8b923;font:700 .72rem Orbitron,system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase}
+    .map-note{max-width:34ch;color:#9aa3a8;font-size:.8rem;line-height:1.5;text-align:right}
+    .map-note a{color:#c9a227}
+    .map-frame{height:min(74vh,760px);min-height:520px;border:1px solid rgba(201,162,39,.3);background:#0f1011;box-shadow:0 18px 80px rgba(0,0,0,.35)}
+    .map-frame iframe{display:block;width:100%;height:100%;border:0}
+    .map-facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+    .map-fact{border:1px solid rgba(154,163,168,.25);padding:10px 14px;color:#9aa3a8;font-size:.78rem}
+    .map-fact strong{display:block;color:#f5f0e8;font-family:Orbitron,system-ui,sans-serif;font-size:.9rem;margin-bottom:3px}
+    @media (max-width:760px){.map-page{padding-top:72px}.map-shell{width:min(100% - 20px,1440px);padding-top:28px}.map-intro{display:block}.map-note{text-align:left;margin-top:16px}.map-frame{min-height:520px;height:72vh}}
+  </style>
+</head>
+<body>
+  <nav class="site-nav" data-i18n-aria="nav.main" aria-label="Main navigation"></nav>
+  <main id="main" class="map-page">
+    <div class="map-shell">
+      <div class="map-intro">
+        <div>
+          <div class="map-kicker">The build / interactive circuit</div>
+          <h1>From sketch to starting grid.</h1>
+          <p>The five stages behind the Cobra, laid out as turns on a circuit. Drag to pan, and click a turn to read what happened there.</p>
+        </div>
+        <!-- The plate is a Planet Labs SkySat derivative under CC BY-SA 4.0, whose
+             share-alike terms require naming the author, the licence and a link to
+             it. The second sentence is here because the site must not imply a
+             venue the team has not confirmed: Silverstone is the chart, not the
+             race. -->
+        <div class="map-note">
+          Circuit imagery &copy; Planet Labs PBC, <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="license noopener" target="_blank">CC BY-SA 4.0</a>.
+          The circuit shown is illustrative &mdash; it is not the team's race venue.
+        </div>
+      </div>
+      <div class="map-frame">
+        <!-- Points straight at the prototype's index.html, which is self-contained
+             and loads its own assets relative to prototype/trackmap/. -->
+        <iframe src="prototype/trackmap/index.html" title="Interactive circuit map of the SIS Al Jada Cobras build stages" loading="eager"></iframe>
+      </div>
+      <div class="map-facts" aria-label="Map facts">
+        <div class="map-fact"><strong>5 stages</strong>Design, build, wiring, testing, adjustments</div>
+        <div class="map-fact"><strong>Turn markers</strong>Click one to open that stage</div>
+        <div class="map-fact"><strong>Racing line</strong>Traced from OpenStreetMap circuit data</div>
+        <div class="map-fact"><strong>Drag to pan</strong>And zoom to follow the lap</div>
+      </div>
+    </div>
+  </main>
+  <script src="cobras-lib.js"></script>
+  <script src="arabic.js"></script>
+  <script src="site.js"></script>
+</body>
+</html>

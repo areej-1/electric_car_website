@@ -1,0 +1,4 @@
+# three.js is vendored locally for the prototype, not committed.
+# Reproduce with:
+#   curl -sL -o vendor/three.module.js https://unpkg.com/three@0.169.0/build/three.module.js
+vendor/

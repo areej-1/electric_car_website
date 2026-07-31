@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Inspect the SIS Al Jada Cobras three-wheeled electric race car in an interactive 360-degree viewer.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="cobra-race-mark.png" type="image/png">
+  <title>The Car | SIS Al Jada Cobras</title>
+  <style>
+    .car-page{min-height:100vh;background:#0a0a0a;color:#f5f0e8;padding-top:84px}
+    .car-shell{width:min(1440px,calc(100% - 32px));margin:0 auto;padding:42px 0 72px}
+    .car-intro{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:24px}
+    .car-intro h1{margin:0;font-family:Orbitron,system-ui,sans-serif;font-size:clamp(2rem,5vw,4.5rem);line-height:.98}
+    .car-intro p{max-width:42ch;color:#9aa3a8;line-height:1.6;margin:12px 0 0}
+    .car-kicker{color:#e8b923;font:700 .72rem Orbitron,system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase}
+    .car-note{max-width:30ch;color:#9aa3a8;font-size:.8rem;line-height:1.5;text-align:right}
+    .car-frame{height:min(74vh,760px);min-height:520px;border:1px solid rgba(201,162,39,.3);background:#0f1011;box-shadow:0 18px 80px rgba(0,0,0,.35)}
+    .car-frame iframe{display:block;width:100%;height:100%;border:0}
+    .car-facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+    .car-fact{border:1px solid rgba(154,163,168,.25);padding:10px 14px;color:#9aa3a8;font-size:.78rem}
+    .car-fact strong{display:block;color:#f5f0e8;font-family:Orbitron,system-ui,sans-serif;font-size:.9rem;margin-bottom:3px}
+    @media (max-width:760px){.car-page{padding-top:72px}.car-shell{width:min(100% - 20px,1440px);padding-top:28px}.car-intro{display:block}.car-note{text-align:left;margin-top:16px}.car-frame{min-height:520px;height:72vh}}
+  </style>
+</head>
+<body>
+  <nav class="site-nav" data-i18n-aria="nav.main" aria-label="Main navigation"></nav>
+  <main id="main" class="car-page">
+    <div class="car-shell">
+      <div class="car-intro">
+        <div>
+          <div class="car-kicker">The machine / 360&deg; viewer</div>
+          <h1>Meet the Cobra.</h1>
+          <p>Orbit around the team's three-wheeled electric race car from eye level to a true top-down view. Drag to inspect it, scroll to zoom, or select a component.</p>
+        </div>
+        <div class="car-note">Rendered visualisation, not photographs of the car. Built to match the team's own reference photographs and chassis measurements &mdash; the geometry and livery are the real car's. Photographs of the actual build are on <a href="projects.html">Our Work</a>.</div>
+      </div>
+      <div class="car-frame">
+        <!-- Points straight at photo.html. Going via index.html breaks on any server
+             that strips .html: the 301 moves the document base from /prototype/kart/ to
+             /prototype/, so index.html's relative redirect to photo.html 404s. -->
+        <iframe src="prototype/kart/photo.html" title="Interactive 360-degree view of the SIS Al Jada Cobras race car" loading="eager"></iframe>
+      </div>
+      <div class="car-facts" aria-label="Model facts">
+        <div class="car-fact"><strong>3 wheels</strong>Two front, one centered rear</div>
+        <div class="car-fact"><strong>48V system</strong>Current published build configuration</div>
+        <div class="car-fact"><strong>Open cockpit</strong>Handlebars, bucket seat, red harness</div>
+        <div class="car-fact"><strong>Enclosed rear</strong>Rear wheel covered by the body shell</div>
+      </div>
+    </div>
+  </main>
+  <script src="cobras-lib.js"></script>
+  <script src="arabic.js"></script>
+  <script src="site.js"></script>
+</body>
+</html>
