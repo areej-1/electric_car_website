@@ -73,100 +73,103 @@ const PH = 1220;
 const TURNS = [
   {
     n: '1', name: 'Design + planning', kicker: 'Start with the rules',
-    x: 0.7829, y: 0.2864, status: 'recorded',
+    x: 0.7918, y: 0.3002, status: 'recorded',
     body: 'Set performance targets, study EVGP requirements, choose parts, and turn constraints into a buildable layout.',
     tags: ['Competition rules', 'Component selection', 'Safety planning'],
     media: { type: 'img', src: '../../design.JPG', alt: 'Cobras students at the project room noticeboard' },
   },
   {
     n: '2', name: 'Build + assembly', kicker: 'Make it physical',
-    x: 0.896, y: 0.5033, status: 'recorded',
+    x: 0.9249, y: 0.5032, status: 'recorded',
     body: 'Fit the frame, steering, seat, wheels, controls, and mechanical systems into one working machine.',
     tags: ['Chassis assembly', 'Driver ergonomics', 'Mechanical fit'],
     media: { type: 'video', src: '../../build.MP4', alt: 'Assembly work on the Cobra platform' },
   },
   {
     n: '3', name: 'Wiring + controls', kicker: 'Bring it to life',
-    x: 0.7359, y: 0.8184, status: 'recorded',
+    x: 0.7309, y: 0.8955, status: 'recorded',
     body: 'Connect batteries, controller, motor, kill switch, and driver inputs into an organized 48V system.',
     tags: ['Power distribution', 'Control wiring', 'Safe shutdown'],
     media: { type: 'img', src: '../../wiring.JPG', alt: 'Students reviewing the car during systems work' },
   },
   {
     n: '4', name: 'Testing + troubleshooting', kicker: 'Find the weak points',
-    x: 0.5055, y: 0.7119, status: 'in progress',
+    x: 0.5103, y: 0.752, status: 'in progress',
     body: 'Run the car, observe its behavior, diagnose failures, and record what must change before the next session.',
     tags: ['Functional tests', 'Driver feedback', 'Fault diagnosis'],
     media: { type: 'video', src: '../../testing.MP4', alt: 'The kart being driven during a test session' },
   },
   {
     n: '5', name: 'Final adjustments', kicker: 'Prepare to compete',
-    x: 0.1253, y: 0.3974, status: 'pending',
+    x: 0.0955, y: 0.3472, status: 'pending',
     body: 'Refine balance, reliability, safety, and presentation so the car and team are ready for EVGP.',
     tags: ['Weight balance', 'Reliability checks', 'Race preparation'],
     media: { type: 'video', src: '../../adjust.MP4', alt: 'Final adjustment work on the kart' },
   },
   {
     n: 'F', name: 'Race target', kicker: 'The grid', flag: true,
-    x: 0.2643, y: 0.1596, status: 'pending',
+    x: 0.2156, y: 0.1698, status: 'pending',
     body: 'Race target: February 13, 2027. Venue, official timing, driver selection and results remain pending team confirmation.',
     tags: ['Venue pending', 'Timing pending', 'Driver pending'],
   },
 ];
 
-// The racing line, traced from OpenStreetMap's Silverstone Grand Prix circuit
-// rather than drawn by eye.
+// The racing line, traced from OpenStreetMap's Silverstone Grand Prix circuit.
 //
-// What was here before was 24 points picked off the picture by hand, and its own
-// comment admitted as much. It read as a rough oval that crossed fields and
-// buildings and missed every corner the circuit is known for.
+// The circuit's raceway ways are stitched into one closed loop by shared
+// endpoints, discarding the pit lanes and the other circuits on the site. The
+// check that this is the Grand Prix layout and not one of its neighbours is the
+// perimeter: 5,842 m against a published 5,891 m.
 //
-// These are the real circuit ways from OSM, stitched into one closed loop —
-// 5,842 m against the published 5,891 m, which is the check that the geometry is
-// the Grand Prix layout and not one of the other circuits on the site. The loop
-// is then placed on the plate by rotating it 90 degrees, since the imagery is
-// turned to put the long axis across the frame, fitting its extent to the
-// plate's, and finally nudging position, scale and angle to minimise the
-// difference between the pixels under the path and the asphalt's own luminance.
-// That last step is what puts it on the ribbon rather than merely near it: mean
-// deviation from the asphalt tone fell from 22.9 to 14.1.
+// Placing it on the plate is a rotation and a fit, and nothing more. Rotate 90
+// degrees, because the imagery is turned to put the circuit's long axis across
+// the frame — the loop's bounding box comes out at 1.625 against the plate's
+// 1.689, so it very nearly fills it — then map that extent onto the plate's.
 //
-// Resampled to a manageable number of points by arc length, so the corners keep
-// their shape without carrying all 466.
+// There was an extra step here for a while that searched position, scale and
+// angle to minimise the difference between the pixels under the path and the
+// asphalt's tone. It reported an improvement and made the line visibly worse:
+// it drove the scale to 0.90, the floor of its own search range, and pulled the
+// whole loop inside the ribbon. Asphalt, grass and gravel are too close in a
+// graded greyscale plate for that score to mean what it claims. The number said
+// one thing and the picture said another, and the picture was right.
+//
+// Resampled by arc length so the corners keep their shape without carrying all
+// 466 points.
 const LINE = [
-  [0.133, 0.3282], [0.1518, 0.3132], [0.1697, 0.2952], [0.187, 0.2755],
-  [0.2028, 0.2527], [0.2184, 0.2293], [0.2344, 0.2067], [0.2507, 0.1848],
-  [0.2643, 0.1596], [0.2526, 0.1315], [0.2511, 0.0994], [0.2665, 0.0758],
-  [0.2843, 0.0577], [0.3041, 0.0471], [0.3243, 0.0495], [0.3405, 0.0715],
-  [0.3568, 0.0935], [0.373, 0.1155], [0.3893, 0.1375], [0.4055, 0.1595],
-  [0.4218, 0.1815], [0.438, 0.2036], [0.4543, 0.2256], [0.4705, 0.2476],
-  [0.4867, 0.2698], [0.5028, 0.2922], [0.5101, 0.3242], [0.5094, 0.3593],
-  [0.5055, 0.3938], [0.5015, 0.4284], [0.5004, 0.4633], [0.5056, 0.4973],
-  [0.5167, 0.5268], [0.5292, 0.5549], [0.5418, 0.5831], [0.5543, 0.6112],
-  [0.5657, 0.6404], [0.5559, 0.6667], [0.5359, 0.6767], [0.5159, 0.6864],
-  [0.5055, 0.7119], [0.5221, 0.7318], [0.5417, 0.7437], [0.562, 0.7511],
-  [0.5828, 0.7533], [0.6006, 0.7372], [0.6151, 0.7121], [0.6298, 0.6871],
-  [0.6442, 0.6617], [0.6587, 0.6364], [0.6732, 0.6111], [0.6877, 0.5858],
-  [0.7021, 0.5605], [0.7166, 0.5351], [0.731, 0.5098], [0.7454, 0.4844],
-  [0.7598, 0.4589], [0.7742, 0.4334], [0.7885, 0.4078], [0.8027, 0.3822],
-  [0.8143, 0.3533], [0.8154, 0.3187], [0.8034, 0.2915], [0.7829, 0.2864],
-  [0.7623, 0.2812], [0.7482, 0.2568], [0.7496, 0.2229], [0.7652, 0.2011],
-  [0.7853, 0.2043], [0.8037, 0.2208], [0.8223, 0.2369], [0.8408, 0.253],
-  [0.857, 0.2749], [0.8711, 0.3008], [0.8826, 0.33], [0.8895, 0.3631],
-  [0.8923, 0.3979], [0.8936, 0.4331], [0.8948, 0.4682], [0.896, 0.5033],
-  [0.8971, 0.5384], [0.8981, 0.5736], [0.8989, 0.6087], [0.8998, 0.6439],
-  [0.9006, 0.679], [0.9007, 0.7142], [0.8931, 0.7466], [0.8781, 0.7705],
-  [0.8587, 0.7831], [0.8387, 0.7928], [0.8185, 0.8014], [0.798, 0.8082],
-  [0.7775, 0.8137], [0.7567, 0.8165], [0.7359, 0.8184], [0.7151, 0.8198],
-  [0.6942, 0.8208], [0.6734, 0.8215], [0.6528, 0.8254], [0.6335, 0.8387],
-  [0.6153, 0.8556], [0.5949, 0.8545], [0.5755, 0.8417], [0.556, 0.8295],
-  [0.5353, 0.8257], [0.516, 0.8376], [0.4993, 0.8588], [0.4796, 0.868],
-  [0.4602, 0.8568], [0.4475, 0.8293], [0.4373, 0.7986], [0.4257, 0.7696],
-  [0.4085, 0.7499], [0.3904, 0.7323], [0.3724, 0.7148], [0.3543, 0.6972],
-  [0.3361, 0.6802], [0.3178, 0.6633], [0.2995, 0.6464], [0.2813, 0.6293],
-  [0.2631, 0.6123], [0.2449, 0.5952], [0.2267, 0.578], [0.2086, 0.5606],
-  [0.1905, 0.5432], [0.1728, 0.5247], [0.1554, 0.5052], [0.1384, 0.485],
-  [0.1217, 0.4639], [0.1215, 0.4319], [0.1253, 0.3974], [0.1292, 0.3628],
+  [0.0748, 0.3646], [0.0955, 0.3472], [0.1152, 0.3265], [0.134, 0.3036],
+  [0.1512, 0.2775], [0.1681, 0.2506], [0.1855, 0.2249], [0.2033, 0.1998],
+  [0.2156, 0.1698], [0.2008, 0.1403], [0.2011, 0.1044], [0.2183, 0.0781],
+  [0.2381, 0.0583], [0.2603, 0.0468], [0.2822, 0.0529], [0.3006, 0.0768],
+  [0.319, 0.1005], [0.3374, 0.1242], [0.3559, 0.1479], [0.3743, 0.1717],
+  [0.3927, 0.1954], [0.4111, 0.2191], [0.4296, 0.2429], [0.448, 0.2666],
+  [0.4663, 0.2905], [0.4845, 0.3147], [0.4935, 0.3498], [0.4937, 0.3888],
+  [0.4903, 0.4275], [0.4867, 0.4662], [0.4865, 0.5052], [0.4931, 0.5425],
+  [0.5062, 0.5747], [0.5206, 0.6052], [0.5351, 0.6358], [0.5496, 0.6663],
+  [0.5633, 0.6977], [0.5546, 0.7288], [0.5325, 0.7405], [0.5103, 0.752],
+  [0.4985, 0.7801], [0.517, 0.802], [0.5389, 0.8147], [0.5615, 0.8227],
+  [0.5847, 0.825], [0.6045, 0.8075], [0.6202, 0.7788], [0.6361, 0.7502],
+  [0.6517, 0.7213], [0.6673, 0.6924], [0.6829, 0.6635], [0.6985, 0.6346],
+  [0.7141, 0.6056], [0.7297, 0.5767], [0.7453, 0.5477], [0.7609, 0.5188],
+  [0.7764, 0.4897], [0.7918, 0.4605], [0.8072, 0.4313], [0.8226, 0.402],
+  [0.8331, 0.3677], [0.8312, 0.3293], [0.8148, 0.304], [0.7918, 0.3002],
+  [0.7692, 0.293], [0.7548, 0.2635], [0.7585, 0.226], [0.7773, 0.2048],
+  [0.7995, 0.2125], [0.8202, 0.2301], [0.841, 0.2472], [0.8616, 0.265],
+  [0.8797, 0.2893], [0.8955, 0.3179], [0.9085, 0.3502], [0.9165, 0.3868],
+  [0.9203, 0.4254], [0.9227, 0.4643], [0.9249, 0.5032], [0.9271, 0.5422],
+  [0.9294, 0.5811], [0.9313, 0.6201], [0.9332, 0.6591], [0.9351, 0.6981],
+  [0.9369, 0.7371], [0.9377, 0.7762], [0.9291, 0.8122], [0.912, 0.8382],
+  [0.8904, 0.8522], [0.8682, 0.8632], [0.8458, 0.8732], [0.8231, 0.8812],
+  [0.8002, 0.8873], [0.7772, 0.8908], [0.754, 0.8934], [0.7309, 0.8955],
+  [0.7077, 0.897], [0.6846, 0.8984], [0.6618, 0.9049], [0.6409, 0.9216],
+  [0.6205, 0.9395], [0.5978, 0.9345], [0.5761, 0.9209], [0.5541, 0.9087],
+  [0.5311, 0.9075], [0.5106, 0.9245], [0.4922, 0.9483], [0.4696, 0.9545],
+  [0.449, 0.9382], [0.4352, 0.9069], [0.4234, 0.8732], [0.4089, 0.843],
+  [0.389, 0.8229], [0.3687, 0.8041], [0.3484, 0.7853], [0.3281, 0.7665],
+  [0.3075, 0.7483], [0.287, 0.7302], [0.2665, 0.712], [0.246, 0.6938],
+  [0.2255, 0.6755], [0.205, 0.6572], [0.1846, 0.6387], [0.1642, 0.6201],
+  [0.1438, 0.6014], [0.1239, 0.5815], [0.1043, 0.5606], [0.0851, 0.5388],
+  [0.0662, 0.5161], [0.0647, 0.4808], [0.0681, 0.442], [0.0714, 0.4033],
 ];
 
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;

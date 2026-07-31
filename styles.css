@@ -1631,3 +1631,20 @@ header:not(.home-hero):not(.home-world),
   .home-world .world-stage,
   .home-world .world-intro { transition: none; animation: none; }
 }
+
+/* The hero headline has to fit a viewport, not just a width.
+
+   `h1` is sized `clamp(2.5rem, 6vw, 5.6rem)`, which asks only how wide the
+   window is. The hero panel is pinned to 100vh, so on a short window — a laptop
+   with a toolbar, or any browser that is not full screen — the type kept scaling
+   off the width while the space it had to fit shrank. At 1200x620 that is a 72px
+   headline 212px tall inside a 620px panel: the eyebrow, headline, paragraph and
+   buttons together stopped fitting, and the whole thing read as zoomed in.
+
+   Taking the smaller of the two makes the height a real constraint. Wide, tall
+   windows are unaffected — at 1920x1080 the width rule is already at its ceiling
+   — and it only ever makes the type smaller, never larger. Scoped to the hero,
+   because every other h1 on the site sits in normal flow where the page can
+   simply get longer. */
+.home-world h1 { font-size: clamp(2.25rem, min(6vw, 9vh), 5.6rem); }
+.home-world .hero-lead { font-size: clamp(1rem, min(1.35vw, 2.6vh), 1.35rem); }
