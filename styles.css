@@ -1605,3 +1605,29 @@ header:not(.home-hero):not(.home-world),
   main.cobras-home .decision-step > span,
   main.cobras-home .team-crew-head span { font-size: 11px !important; }
 }
+
+/* ------------------------------------ the homepage hero under reduced motion
+   The hero enhances for everyone now, including readers who have asked for
+   reduced motion — see the note at the top of assets/home/homepage.js. The
+   short version: the strip's position is a direct function of scroll offset, so
+   it moves exactly as far as the reader scrolls and stops when they stop.
+   Nothing plays by itself, so there is no animation to withhold, and refusing
+   to lay the page out sideways was answering the request by changing what the
+   page is rather than how much it moves.
+
+   What genuinely is motion gets dropped here. The car no longer travels across
+   the panels — the island pins it — and the decorative fades and slides that
+   run on their own timers are turned off, so the only thing that moves is the
+   strip the reader is pushing.
+
+   The `:not(.is-enhanced)` rules that used to live here are gone with the
+   fallback they styled. If the island ever fails to run, the panels stack in
+   normal flow, which is a plain and readable page rather than a designed one —
+   correct for a state that now only happens when JavaScript is broken. */
+@media (prefers-reduced-motion: reduce) {
+  .home-world .world-car { transition: none; }
+  .home-world .world-rail li { transition: none; }
+  .home-world .world-panel,
+  .home-world .world-stage,
+  .home-world .world-intro { transition: none; animation: none; }
+}
