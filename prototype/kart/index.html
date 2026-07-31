@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090a0b">
+<meta http-equiv="refresh" content="0;url=photo.html">
+<title>Cobra 3D — continuous vehicle inspection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#08090a;--panel:rgba(16,18,20,.82);--raised:#181a1d;--hot:#e6392b;
+    --gold:#d3ad31;--cream:#f6f2eb;--steel:#a4adb3;
+    --display:'Orbitron',system-ui,sans-serif;--body:'Poppins',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{width:100%;height:100%;margin:0}
+  body{overflow:hidden;background:var(--ink);color:var(--cream);font-family:var(--body)}
+  button{font:inherit}
+  .viewer{
+    position:relative;width:100%;height:100%;min-height:480px;overflow:hidden;
+    isolation:isolate;touch-action:none;user-select:none;background:
+      radial-gradient(circle at 50% 38%,#303338 0,#17191c 34%,#090a0b 76%);
+  }
+  .stage{position:absolute;inset:0;cursor:grab;outline:0}
+  .stage.is-dragging{cursor:grabbing}
+  #carCanvas{display:block;width:100%;height:100%;outline:0}
+  .stage::after{
+    content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
+    background:
+      radial-gradient(circle at 50% 45%,transparent 28%,rgba(0,0,0,.18) 68%,rgba(0,0,0,.58) 110%),
+      linear-gradient(180deg,rgba(5,6,7,.22),transparent 23%,transparent 72%,rgba(5,6,7,.58));
+  }
+  .loading{
+    position:absolute;inset:0;display:grid;place-items:center;z-index:10;background:#0b0c0d;
+    transition:opacity .45s ease,visibility .45s ease;
+  }
+  .loading.is-ready{opacity:0;visibility:hidden}
+  .loader-mark{
+    width:52px;height:52px;border-radius:50%;border:2px solid rgba(164,173,179,.18);
+    border-top-color:var(--hot);animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .topbar{
+    position:absolute;z-index:5;top:0;left:0;right:0;display:flex;align-items:flex-start;
+    justify-content:space-between;gap:20px;padding:20px 22px;pointer-events:none;
+  }
+  .brand h1{font-family:var(--display);font-size:clamp(1rem,2.5vw,1.38rem);letter-spacing:.08em;margin:0}
+  .brand p{font-size:12px;color:var(--steel);margin:5px 0 0}
+  .live{
+    display:inline-flex;align-items:center;gap:7px;margin-top:10px;color:#d6dadd;
+    font:700 9px var(--display);letter-spacing:.13em;text-transform:uppercase;
+  }
+  .live::before{content:"";width:6px;height:6px;border-radius:50%;background:#55d38a;box-shadow:0 0 12px #55d38a}
+  .angle{font-family:var(--display);font-size:10px;letter-spacing:.13em;color:var(--gold);text-align:right;text-transform:uppercase}
+  .angle strong{display:block;color:var(--cream);font-size:13px;margin-top:4px}
+  .hint{
+    position:absolute;z-index:5;left:50%;bottom:82px;transform:translateX(-50%);
+    padding:8px 12px;border:1px solid rgba(164,173,179,.2);background:rgba(9,10,11,.66);
+    backdrop-filter:blur(10px);font-size:10px;color:var(--steel);letter-spacing:.06em;
+    white-space:nowrap;pointer-events:none;transition:opacity .25s ease;
+  }
+  .viewer.has-dragged .hint{opacity:0}
+  .controls{
+    position:absolute;z-index:6;left:18px;right:18px;bottom:16px;display:flex;
+    align-items:center;justify-content:space-between;gap:12px;pointer-events:none;
+  }
+  .control-group{display:flex;align-items:center;gap:7px;pointer-events:auto}
+  .control{
+    min-width:42px;height:42px;padding:0 13px;border:1px solid rgba(164,173,179,.28);
+    background:var(--panel);backdrop-filter:blur(12px);color:var(--cream);cursor:pointer;border-radius:3px;
+    transition:border-color .16s,background .16s,transform .16s;
+  }
+  .control:hover{border-color:var(--gold);background:var(--raised)}
+  .control:active{transform:translateY(1px)}
+  .control:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .control[aria-pressed="true"]{background:var(--hot);border-color:var(--hot)}
+  .control.is-label{font-size:10px;letter-spacing:.04em}
+  .mode-link{
+    color:var(--steel);text-decoration:none;display:grid;place-items:center;
+    font-size:10px;letter-spacing:.04em;
+  }
+  .hotspots{
+    position:absolute;z-index:6;right:18px;top:50%;transform:translateY(-50%);
+    display:grid;gap:8px;pointer-events:auto;
+  }
+  .hotspot{
+    display:flex;align-items:center;justify-content:flex-end;gap:9px;border:0;background:transparent;
+    color:var(--steel);font-size:10px;letter-spacing:.04em;cursor:pointer;padding:4px;
+  }
+  .hotspot span:first-child{
+    opacity:0;transform:translateX(6px);transition:opacity .16s,transform .16s;
+    background:rgba(10,10,10,.76);padding:5px 8px;border-left:2px solid var(--gold);
+  }
+  .hotspot:hover span:first-child,.hotspot:focus-visible span:first-child{opacity:1;transform:none}
+  .hotspot-dot{
+    width:27px;height:27px;border-radius:50%;border:1px solid var(--gold);
+    display:grid;place-items:center;color:var(--cream);background:rgba(10,10,10,.72);
+  }
+  .detail{
+    position:absolute;z-index:7;right:62px;top:50%;width:min(310px,calc(100% - 90px));
+    transform:translateY(-50%) translateX(20px);opacity:0;visibility:hidden;
+    background:rgba(18,20,22,.95);border:1px solid rgba(211,173,49,.34);
+    padding:18px;box-shadow:0 20px 70px rgba(0,0,0,.4);transition:.2s ease;
+  }
+  .detail.is-open{opacity:1;visibility:visible;transform:translateY(-50%)}
+  .detail .eyebrow{font-family:var(--display);font-size:9px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase}
+  .detail h2{font-family:var(--display);font-size:1rem;margin:8px 0}
+  .detail p{font-size:12px;line-height:1.6;color:var(--steel);margin:0}
+  .detail-close{position:absolute;top:8px;right:8px;border:0;background:none;color:var(--steel);font-size:20px;cursor:pointer}
+  .disclosure{
+    position:absolute;z-index:5;right:18px;bottom:70px;max-width:38ch;text-align:right;
+    color:rgba(164,173,179,.76);font-size:9px;line-height:1.5;pointer-events:none;
+  }
+  @media (max-width:720px){
+    .topbar{padding:15px}.brand p{display:none}.angle{display:none}.live{margin-top:7px}
+    .controls{left:10px;right:10px;bottom:10px}.control{height:38px;min-width:38px;padding:0 10px}
+    .control.is-label{font-size:0}.control.is-label::first-letter{font-size:12px}
+    .hotspots{right:10px}.hotspot span:first-child{display:none}
+    .detail{right:48px}.hint{bottom:61px}.disclosure{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){.loading,.detail{transition:none}.loader-mark{animation:none}}
+</style>
+</head>
+<body>
+<script>location.replace('photo.html')</script>
+<main class="viewer" id="viewer" aria-label="Continuous interactive 3D view of the Cobras race car">
+  <div class="loading" id="loading" aria-live="polite"><div class="loader-mark" aria-hidden="true"></div></div>
+  <div class="stage" id="stage" tabindex="0" aria-label="Drag in any direction to orbit above the car. Scroll to zoom.">
+    <canvas id="carCanvas"></canvas>
+  </div>
+  <header class="topbar">
+    <div class="brand">
+      <h1>COBRA 3D</h1>
+      <p>Drag anywhere to orbit · top-down included · underside locked</p>
+      <span class="live">Photographic PBR · continuous 3D</span>
+    </div>
+    <div class="angle">Camera<strong id="angleLabel">Front · eye level</strong></div>
+  </header>
+  <div class="hint" aria-hidden="true">Drag freely in any direction · scroll to zoom</div>
+  <nav class="hotspots" aria-label="Car details">
+    <button class="hotspot" type="button" data-view="cockpit"><span>Cockpit</span><span class="hotspot-dot">1</span></button>
+    <button class="hotspot" type="button" data-view="axle"><span>Front axle</span><span class="hotspot-dot">2</span></button>
+    <button class="hotspot" type="button" data-view="shell"><span>Rear shell</span><span class="hotspot-dot">3</span></button>
+  </nav>
+  <aside class="detail" id="detail" aria-live="polite">
+    <button class="detail-close" type="button" aria-label="Close detail">×</button>
+    <div class="eyebrow">Component detail</div>
+    <h2 id="detailTitle"></h2>
+    <p id="detailBody"></p>
+  </aside>
+  <div class="controls">
+    <div class="control-group">
+      <button class="control is-label" id="spinBtn" type="button" aria-pressed="false">Auto rotate</button>
+      <button class="control" id="prevBtn" type="button" aria-label="Rotate left">←</button>
+      <button class="control" id="nextBtn" type="button" aria-label="Rotate right">→</button>
+      <button class="control is-label" id="eyeBtn" type="button">Eye level</button>
+      <button class="control is-label" id="topBtn" type="button">Top</button>
+      <a class="control mode-link" href="photo.html" title="Open photographic reference turntable">Photos</a>
+    </div>
+    <div class="control-group">
+      <button class="control" id="zoomOut" type="button" aria-label="Zoom out">−</button>
+      <button class="control" id="zoomIn" type="button" aria-label="Zoom in">+</button>
+    </div>
+  </div>
+  <p class="disclosure">Continuous real-time model matched to the documented trike layout: two front wheels and one centered rear wheel fully enclosed by the shell.</p>
+</main>
+<script src="viewer.bundle.js"></script>
+</body>
+</html>

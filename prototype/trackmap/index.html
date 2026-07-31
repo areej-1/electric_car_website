@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Track Map — SIS Al Jada Cobras (prototype)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A0A0A; --panel:#141414; --raised:#1A1A1A;
+    --cobra:#7C0A02; --hot:#E6392B; --gold:#C9A227; --softgold:#E8B923;
+    --cream:#F5F0E8; --steel:#9AA3A8;
+    --disp:'Orbitron',system-ui,sans-serif; --body:'Poppins',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--ink);color:var(--cream);font-family:var(--body);overflow:hidden}
+
+  #stage{position:fixed;inset:0;overflow:hidden;cursor:grab;touch-action:none;background:var(--ink)}
+  #stage.grabbing{cursor:grabbing}
+  #world{position:absolute;top:0;left:0;width:2060px;height:1220px;transform-origin:0 0;will-change:transform}
+  #plate{display:block;width:2060px;height:1220px;user-select:none;-webkit-user-drag:none}
+  #line{position:absolute;inset:0;width:2060px;height:1220px;pointer-events:none}
+
+  #markers{position:absolute;inset:0;--inv:1;z-index:2}
+  .marker{
+    position:absolute;transform:translate(-50%,-50%) scale(var(--inv));
+    background:none;border:0;padding:0;cursor:pointer;display:flex;align-items:center;gap:10px;
+    font-family:var(--body);color:var(--cream);white-space:nowrap;
+  }
+  /* markers near the right edge hang their label to the left so it stays on-plate */
+  .marker.is-left{flex-direction:row-reverse}
+  .marker.is-left .lbl{border-left:0;border-right:2px solid var(--gold)}
+  .dot{
+    width:36px;height:36px;flex:0 0 36px;border-radius:50%;
+    background:rgba(10,10,10,.88);border:2px solid var(--hot);
+    box-shadow:0 0 0 6px rgba(201,162,39,.16);
+    display:grid;place-items:center;font-family:var(--disp);font-weight:700;font-size:15px;
+    transition:background .18s,border-color .18s,box-shadow .18s;
+  }
+  .marker.is-flag .dot{
+    border-color:var(--gold);
+    background:
+      repeating-conic-gradient(var(--cream) 0 25%, #0A0A0A 0 50%) 50%/12px 12px,
+      rgba(10,10,10,.9);
+  }
+  .lbl{
+    font-size:13px;font-weight:500;letter-spacing:.01em;
+    background:rgba(10,10,10,.82);padding:5px 10px;border-radius:2px;
+    border-left:2px solid var(--gold);
+  }
+  .marker:hover .dot,.marker:focus-visible .dot{background:var(--hot);box-shadow:0 0 0 9px rgba(230,57,43,.18)}
+  .marker.is-active .dot{background:var(--hot);box-shadow:0 0 0 10px rgba(230,57,43,.22)}
+  .marker:focus-visible{outline:2px solid var(--softgold);outline-offset:6px}
+
+  #kart{position:absolute;top:0;left:0;width:78px;height:78px;pointer-events:none;z-index:1;
+        transform:scale(var(--inv));transform-origin:50% 50%;--inv:1}
+
+  #hud{position:fixed;top:0;left:0;right:0;padding:18px 22px;pointer-events:none;
+       background:linear-gradient(rgba(10,10,10,.92),rgba(10,10,10,0))}
+  #hud h1{margin:0;font-family:var(--disp);font-weight:900;font-size:clamp(1.1rem,2.4vw,1.6rem);letter-spacing:.06em}
+  #hud p{margin:4px 0 0;color:var(--steel);font-size:13px}
+
+  #credit{position:fixed;left:0;right:0;bottom:0;padding:10px 22px;font-size:11.5px;color:var(--steel);
+          background:rgba(10,10,10,.9);border-top:1px solid rgba(154,163,168,.16);pointer-events:auto}
+  #credit a{color:var(--steel)}
+
+  #hint{position:fixed;left:22px;bottom:74px;font-size:12px;color:var(--steel);
+        font-family:var(--disp);letter-spacing:.12em;text-transform:uppercase;pointer-events:none;
+        transition:opacity .4s}
+
+  #panel{
+    position:fixed;top:0;right:0;height:100%;width:min(420px,88vw);
+    background:var(--panel);border-left:1px solid rgba(201,162,39,.22);
+    padding:26px 24px 78px;overflow-y:auto;
+    transform:translateX(102%);transition:transform .38s cubic-bezier(.22,.61,.36,1);
+  }
+  #panel.open{transform:none}
+  #panel .close{position:absolute;top:14px;right:16px;background:none;border:0;color:var(--steel);
+                font-size:26px;line-height:1;cursor:pointer}
+  #panel .kicker{font-family:var(--disp);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+                 color:var(--gold);margin:0 0 10px}
+  #panel h2{font-family:var(--disp);font-weight:700;font-size:1.35rem;margin:0 0 14px;line-height:1.2}
+  #panel .status{display:inline-flex;align-items:center;gap:8px;margin:0 0 16px;font-size:12px;
+                 letter-spacing:.04em;text-transform:uppercase;padding:5px 11px;border:1px solid}
+  #panel .pip{width:7px;height:7px;border-radius:50%;background:currentColor}
+  .s-recorded{color:var(--softgold);border-color:rgba(232,185,35,.42)}
+  .s-in-progress{color:var(--hot);border-color:rgba(230,57,43,.45)}
+  .s-pending{color:var(--steel);border-color:rgba(154,163,168,.32)}
+  #panel .body{color:#D8D3CA;line-height:1.65;font-size:14.5px;margin:0 0 18px}
+  #panel .tags{list-style:none;padding:0;margin:0 0 20px;display:flex;flex-wrap:wrap;gap:8px}
+  #panel .tags li{font-size:11.5px;color:var(--steel);border:1px solid rgba(154,163,168,.26);padding:4px 9px}
+  #panel img,#panel video{width:100%;display:block;border:1px solid rgba(154,163,168,.18)}
+
+  @media (prefers-reduced-motion:reduce){#panel{transition:none}}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div id="world">
+    <img id="plate" src="assets/track-wide.webp" width="2060" height="1220"
+         alt="Satellite view of Silverstone Circuit, graded, used as the Cobras build chart">
+    <svg id="line" aria-hidden="true"></svg>
+    <div id="markers"></div>
+    <canvas id="kart" width="78" height="78" aria-hidden="true"></canvas>
+  </div>
+</div>
+
+<header id="hud">
+  <h1>TRACK MAP</h1>
+  <p>Five turns from first sketch to the grid · SIS Al Jada Cobras</p>
+</header>
+
+<p id="hint">Drag to pan · scroll to zoom · click a turn</p>
+
+<aside id="panel" aria-live="polite"></aside>
+
+<footer id="credit">
+  Imagery: <strong>Planet Labs, Inc.</strong> — Silverstone Circuit, 2 July 2018, SkySat.
+  Graded derivative licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.
+  Circuit shown is illustrative — it is not the team's race venue, which is not yet confirmed.
+  Kart is a model built from team photographs, not a photograph.
+</footer>
+
+<script type="module" src="trackmap.js"></script>
+</body>
+</html>

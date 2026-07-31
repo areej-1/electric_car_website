@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cobra 360 — photoreal locked turntable</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0a0a0a;--panel:#141414;--raised:#1a1a1a;--hot:#e6392b;
+    --gold:#c9a227;--cream:#f5f0e8;--steel:#9aa3a8;
+    --display:'Orbitron',system-ui,sans-serif;--body:'Poppins',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{width:100%;height:100%;margin:0}
+  body{overflow:hidden;background:var(--ink);color:var(--cream);font-family:var(--body)}
+  button{font:inherit}
+
+  .viewer{
+    position:relative;width:100%;height:100%;min-height:480px;overflow:hidden;
+    background:#0b0b0c;isolation:isolate;touch-action:none;user-select:none;
+  }
+  .stage{position:absolute;inset:0;display:grid;place-items:center;cursor:grab}
+  .stage.is-dragging{cursor:grabbing}
+  .stage::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(180deg,rgba(10,10,10,.18),transparent 24%,transparent 72%,rgba(10,10,10,.68));
+    z-index:3;
+  }
+  .frame{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+    opacity:0;transform:scale(var(--zoom,1)) rotate(var(--frame-rotation,0deg));transform-origin:50% 52%;
+    transition:transform .12s ease;
+    -webkit-user-drag:none;pointer-events:none;
+  }
+  .frame.is-active{will-change:transform}
+  .loading{
+    position:absolute;inset:0;display:grid;place-items:center;z-index:8;background:#0b0b0c;
+    transition:opacity .35s ease,visibility .35s ease;
+  }
+  .loading.is-ready{opacity:0;visibility:hidden}
+  .loader-mark{
+    width:48px;height:48px;border-radius:50%;border:2px solid rgba(154,163,168,.2);
+    border-top-color:var(--hot);animation:spin .9s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .topbar{
+    position:absolute;z-index:5;top:0;left:0;right:0;display:flex;align-items:flex-start;
+    justify-content:space-between;gap:20px;padding:20px 22px;pointer-events:none;
+  }
+  .brand h1{font-family:var(--display);font-size:clamp(1rem,2.5vw,1.35rem);letter-spacing:.08em;margin:0}
+  .brand p{font-size:12px;color:var(--steel);margin:5px 0 0}
+  .angle{
+    font-family:var(--display);font-size:11px;letter-spacing:.13em;color:var(--gold);
+    text-align:right;text-transform:uppercase;
+  }
+  .angle strong{display:block;color:var(--cream);font-size:14px;margin-top:4px}
+
+  .hint{
+    position:absolute;z-index:5;left:50%;bottom:86px;transform:translateX(-50%);
+    display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(154,163,168,.2);
+    background:rgba(10,10,10,.7);backdrop-filter:blur(8px);font-size:11px;color:var(--steel);
+    letter-spacing:.05em;white-space:nowrap;pointer-events:none;transition:opacity .25s ease;
+  }
+  .viewer.has-dragged .hint{opacity:0}
+  .drag-icon{width:28px;height:14px;position:relative}
+  .drag-icon::before,.drag-icon::after{content:"";position:absolute;top:6px;width:8px;height:8px;border-top:1px solid var(--cream)}
+  .drag-icon::before{left:0;border-left:1px solid var(--cream);transform:rotate(-45deg)}
+  .drag-icon::after{right:0;border-right:1px solid var(--cream);transform:rotate(45deg)}
+  .drag-icon span{position:absolute;left:5px;right:5px;top:7px;height:1px;background:var(--cream)}
+
+  .controls{
+    position:absolute;z-index:6;left:18px;right:18px;bottom:16px;display:flex;
+    align-items:center;justify-content:space-between;gap:12px;pointer-events:none;
+  }
+  .control-group{display:flex;align-items:center;gap:7px;pointer-events:auto}
+  .control{
+    min-width:42px;height:42px;padding:0 13px;border:1px solid rgba(154,163,168,.28);
+    background:rgba(20,20,20,.9);color:var(--cream);cursor:pointer;border-radius:2px;
+    transition:border-color .16s,background .16s,transform .16s;
+  }
+  .control:hover{border-color:var(--gold);background:var(--raised)}
+  .control:active{transform:translateY(1px)}
+  .control:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .control[aria-pressed="true"]{background:var(--hot);border-color:var(--hot)}
+  .control.is-label{font-size:11px;letter-spacing:.04em}
+
+  .hotspots{
+    position:absolute;z-index:6;right:18px;top:50%;transform:translateY(-50%);
+    display:grid;gap:8px;pointer-events:auto;
+  }
+  .hotspot{
+    display:flex;align-items:center;justify-content:flex-end;gap:9px;border:0;background:transparent;
+    color:var(--steel);font-size:11px;letter-spacing:.04em;cursor:pointer;padding:4px;
+  }
+  .hotspot span:first-child{
+    opacity:0;transform:translateX(6px);transition:opacity .16s,transform .16s;
+    background:rgba(10,10,10,.76);padding:5px 8px;border-left:2px solid var(--gold);
+  }
+  .hotspot:hover span:first-child,.hotspot:focus-visible span:first-child{opacity:1;transform:none}
+  .hotspot-dot{
+    width:26px;height:26px;border-radius:50%;border:1px solid var(--gold);
+    display:grid;place-items:center;color:var(--cream);background:rgba(10,10,10,.76);
+  }
+
+  .detail{
+    position:absolute;z-index:7;right:62px;top:50%;width:min(300px,calc(100% - 90px));
+    transform:translateY(-50%) translateX(20px);opacity:0;visibility:hidden;
+    background:rgba(20,20,20,.95);border:1px solid rgba(201,162,39,.34);
+    padding:18px;box-shadow:0 20px 70px rgba(0,0,0,.35);transition:.2s ease;
+  }
+  .detail.is-open{opacity:1;visibility:visible;transform:translateY(-50%)}
+  .detail .eyebrow{font-family:var(--display);font-size:10px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase}
+  .detail h2{font-family:var(--display);font-size:1rem;margin:8px 0}
+  .detail p{font-size:12px;line-height:1.6;color:var(--steel);margin:0}
+  .detail-close{position:absolute;top:8px;right:8px;border:0;background:none;color:var(--steel);font-size:20px;cursor:pointer}
+
+  .disclosure{
+    position:absolute;z-index:5;right:18px;bottom:70px;max-width:34ch;text-align:right;
+    color:rgba(154,163,168,.78);font-size:10px;line-height:1.5;pointer-events:none;
+  }
+
+  @media (max-width:720px){
+    .topbar{padding:15px}.brand p{display:none}.angle{display:none}
+    .controls{left:10px;right:10px;bottom:10px}.control{height:38px;min-width:38px;padding:0 10px}
+    .hotspots{right:10px}.hotspot span:first-child{display:none}
+    .detail{right:48px}
+    /* The disclosure states this is a visualisation rather than a photograph, so it
+       must not be hidden on the viewport where most people will see it. Stacked above
+       the controls with the drag hint above it, so the three never overlap. */
+    .disclosure{
+      left:10px;right:10px;bottom:56px;max-width:none;text-align:center;font-size:9.5px;
+    }
+    .hint{bottom:104px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .frame,.loading,.detail{transition:none}.loader-mark{animation:none}
+  }
+</style>
+</head>
+<body>
+<main class="viewer" id="viewer" aria-label="Interactive 360-degree view of the Cobras race car">
+  <div class="loading" id="loading" aria-live="polite">
+    <div class="loader-mark" aria-hidden="true"></div>
+  </div>
+
+  <div class="stage" id="stage" tabindex="0" aria-label="Drag horizontally to rotate and vertically to tilt up. Use arrow keys to change angle.">
+    <img class="frame top-frame" src="../../assets/car-turntable-smooth-nose/top.jpg" alt="Directly overhead view of the Cobras electric race car" draggable="false">
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <h1>COBRA 360</h1>
+      <p>Drag sideways to rotate · drag upward for top view · scroll to zoom</p>
+    </div>
+    <div class="angle">Camera angle<strong id="angleLabel">Front</strong></div>
+  </header>
+
+  <div class="hint" aria-hidden="true">
+    <span class="drag-icon"><span></span></span>
+    Drag in any direction
+  </div>
+
+  <nav class="hotspots" aria-label="Car details">
+    <button class="hotspot" type="button" data-frame="4" data-detail="cockpit">
+      <span>Cockpit</span><span class="hotspot-dot">1</span>
+    </button>
+    <button class="hotspot" type="button" data-frame="28" data-detail="axle">
+      <span>Front axle</span><span class="hotspot-dot">2</span>
+    </button>
+    <button class="hotspot" type="button" data-frame="12" data-detail="shell">
+      <span>Rear shell</span><span class="hotspot-dot">3</span>
+    </button>
+  </nav>
+
+  <aside class="detail" id="detail" aria-live="polite">
+    <button class="detail-close" type="button" aria-label="Close detail">×</button>
+    <div class="eyebrow">Component detail</div>
+    <h2 id="detailTitle"></h2>
+    <p id="detailBody"></p>
+  </aside>
+
+  <div class="controls">
+    <div class="control-group">
+      <button class="control is-label" id="spinBtn" type="button" aria-pressed="false">Auto rotate</button>
+      <button class="control" id="prevBtn" type="button" aria-label="Previous angle">←</button>
+      <button class="control" id="nextBtn" type="button" aria-label="Next angle">→</button>
+      <button class="control is-label" id="eyeBtn" type="button">Eye level</button>
+      <button class="control is-label" id="topBtn" type="button">Top</button>
+    </div>
+    <div class="control-group">
+      <button class="control" id="zoomOut" type="button" aria-label="Zoom out">−</button>
+      <button class="control" id="zoomIn" type="button" aria-label="Zoom in">+</button>
+    </div>
+  </div>
+
+  <p class="disclosure">AI-assisted studio visualization locked to one master design: two five-spoke front wheels and one centered rear wheel fully enclosed by the shell.</p>
+</main>
+
+<script>
+(() => {
+  const viewer = document.getElementById('viewer');
+  const stage = document.getElementById('stage');
+  const topFrame = document.querySelector('.top-frame');
+  const frameSuffixes = [
+    '000','011','023','034','045','056','068','079',
+    '090','101','113','124','135','146','158','169',
+    '180','191','203','214','225','236','248','259',
+    '270','281','293','304','315','326','338','349'
+  ];
+  const frameAssetVersion = 'livery-v4';
+  const labels = [
+    'Front','Front left','Front left','Front left',
+    'Front left','Left front','Left front','Left front',
+    'Left side','Left rear','Left rear','Left rear',
+    'Rear left','Rear left','Rear left','Rear left',
+    'Rear','Rear right','Rear right','Rear right',
+    'Rear right','Right rear','Right rear','Right rear',
+    'Right side','Right front','Right front','Right front',
+    'Front right','Front right','Front right','Front right'
+  ];
+  const angleStep = 360 / frameSuffixes.length;
+  frameSuffixes.forEach((suffix, index) => {
+    const angle = index * angleStep;
+    [
+      {prefix:'eye', className:'ring-low', elevation:'Eye-level'},
+      {prefix:'elevated', className:'ring-high', elevation:'Elevated'}
+    ].forEach(({prefix, className, elevation}) => {
+      const image = document.createElement('img');
+      image.className = `frame ${className}`;
+      image.dataset.index = String(index);
+      image.dataset.angle = String(angle);
+      image.src = `../../assets/car-turntable-smooth-nose/${prefix}-${suffix}.jpg?v=${frameAssetVersion}`;
+      image.alt = `${elevation} ${labels[index].toLowerCase()} view of the Cobras electric race car at ${angle} degrees`;
+      image.draggable = false;
+      image.decoding = 'async';
+      image.setAttribute('aria-hidden', 'true');
+      stage.insertBefore(image, topFrame);
+    });
+  });
+  const frames = [...document.querySelectorAll('.frame')];
+  const lowFrames = [...document.querySelectorAll('.ring-low')];
+  const highFrames = [...document.querySelectorAll('.ring-high')];
+  const loading = document.getElementById('loading');
+  const angleLabel = document.getElementById('angleLabel');
+  const spinBtn = document.getElementById('spinBtn');
+  const detail = document.getElementById('detail');
+  const detailTitle = document.getElementById('detailTitle');
+  const detailBody = document.getElementById('detailBody');
+  const details = {
+    cockpit:['Open cockpit','Black bucket seat, bright red four-point harness, tubular roll structure, and handlebar steering.'],
+    axle:['Single front axle','Two chrome five-spoke front wheels mounted side-by-side across one common axle.'],
+    shell:['Enclosed rear shell','The single centered rear wheel sits inside the continuous composite tail and is hidden externally.']
+  };
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let zoom = 1;
+  let dragging = false;
+  let startX = 0;
+  let startY = 0;
+  let startAzimuth = 0;
+  let startTilt = 0;
+  let azimuth = 0;
+  let targetAzimuth = 0;
+  let tilt = 0;
+  let targetTilt = 0;
+  let autoRotate = false;
+  let previousTime = performance.now();
+  let activeFrame = null;
+  let renderedIndex = -1;
+  let renderedElevation = '';
+
+  const normalizeAngle = (value) => {
+    let result = value % lowFrames.length;
+    if (result < 0) result += lowFrames.length;
+    return result;
+  };
+  const formatDegrees = (value) => {
+    const precise = value.toFixed(2).replace(/\.?0+$/, '');
+    const [whole, fraction] = precise.split('.');
+    return `${whole.padStart(3, '0')}${fraction ? `.${fraction}` : ''}°`;
+  };
+  const setActiveFrame = (nextFrame) => {
+    if (activeFrame === nextFrame) return;
+    if (activeFrame) {
+      activeFrame.style.opacity = '0';
+      activeFrame.classList.remove('is-active');
+      activeFrame.setAttribute('aria-hidden', 'true');
+    }
+    nextFrame.style.opacity = '1';
+    nextFrame.classList.add('is-active');
+    nextFrame.setAttribute('aria-hidden', 'false');
+    activeFrame = nextFrame;
+  };
+  topFrame.dataset.angle = 'overhead';
+  topFrame.setAttribute('aria-hidden', 'true');
+  const renderView = () => {
+    const wrapped = normalizeAngle(azimuth);
+    const nearest = Math.round(wrapped) % lowFrames.length;
+    const showTop = tilt >= .82;
+    const showHigh = !showTop && tilt >= .34;
+    const nextFrame = showTop ? topFrame : showHigh ? highFrames[nearest] : lowFrames[nearest];
+    setActiveFrame(nextFrame);
+    const imageAngle = nearest * angleStep;
+    const elevation = showTop ? 'Top' : showHigh ? 'Elevated' : 'Eye level';
+    if (nearest !== renderedIndex || elevation !== renderedElevation) {
+      topFrame.style.setProperty('--frame-rotation', `${imageAngle}deg`);
+      const angleText = formatDegrees(imageAngle);
+      angleLabel.textContent = `${angleText} · ${labels[nearest]} · ${elevation}`;
+      stage.setAttribute('aria-label', `Cobras car at ${angleText}, ${elevation}. Drag sideways to rotate.`);
+      renderedIndex = nearest;
+      renderedElevation = elevation;
+    }
+  };
+  const applyZoom = (next) => {
+    zoom = Math.max(1, Math.min(1.9, next));
+    viewer.style.setProperty('--zoom', zoom.toFixed(2));
+  };
+  const stopAuto = () => {
+    autoRotate = false;
+    spinBtn.setAttribute('aria-pressed', 'false');
+  };
+  const startAuto = () => {
+    if (reduced) return;
+    autoRotate = true;
+    spinBtn.setAttribute('aria-pressed', 'true');
+  };
+
+  Promise.all(frames.map((img) => img.complete ? Promise.resolve() : new Promise((resolve) => {
+    img.addEventListener('load', resolve, {once:true});
+    img.addEventListener('error', resolve, {once:true});
+  }))).then(() => loading.classList.add('is-ready'));
+
+  stage.addEventListener('pointerdown', (event) => {
+    dragging = true;startX = event.clientX;startY = event.clientY;
+    startAzimuth = targetAzimuth;startTilt = targetTilt;
+    stage.classList.add('is-dragging');stage.setPointerCapture(event.pointerId);stopAuto();
+  });
+  stage.addEventListener('pointermove', (event) => {
+    if (!dragging) return;
+    targetAzimuth = startAzimuth - (event.clientX - startX) / 23;
+    targetTilt = Math.max(0, Math.min(1, startTilt - (event.clientY - startY) / 280));
+    viewer.classList.add('has-dragged');
+  });
+  const finishDrag = (event) => {
+    if (!dragging) return;
+    dragging = false;stage.classList.remove('is-dragging');
+    try{stage.releasePointerCapture(event.pointerId)}catch{}
+    if (Math.hypot(event.clientX - startX,event.clientY - startY) > 4) viewer.classList.add('has-dragged');
+  };
+  stage.addEventListener('pointerup', finishDrag);
+  stage.addEventListener('pointercancel', finishDrag);
+  stage.addEventListener('wheel', (event) => {
+    event.preventDefault();applyZoom(zoom * Math.exp(-event.deltaY * .001));stopAuto();
+  }, {passive:false});
+  stage.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') {event.preventDefault();targetAzimuth -= 1;stopAuto()}
+    if (event.key === 'ArrowRight') {event.preventDefault();targetAzimuth += 1;stopAuto()}
+    if (event.key === 'ArrowUp') {event.preventDefault();targetTilt = Math.min(1,targetTilt + .25);stopAuto()}
+    if (event.key === 'ArrowDown') {event.preventDefault();targetTilt = Math.max(0,targetTilt - .25);stopAuto()}
+    if (event.key === '+' || event.key === '=') {event.preventDefault();applyZoom(zoom + .1)}
+    if (event.key === '-') {event.preventDefault();applyZoom(zoom - .1)}
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', () => {targetAzimuth -= 1;stopAuto()});
+  document.getElementById('nextBtn').addEventListener('click', () => {targetAzimuth += 1;stopAuto()});
+  document.getElementById('eyeBtn').addEventListener('click', () => {targetTilt = 0;stopAuto()});
+  document.getElementById('topBtn').addEventListener('click', () => {targetTilt = 1;stopAuto()});
+  document.getElementById('zoomIn').addEventListener('click', () => applyZoom(zoom + .12));
+  document.getElementById('zoomOut').addEventListener('click', () => applyZoom(zoom - .12));
+  spinBtn.addEventListener('click', () => autoRotate ? stopAuto() : startAuto());
+
+  document.querySelectorAll('.hotspot').forEach((button) => {
+    button.addEventListener('click', () => {
+      stopAuto();targetAzimuth = Number(button.dataset.frame);targetTilt = .26;
+      const [title, body] = details[button.dataset.detail];
+      detailTitle.textContent = title;detailBody.textContent = body;detail.classList.add('is-open');
+    });
+  });
+  document.querySelector('.detail-close').addEventListener('click', () => detail.classList.remove('is-open'));
+  addEventListener('keydown', (event) => {if(event.key === 'Escape') detail.classList.remove('is-open')});
+
+  const animate = (now) => {
+    const delta = Math.min(.05,(now - previousTime) / 1000);previousTime = now;
+    if (autoRotate && !dragging) targetAzimuth += delta * (27.9 / angleStep);
+    const smoothing = reduced ? 1 : 1 - Math.exp(-delta * 12);
+    azimuth += (targetAzimuth - azimuth) * smoothing;
+    tilt += (targetTilt - tilt) * smoothing;
+    renderView();
+    requestAnimationFrame(animate);
+  };
+  renderView();
+  requestAnimationFrame(animate);
+})();
+</script>
+</body>
+</html>
