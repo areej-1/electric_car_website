@@ -17,6 +17,8 @@
     .map-intro p{max-width:42ch;color:#9aa3a8;line-height:1.6;margin:12px 0 0}
     .map-kicker{color:#e8b923;font:700 .72rem Orbitron,system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase}
     .map-note{max-width:34ch;color:#9aa3a8;font-size:.8rem;line-height:1.5;text-align:right}
+    .map-note p{margin:0 0 4px}
+    .map-note p:last-child{margin-bottom:0}
     .map-note a{color:#c9a227}
     .map-frame{height:min(74vh,760px);min-height:520px;border:1px solid rgba(201,162,39,.3);background:#0f1011;box-shadow:0 18px 80px rgba(0,0,0,.35)}
     .map-frame iframe{display:block;width:100%;height:100%;border:0}
@@ -36,14 +38,22 @@
           <h1>From sketch to starting grid.</h1>
           <p>The five stages behind the Cobra, laid out as turns on a circuit. Drag to pan, and click a turn to read what happened there.</p>
         </div>
-        <!-- The plate is a Planet Labs SkySat derivative under CC BY-SA 4.0, whose
-             share-alike terms require naming the author, the licence and a link to
-             it. The second sentence is here because the site must not imply a
-             venue the team has not confirmed: Silverstone is the chart, not the
-             race. -->
+        <!-- Two separate works with two separate licences, so both are named. The
+             plate is a Planet Labs SkySat derivative under CC BY-SA 4.0, whose
+             share-alike terms require the author, the licence and a link. The
+             racing line is traced from OpenStreetMap, which is ODbL and needs its
+             own attribution — naming OSM as a source is not the licence notice.
+             The last sentence is here because the site must not imply a venue the
+             team has not confirmed: the circuit is the chart, not the race.
+
+             One sentence per element on purpose. The licence line used to be a
+             single text node split by the <a>, which left the translator matching
+             ".\n  The circuit shown is…" as one string — unkeyable, so it never
+             translated. -->
         <div class="map-note">
-          Circuit imagery &copy; Planet Labs PBC, <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="license noopener" target="_blank">CC BY-SA 4.0</a>.
-          The circuit shown is illustrative &mdash; it is not the team's race venue.
+          <p>Circuit imagery &copy; Planet Labs PBC, <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="license noopener" target="_blank">CC BY-SA 4.0</a></p>
+          <p>Racing line traced from OpenStreetMap, &copy; OpenStreetMap contributors, <a href="https://opendatacommons.org/licenses/odbl/" rel="license noopener" target="_blank">ODbL</a></p>
+          <p>The circuit shown is illustrative &mdash; it is not the team's race venue.</p>
         </div>
       </div>
       <div class="map-frame">
