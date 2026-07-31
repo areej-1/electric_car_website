@@ -93,8 +93,12 @@
   const laneXAt = (lane, progress) => W / 2 + lane * roadWidthAt(progress) / 4;
 
   // Keep the race stage LTR even when the site is Arabic, so controls/canvas stay correct.
+  // The panel used to be forced to dir="ltr" here, which made the Arabic
+  // instructions read with their clauses reversed and the sentence-final stop
+  // leading. Only the parts whose left and right mean physical directions need
+  // it: the steer pad and the numeric readouts, which get it in CSS.
   const raceShell = document.querySelector('.race-shell');
-  if (raceShell) raceShell.setAttribute('dir', 'ltr');
+  if (raceShell) raceShell.removeAttribute('dir');
 
   function updateHud() {
     scoreNode.textContent = Math.floor(state.score).toString().padStart(5, '0');

@@ -320,7 +320,7 @@ header:not(.home-hero):not(.home-world) {
   margin: 0 auto;
   padding: 105px 0 48px;
   position: relative;
-  text-align: left;
+  text-align: start;
 }
 header:not(.home-hero):not(.home-world)::before {
   content: 'COBRAS / EVGP';
@@ -578,12 +578,12 @@ header:not(.home-hero):not(.home-world) > p { max-width: 680px; margin-top: 20px
 .spec-table tr { border-bottom: 1px solid rgba(245,240,232,.07); }
 .spec-table tr:last-child { border: 0; }
 .spec-table td { padding: 13px 0; vertical-align: top; font-size: .84rem; }
-.spec-label { width: 46%; padding-right: 18px !important; color: var(--muted); }
+.spec-label { width: 46%; padding-inline-end: 18px; color: var(--muted); }
 .spec-value { color: var(--cream); font-weight: 500; }
 .last-updated { margin: 0 0 70px; color: var(--gold); font-size: .75rem; text-align: center; text-transform: uppercase; letter-spacing: .08em; }
 
 /* Education cards */
-.edu-hero { width: min(var(--max-width), calc(100% - 40px)) !important; margin: 0 auto !important; padding: 105px 0 48px !important; text-align: left !important; }
+.edu-hero { width: min(var(--max-width), calc(100% - 40px)) !important; margin: 0 auto !important; padding: 105px 0 48px !important; text-align: start !important; }
 .edu-hero::before { content: 'KNOW THE MACHINE'; display: block; margin-bottom: 20px; color: var(--gold); font: 700 11px/1 var(--display); letter-spacing: .17em; }
 .edu-hero h1 { font-size: clamp(2.5rem,6vw,5.6rem) !important; }
 .edu-hero p { max-width: 640px !important; margin: 18px 0 0 !important; color: var(--muted) !important; }
@@ -660,7 +660,11 @@ nav .open-button::before { content: none; }
 /* Cobra Circuit */
 .race-page header { padding-bottom: 38px; }
 .race-kicker { display: block; margin-bottom: 18px; color: var(--gold); font: 700 11px/1 var(--display); letter-spacing: .16em; text-transform: uppercase; }
-.race-shell { width: min(920px, calc(100% - 32px)); margin: 0 auto; padding: 0; overflow: hidden; background: #0d0d0d; border: 1px solid var(--border-red); border-radius: 18px; box-shadow: var(--shadow); direction: ltr; }
+.race-shell { width: min(920px, calc(100% - 32px)); margin: 0 auto; padding: 0; overflow: hidden; background: #0d0d0d; border: 1px solid var(--border-red); border-radius: 18px; box-shadow: var(--shadow); }
+/* The parts that genuinely must not mirror: the steer pad, whose arrows mean
+   physical left and right, and the numeric readouts. Everything else in the
+   panel is prose and follows the page. */
+.race-controls, .race-stats, .energy-meter, .race-score { direction: ltr; }
 .race-page { direction: inherit; }
 html[dir="rtl"] .race-shell, html[dir="rtl"] .race-shell * { text-align: start; }
 .race-topbar { min-height: 78px; display: grid; grid-template-columns: repeat(3, 120px) 1fr; align-items: center; gap: 18px; padding: 14px 20px; background: var(--panel); border-bottom: 1px solid var(--border-red); }
@@ -708,7 +712,7 @@ footer {
   color: var(--muted);
   border-top: 1px solid var(--border-red);
   font-size: .75rem;
-  text-align: left;
+  text-align: start;
   display: grid;
   grid-template-columns: 1.4fr 1fr auto;
   gap: 28px;
@@ -835,7 +839,7 @@ footer::before { display: none; }
   .needs-grid { grid-template-columns: repeat(2,1fr); }
   .level-grid .featured { transform: none; }
   footer { grid-template-columns: 1fr 1fr; }
-  .footer-meta { grid-column: 1 / -1; align-items: flex-start; text-align: left; }
+  .footer-meta { grid-column: 1 / -1; align-items: flex-start; text-align: start; }
   .socials { justify-content: flex-start; }
 }
 
@@ -947,7 +951,11 @@ footer::before { display: none; }
 
 .last-updated .text-link { margin-top: 0; justify-content: center; color: var(--gold); }
 
-.spec-table th { text-align: left; font-weight: 500; }
+/* `start`, not `left`: in RTL the cell mirrors but left-aligned text stays against
+   the border it shares with the value, so 14 of 19 rows read as one word. The
+   padding has to mirror too — `padding-right` put the gap on the far side of the
+   label in Arabic, which is the side that already had one. */
+.spec-table th { text-align: start; font-weight: 500; }
 
 ::selection { background: rgba(230,57,43,.45); color: #fff; }
 
@@ -1109,7 +1117,11 @@ html[dir="rtl"] .sponsor-interest, html[dir="rtl"] .landing-cta { border-left-wi
 .analytics-note { opacity: .8; font-size: .68rem; }
 
 .share-score-btn {
-  display: inline-flex;
+  /* inline-flex ignores `margin: 0 auto`, so this sat at the start of its line box
+     — x=0 in LTR, hard against the right edge in RTL — while its sibling #start-btn
+     (display:flex) centred correctly. */
+  display: flex;
+  width: fit-content;
   align-items: center;
   justify-content: center;
   min-height: 44px;
@@ -1184,11 +1196,18 @@ nav.site-nav > ul {
   justify-content: center;
 }
 
-.site-nav > ul a,
-nav.site-nav > ul a {
-  padding: 8px 7px;
-  font-size: 10px;
-  white-space: nowrap;
+/* Scoped to the desktop bar on purpose. Unscoped, this rule's specificity (0,1,3)
+   beat the mobile rule at ~818 (0,1,2), so the open hamburger rendered its seven
+   primary links at 10px in 32.5px rows — smaller than the submenu items nested
+   underneath them — and made the 1041-1200px rule dead code. It is a compressed
+   bar for a crowded desktop nav, not a size for a drawer or a finger. */
+@media (min-width: 1041px) {
+  .site-nav > ul a,
+  nav.site-nav > ul a {
+    padding: 8px 7px;
+    font-size: 10px;
+    white-space: nowrap;
+}
 }
 
 .site-nav .nav-tools,
@@ -1672,3 +1691,13 @@ main.cobras-home .world-car {
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
 }
+
+/* The hero pin is 100vh but starts below the in-flow nav, so its bottom-anchored
+   stage indicator rendered as a 2-12px sliver until the first scroll tick latched
+   the sticky element to the top. Only wrong at scrollY 0 — which is the first
+   thing anyone sees. Worst at 1366x768, where 93% of it was cut. */
+/* The attribute selectors are here to out-specify the ported Astro rule, which
+   writes every selector as `.thing[data-astro-cid-...]` and is linked after this
+   file — so it wins both on specificity and on order unless matched and beaten. */
+main.cobras-home .home-world[data-astro-cid-zkhec6xw].is-enhanced .world-pin[data-astro-cid-zkhec6xw]
+  { block-size: calc(100vh - var(--nav-h, 76px)); }

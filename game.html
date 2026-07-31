@@ -22,7 +22,10 @@
       <p data-i18n="game.intro">A retro night run through Cobra City. Cut through traffic, evade hazards, collect battery cells, and hold your nerve as the road accelerates.</p>
     </header>
 
-    <section class="race-shell" aria-label="Cobra Circuit game" dir="ltr">
+    <!-- No dir="ltr" here. The steering buttons and numeric readouts need LTR and
+     get it individually below; forcing it on the whole panel made the Arabic
+     instructions read with their clauses reversed and the full stop leading. -->
+    <section class="race-shell" aria-label="Cobra Circuit game">
       <div class="race-topbar">
         <div class="race-stat"><span data-i18n="game.score">Score</span><strong id="race-score">00000</strong></div>
         <div class="race-stat"><span data-i18n="game.level">Level</span><strong id="race-level">1</strong></div>

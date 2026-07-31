@@ -1,5 +1,5 @@
 /* Cobras PWA service worker — offline shell cache */
-const CACHE = 'cobras-shell-v8';
+const CACHE = 'cobras-shell-v9';
 const SHELL = [
   './',
   './index.html',
@@ -11,13 +11,16 @@ const SHELL = [
   './game.html',
   './race-day.html',
   './manifest.webmanifest',
-  './cobra-race-mark.png',
-  './favicon.png',
-  './car-rear.png',
-  './cobra-front.png',
-  './battery-perspective.png',
-  './dubai-pixel-skyline.png'
+  './cobra-race-mark.png'
 ];
+
+// The four game sprites used to be in SHELL. site.js registers this worker on
+// every page, so someone who opened only the homepage still pulled 4.2 MB of
+// them in the background — dubai-pixel-skyline.png alone is 1.7 MB. They are
+// fetched by game.js when the game needs them and cached by the runtime handler
+// below on first use, which is where a 4 MB dependency of one page belongs.
+//
+// favicon.png went with them: nothing links it.
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting()));
