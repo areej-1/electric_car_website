@@ -759,9 +759,16 @@
   const NAV_ITEMS = [
     { href: 'index.html', key: 'nav.home', match: ['index.html', '', '/'] },
     { href: 'members.html', key: 'nav.members', match: ['members.html'] },
-    { href: 'projects.html', key: 'nav.work', match: ['projects.html'] },
-    { href: 'specs.html', key: 'nav.specs', match: ['specs.html'] },
-    { href: 'trackmap.html', key: 'nav.trackMap', match: ['trackmap.html'] },
+    /* Track Map replaces Our Work rather than sitting beside it — it is the same
+       five build stages, laid out as turns. Both were in the bar, which is why
+       the site appeared to have two entries for one thing.
+
+       Specs comes out for the same reason: its content belongs on the 360 as
+       component hotspots. Neither page is deleted or orphaned — the homepage
+       links "See every phase" to projects.html and "Open the complete
+       specification sheet" to specs.html, and the Cobra page links to Our Work
+       in its disclosure. They are off the bar, not off the site. */
+    { href: 'trackmap.html', key: 'nav.trackMap', match: ['trackmap.html', 'projects.html'] },
     { href: 'car.html', key: 'nav.car', match: ['car.html'] },
     { href: 'game.html', key: 'nav.game', match: ['game.html'] },
     { id: 'resources', key: 'nav.resources', children: RESOURCE_ITEMS },
