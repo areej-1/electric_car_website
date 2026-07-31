@@ -52,6 +52,17 @@ const T = (text) => (LANG === 'ar' && globalThis.CobrasArabic
   ? globalThis.CobrasArabic.translateText('prototype/trackmap', text)
   : text);
 
+/* The zoom hint names a key, and which key it is depends on the machine. ⌘ does
+   not exist on a Windows keyboard and renders as a symbol nobody there can
+   press; Ctrl exists on a Mac but ctrl+wheel is the system zoom gesture, so
+   telling a Mac reader to use it is worse than saying nothing. The wheel handler
+   accepts both regardless — this only corrects what the label claims. */
+const APPLE = /Mac|iPhone|iPad|iPod/.test(navigator.platform || '')
+  || /Mac OS X/.test(navigator.userAgent);
+const zoomKey = (text) => text
+  .replace('ctrl or ⌘', APPLE ? '⌘' : 'Ctrl')
+  .replace('ctrl أو ⌘', APPLE ? '⌘' : 'Ctrl');
+
 // Plate intrinsic size. The graded Silverstone derivative is rotated 90 degrees
 // clockwise so the circuit's long axis runs horizontally and the whole lap fits
 // a landscape viewport.
@@ -369,6 +380,14 @@ if (LANG === 'ar') {
     node.textContent = T(node.textContent.trim());
   });
 }
+
+// Outside the Arabic branch, because the English hint is written in the markup
+// rather than set above and still names the wrong key on Windows.
+function hintKeyPass() {
+  const hint = document.getElementById('hint');
+  if (hint) hint.textContent = zoomKey(hint.textContent);
+}
+hintKeyPass();
 
 const img = document.getElementById('plate');
 function start() { fit(); requestAnimationFrame(frame); }

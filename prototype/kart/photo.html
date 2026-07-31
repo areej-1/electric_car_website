@@ -262,6 +262,17 @@
     'disclosure':'تصوّر استوديو بمساعدة الذكاء الاصطناعي، مثبّت على تصميم رئيسي واحد: عجلتان أماميتان بخمس أذرع، وعجلة خلفية واحدة في المنتصف يغطيها الهيكل بالكامل.'
   };
   const t = (key, fallback) => (LANG === 'ar' && AR[key]) || fallback || key;
+
+  /* The zoom hint names a key, and which key it is depends on the machine.
+     ⌘ does not exist on a Windows keyboard and renders as a symbol nobody there
+     can press; Ctrl exists on a Mac but ctrl+wheel is the system zoom gesture,
+     so telling a Mac reader to use it is worse than saying nothing. The handler
+     accepts both either way — this only fixes what the label claims. */
+  const APPLE = /Mac|iPhone|iPad|iPod/.test(navigator.platform || '')
+    || /Mac OS X/.test(navigator.userAgent);
+  const zoomKey = (text) => text
+    .replace('ctrl or ⌘', APPLE ? '⌘' : 'Ctrl')
+    .replace('ctrl أو ⌘', APPLE ? '⌘' : 'Ctrl');
   const fill = (template, values) =>
     Object.keys(values).reduce((out, k) => out.split(`{${k}}`).join(values[k]), template);
 
@@ -585,6 +596,12 @@
     // moment before that, when a screen reader could already have reached it.
     stage.setAttribute('aria-label', t('stage.start'));
   }
+
+  // After the Arabic pass, not inside it: the hint names a key in both
+  // languages, and the English one is written in the markup rather than set
+  // above, so this has to run either way.
+  const brandHint = document.querySelector('.brand p');
+  if (brandHint) brandHint.textContent = zoomKey(brandHint.textContent);
 
   const animate = (now) => {
     const delta = Math.min(.05,(now - previousTime) / 1000);previousTime = now;

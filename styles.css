@@ -1528,3 +1528,80 @@ header:not(.home-hero):not(.home-world),
   .journal-list article { grid-template-columns: 1fr; gap: 8px; }
   .metric-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
 }
+
+/* ================================================================= devices
+   Everything below is about the machine the page is read on rather than how it
+   looks, so it is keyed on what the input device can do and on how much room
+   there is — not on a guess about which device is which.
+
+   `pointer: coarse` is the question that actually matters for hit areas: it is
+   true for a finger and false for a mouse, on any screen size. Width would have
+   been the wrong test — an iPad in landscape is 1024px wide and still touched,
+   and a small window on a desktop is narrow and still has a cursor. */
+
+@media (pointer: coarse) {
+  /* Every one of these was under 32px tall and several were around 18px, which
+     is roughly a third of a fingertip. The visual size of the text and icons is
+     unchanged; only the box you have to hit grows, so nothing about the design
+     moves except the footer getting taller, which it should be on a phone. */
+  .footer-links a,
+  .news-link,
+  .text-link,
+  .car-note a,
+  .map-note a,
+  .journey-credit a {
+    min-block-size: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .socials a {
+    inline-size: 44px;
+    block-size: 44px;
+    display: inline-grid;
+    place-items: center;
+  }
+
+  /* 18px checkboxes on a race-day list that is meant to be ticked off in a pit
+     lane, on a phone, wearing gloves. The column that holds them widens to
+     match so the text beside them does not shift. */
+  .checklist-list li { grid-template-columns: 38px 1fr; }
+  .checklist-list input { inline-size: 32px; block-size: 32px; margin-block-start: 0; }
+}
+
+/* Two conditions, either one. Width alone missed the iPad in portrait by eight
+   pixels — it is 768 wide and the breakpoint was 760 — and width can never
+   describe a tablet in landscape at all, which is 1024 wide and still held at
+   arm's length. `pointer: coarse` covers both, and the width clause keeps a
+   narrow window on a desktop covered too. */
+@media (max-width: 820px), (pointer: coarse) {
+  /* Type that is a deliberate 9–10px label on a desktop is simply hard to read
+     held at arm's length. These are nudged to 11px and no further: they are
+     still labels, they are just legible ones now.
+
+     The two on the members page are different — a person's role and what they
+     work on is content, not decoration, and it was rendering at about 10px. */
+  .log-tag, .story-tag, .world-kicker, .section-kicker, .section-index { font-size: 11px; }
+  .members-grid .member-role { font-size: .72rem; }
+  .members-grid .member-contribution { font-size: .78rem; }
+  /* The scale caption under each spec bar, and the placeholder shown where test
+     history will go — both are read, not skimmed. */
+  .test-data-grid p { font-size: .78rem; }
+  .data-empty span { font-size: 11px; }
+
+  /* !important, and only here. The homepage was ported from the Astro build and
+     its stylesheet writes every rule as `.thing[data-astro-cid-…]`, which is two
+     selectors' worth of specificity on what reads like one class — and it is
+     linked after this file, so it also wins any tie. A hand-written selector
+     cannot beat `.decision-step[data-astro-cid] > span[data-astro-cid]` without
+     a chain long enough to be its own bug.
+
+     The alternative was editing the generated file, which loses the change the
+     next time it is generated. This is bounded instead: one media query, under
+     760px, raising 9px and 10px labels to 11px so they can be read on a phone
+     held at arm's length. Nothing here applies to a desktop. */
+  main.cobras-home .world-kicker,
+  main.cobras-home .story-tag,
+  main.cobras-home .log-tag,
+  main.cobras-home .decision-step > span,
+  main.cobras-home .team-crew-head span { font-size: 11px !important; }
+}

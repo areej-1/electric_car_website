@@ -177,6 +177,27 @@
     if (langBtn) langBtn.textContent = Lib.t(lang, 'lang.toggle');
     if (skip) skip.textContent = Lib.t(lang, 'skip');
     if (window.CobrasArabic) window.CobrasArabic.apply(document, pageName, lang);
+    nameTheZoomKey();
+  }
+
+  /* The Cobra page tells the reader which key zooms the viewer, and the right
+     answer is not the same on every machine. ⌘ is not on a Windows keyboard and
+     shows up there as a symbol nobody can press; Ctrl is on a Mac, but ctrl and
+     the wheel is the system zoom gesture, so pointing a Mac reader at it is
+     worse than saying nothing at all. The viewer accepts either modifier
+     regardless — this only corrects the sentence.
+
+     Runs after the translation pass, and works on both languages, because it
+     matches the phrase rather than a key. */
+  function nameTheZoomKey() {
+    const apple = /Mac|iPhone|iPad|iPod/.test(navigator.platform || '')
+      || /Mac OS X/.test(navigator.userAgent);
+    const key = apple ? '⌘' : 'Ctrl';
+    document.querySelectorAll('main p, main .car-note, main .map-fact').forEach(node => {
+      const text = node.textContent;
+      if (!text.includes('ctrl or ⌘') && !text.includes('ctrl أو ⌘')) return;
+      node.textContent = text.replace('ctrl or ⌘', key).replace('ctrl أو ⌘', key);
+    });
   }
 
   langBtn?.addEventListener('click', () => {
