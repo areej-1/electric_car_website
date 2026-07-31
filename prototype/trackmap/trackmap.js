@@ -317,9 +317,6 @@ new ResizeObserver(() => {
   if (before !== minScale && active < 0) Object.assign(view, target);
 }).observe(stage);
 
-// ---- kart marker ------------------------------------------------------
-
-
 // ---- one RAF loop, direct DOM writes, dirty-checked --------------------
 let prev = performance.now();
 let lastTransform = '';
