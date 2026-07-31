@@ -151,7 +151,13 @@
   </div>
 
   <div class="stage" id="stage" tabindex="0" aria-label="Drag horizontally to rotate and vertically to tilt up. Use arrow keys to change angle.">
-    <img class="frame top-frame" src="../../assets/car-turntable-smooth-nose/top.jpg" alt="Directly overhead view of the Cobras electric race car" draggable="false">
+    <!-- AVIF with a JPEG fallback, same as the generated frames. data-src rather
+         than src because nothing shows this frame until the reader tilts all the
+         way up, so it belongs in the last loading wave, not competing with the
+         angles on screen. -->
+    <img class="frame top-frame" data-src="../../assets/car-turntable-smooth-nose/top.avif"
+         onerror="this.onerror=null;this.src='../../assets/car-turntable-smooth-nose/top.jpg'"
+         alt="Directly overhead view of the Cobras electric race car" draggable="false">
   </div>
 
   <header class="topbar">
@@ -268,7 +274,7 @@
     '180','191','203','214','225','236','248','259',
     '270','281','293','304','315','326','338','349'
   ];
-  const frameAssetVersion = 'livery-v4';
+  const frameAssetVersion = 'livery-v5';
   const labels = [
     'Front','Front left','Front left','Front left',
     'Front left','Left front','Left front','Left front',
@@ -290,7 +296,30 @@
       image.className = `frame ${className}`;
       image.dataset.index = String(index);
       image.dataset.angle = String(angle);
-      image.src = `../../assets/car-turntable-smooth-nose/${prefix}-${suffix}.jpg?v=${frameAssetVersion}`;
+      /* AVIF, with the original JPEG behind it. The same 65 frames are 18.6 MB as
+         JPEG and 1.9 MB as AVIF at visually identical quality — the backdrop is
+         a smooth studio gradient and the car is flat colour, which is close to
+         the best case for a modern codec.
+
+         The fallback is per-image onerror rather than a capability probe because
+         there is no reliable synchronous test for AVIF *decoding* — the canvas
+         trick tests encoding — and an async probe would have to gate frame
+         creation, which everything below assumes has already happened. A browser
+         too old for AVIF (iOS before 16.4) pays one failed request per frame and
+         still gets the viewer; every current browser fetches once.
+
+         The URL is parked on the element rather than assigned. Setting src here
+         would start all 65 downloads at once, and a browser runs six at a time in
+         roughly the order they were created — so the handful of angles the viewer
+         actually needs to open would sit in a queue behind sixty it does not, and
+         the loading overlay would last as long as the whole set. They are
+         assigned in waves further down instead. */
+      image.dataset.src = `../../assets/car-turntable-smooth-nose/${prefix}-${suffix}.avif?v=${frameAssetVersion}`;
+      image.dataset.fallback = `../../assets/car-turntable-smooth-nose/${prefix}-${suffix}.jpg?v=${frameAssetVersion}`;
+      image.addEventListener('error', function fallback() {
+        this.removeEventListener('error', fallback);
+        this.src = this.dataset.fallback;
+      });
       image.alt = LANG === 'ar'
         ? fill(t('alt.frame'), { direction: t(labels[index]), elevation: t(`alt.${elevation}`), angle })
         : `${elevation} ${labels[index].toLowerCase()} view of the Cobras electric race car at ${angle} degrees`;
@@ -347,6 +376,12 @@
   };
   const setActiveFrame = (nextFrame) => {
     if (activeFrame === nextFrame) return;
+    // Hold the frame we have rather than cut to one that has not arrived. The
+    // viewer becomes usable after a coarse subset of angles has loaded, so a
+    // fast drag can reach an angle that is still in flight; switching to it
+    // would blank the stage mid-rotation. Staying put makes that read as a
+    // slightly chunky rotation instead, and the next frame corrects it.
+    if (!nextFrame.complete || nextFrame.naturalWidth === 0) return;
     if (activeFrame) {
       activeFrame.style.opacity = '0';
       activeFrame.classList.remove('is-active');
@@ -393,10 +428,65 @@
     spinBtn.setAttribute('aria-pressed', 'true');
   };
 
-  Promise.all(frames.map((img) => img.complete ? Promise.resolve() : new Promise((resolve) => {
-    img.addEventListener('load', resolve, {once:true});
-    img.addEventListener('error', resolve, {once:true});
-  }))).then(() => loading.classList.add('is-ready'));
+  /* Open on a coarse ring rather than the whole turntable.
+
+     This used to wait on all 65 frames before clearing the loading overlay, so
+     the page was a spinner until the last byte of the set had arrived — the
+     reader could not touch a car that was already on screen behind it. Every
+     eighth eye-level angle is enough to rotate through a full 360°, and it is a
+     small fraction of the set, so the viewer becomes usable almost immediately
+     and sharpens as the remaining angles land. setActiveFrame holds the last
+     good frame in the meantime, so a fast early drag steps rather than blanks.
+
+     "Settled" deliberately means loaded-or-given-up, not loaded-or-errored. The
+     first error on a frame is the expected one on a browser without AVIF, and it
+     is immediately followed by the JPEG retry — resolving there would clear the
+     overlay off a stage that has nothing on it yet, since setActiveFrame will
+     not show an unloaded frame. So it waits out the retry and only gives up when
+     the fallback fails too.
+
+     And it gives up on a clock regardless. A frame that neither loads nor errors
+     — a stalled connection, a proxy holding the socket — would otherwise pin the
+     overlay over a viewer that may well be usable. */
+  const settled = (img) => (img.complete && img.naturalWidth > 0) ? Promise.resolve() : new Promise((resolve) => {
+    let failures = 0;
+    const finish = () => {
+      img.removeEventListener('load', finish);
+      img.removeEventListener('error', onError);
+      resolve();
+    };
+    const onError = () => { if (++failures >= 2) finish(); };
+    img.addEventListener('load', finish);
+    img.addEventListener('error', onError);
+  });
+  const request = (img) => { if (img.dataset.src) { img.src = img.dataset.src; delete img.dataset.src; } };
+
+  /* Three waves, in the order the viewer needs them.
+
+     Opening: every eighth angle at eye level. Enough to turn the car through a
+     full circle, and small enough to arrive almost at once. The overlay lifts
+     here.
+
+     Then the rest of the eye-level ring, which is what a reader is looking at
+     while they first drag, and only then the elevated ring and the overhead
+     frame, which nothing shows until they tilt up.
+
+     Each wave waits for the one before rather than firing on a timer, so on a
+     fast connection all three land in quick succession and on a slow one the
+     later waves never compete with the frames being looked at. */
+  const opening = lowFrames.filter((_, index) => index % 8 === 0);
+  const rest = [...lowFrames.filter((f) => !opening.includes(f)), ...highFrames, topFrame];
+
+  const reveal = () => loading.classList.add('is-ready');
+  opening.forEach(request);
+  Promise.all(opening.map(settled)).then(() => {
+    reveal();
+    rest.forEach(request);
+  });
+  // The overlay never outlives this, whatever the network is doing. Frames that
+  // have not arrived are simply not switched to, so a partly-loaded turntable is
+  // usable rather than hidden.
+  setTimeout(reveal, 8000);
 
   stage.addEventListener('pointerdown', (event) => {
     dragging = true;startX = event.clientX;startY = event.clientY;
