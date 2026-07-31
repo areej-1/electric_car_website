@@ -20,9 +20,12 @@
 
   .viewer{
     position:relative;width:100%;height:100%;min-height:480px;overflow:hidden;
-    background:#0b0b0c;isolation:isolate;touch-action:none;user-select:none;
+    background:#0b0b0c;isolation:isolate;touch-action:pan-y;user-select:none;
   }
-  .stage{position:absolute;inset:0;display:grid;place-items:center;cursor:grab}
+  /* pan-y on the element that handles the drag, not only on its wrapper:
+     touch-action does not inherit, so the stage was computing `auto`.
+     Horizontal drags rotate the car; vertical ones belong to the page. */
+  .stage{position:absolute;inset:0;display:grid;place-items:center;cursor:grab;touch-action:pan-y}
   .stage.is-dragging{cursor:grabbing}
   .stage::after{
     content:"";position:absolute;inset:0;pointer-events:none;
@@ -154,7 +157,7 @@
   <header class="topbar">
     <div class="brand">
       <h1>COBRA 360</h1>
-      <p>Drag sideways to rotate · drag upward for top view · scroll to zoom</p>
+      <p>Drag sideways to rotate · drag upward for top view · ctrl or ⌘ + scroll to zoom</p>
     </div>
     <div class="angle">Camera angle<strong id="angleLabel">Front</strong></div>
   </header>
@@ -352,7 +355,13 @@
   };
   stage.addEventListener('pointerup', finishDrag);
   stage.addEventListener('pointercancel', finishDrag);
+  // Zoom only with a modifier. This runs inside an iframe on trackmap.html and
+  // car.html, so cancelling every wheel event does not merely stop this element
+  // scrolling — it stops the PARENT page scrolling too, with no way out but to
+  // move the pointer off the frame. ctrlKey also covers the trackpad pinch
+  // gesture, which browsers report as ctrl+wheel, so pinch still zooms.
   stage.addEventListener('wheel', (event) => {
+    if (!event.ctrlKey && !event.metaKey) return;
     event.preventDefault();applyZoom(zoom * Math.exp(-event.deltaY * .001));stopAuto();
   }, {passive:false});
   stage.addEventListener('keydown', (event) => {

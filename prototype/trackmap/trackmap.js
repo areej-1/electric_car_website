@@ -197,7 +197,13 @@ stage.addEventListener('pointerup', (e) => {
   dragging = false; stage.classList.remove('grabbing');
   try { stage.releasePointerCapture(e.pointerId); } catch {}
 });
+// Zoom only with a modifier. This runs inside an iframe on trackmap.html and
+// car.html, so cancelling every wheel event does not merely stop this element
+// scrolling — it stops the PARENT page scrolling too, with no way out but to
+// move the pointer off the frame. ctrlKey also covers the trackpad pinch
+// gesture, which browsers report as ctrl+wheel, so pinch still zooms.
 stage.addEventListener('wheel', (e) => {
+  if (!e.ctrlKey && !e.metaKey) return;
   e.preventDefault();
   const r = stage.getBoundingClientRect();
   const cx = e.clientX - r.left, cy = e.clientY - r.top;
