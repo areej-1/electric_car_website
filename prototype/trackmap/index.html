@@ -18,7 +18,9 @@
   html,body{height:100%}
   body{margin:0;background:var(--ink);color:var(--cream);font-family:var(--body);overflow:hidden}
 
-  #stage{position:fixed;inset:0;overflow:hidden;cursor:grab;touch-action:none;background:var(--ink)}
+  /* pan-y, not none: a vertical drag has to reach the page, or a touch reader
+     meeting this full-frame map is trapped inside it. */
+  #stage{position:fixed;inset:0;overflow:hidden;cursor:grab;touch-action:pan-y;background:var(--ink)}
   #stage.grabbing{cursor:grabbing}
   #world{position:absolute;top:0;left:0;width:2060px;height:1220px;transform-origin:0 0;will-change:transform}
   #plate{display:block;width:2060px;height:1220px;user-select:none;-webkit-user-drag:none}
@@ -114,7 +116,7 @@
   <p>Five turns from first sketch to the grid · SIS Al Jada Cobras</p>
 </header>
 
-<p id="hint">Drag to pan · scroll to zoom · click a turn</p>
+<p id="hint">Drag to pan · ctrl or ⌘ + scroll to zoom · click a turn</p>
 
 <aside id="panel" aria-live="polite"></aside>
 
