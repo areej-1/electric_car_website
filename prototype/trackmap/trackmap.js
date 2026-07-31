@@ -1,4 +1,21 @@
-import { mountMarker } from './kart.js';
+/* Loaded dynamically, and the failure is swallowed on purpose.
+
+   kart.js imports Three at module load. As a static `import` at the top of this
+   file, anything that stops kart.js resolving — a 404 on the vendored Three, a
+   parse error, a blocked request — fails this module too, before a single line
+   of it runs. That is not a hypothetical: vendor/ was gitignored, so Three was
+   404 on the deployed site and the live track map was a satellite photograph
+   with no markers, no pan and no zoom, while working perfectly on localhost off
+   an untracked file.
+
+   Awaiting it here costs one tick and buys the guarantee that the map itself
+   cannot be taken down by the decoration on top of it. */
+let mountMarker = null;
+try {
+  ({ mountMarker } = await import('./kart.js'));
+} catch (error) {
+  mountMarker = null;
+}
 
 /* ---------- Arabic ----------
    This map runs in its own document inside an iframe on trackmap.html, so the
@@ -279,6 +296,7 @@ const MK = 78;
    three methods the frame loop calls, so the loop does not need to know. */
 const marker = (() => {
   try {
+    if (!mountMarker) throw new Error('kart.js unavailable');
     return mountMarker(kartCanvas, MK);
   } catch (error) {
     kartCanvas.hidden = true;

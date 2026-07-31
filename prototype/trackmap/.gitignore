@@ -1,4 +1,13 @@
-# three.js is vendored locally for the prototype, not committed.
-# Reproduce with:
+# three.js is vendored locally for the prototype. Reproduce with:
 #   curl -sL -o vendor/three.module.js https://unpkg.com/three@0.169.0/build/three.module.js
-vendor/
+#
+# three.module.js itself IS committed, and has to be. This site is served as
+# static files with no build step, so anything ignored here simply does not exist
+# on the deployed site — and kart.js imports Three at module load, so a 404 there
+# fails the import and takes the whole of trackmap.js with it: no markers, no
+# pan, no zoom, just a satellite photograph. That is exactly what shipped when
+# this directory was ignored wholesale.
+#
+# The addons are not imported by anything and stay out.
+vendor/*
+!vendor/three.module.js

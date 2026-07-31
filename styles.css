@@ -372,7 +372,18 @@ header:not(.home-hero) > p { max-width: 680px; margin-top: 20px; }
 .landing-journey { width: min(var(--max-width), calc(100% - 40px)); margin: 0 auto 120px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 70px; align-items: center; }
 .journey-visual { position: relative; }
 .journey-visual img { width: 100%; height: 600px; object-fit: cover; border-radius: 12px; border: 1px solid var(--border-red); filter: saturate(.72) contrast(1.08); }
-.journey-copy > .section-index { margin-bottom: 28px; }
+/* `p.section-index`, not `.section-index`, and the element selector is the whole
+   point. assets/home/homepage.css carries the ported Astro rule
+   `.section-index[data-astro-cid-zkhec6xw] { margin: 0 }`, which is also two
+   selectors' worth of specificity — so the plain class version of this rule tied
+   and lost on source order, and the index sat directly on top of the kicker with
+   both at line-height 1. Adding the tag name breaks the tie.
+
+   Only this section needs it. Every other `.section-index` sits in a
+   `.section-heading` grid where the kicker is placed in its own track, so a
+   bottom margin there would push against a layout that is already correct.
+   `.journey-copy` is the one place the two labels are stacked in normal flow. */
+.journey-copy > p.section-index { margin-bottom: 8px; }
 .journey-copy h2 { margin-bottom: 28px; }
 .journey-copy ol { margin-bottom: 32px; list-style: none; }
 .journey-copy li { display: grid; grid-template-columns: 46px 1fr; gap: 14px; padding: 17px 0; border-top: 1px solid rgba(245,240,232,.08); }
