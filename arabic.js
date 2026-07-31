@@ -12,6 +12,252 @@
   };
 
   const PAGES = {
+    // The Track Map prototype, which lives in its own document inside the
+    // iframe on trackmap.html. apply() cannot cross a frame boundary and the
+    // panel markup is rebuilt on every click, so the prototype looks these up
+    // itself. Kept here rather than inlined there so both languages of the same
+    // sentence stay in one file.
+    'prototype/trackmap': {
+      'Design + planning': 'التصميم والتخطيط',
+      'Set performance targets, study EVGP requirements, choose parts, and turn constraints into a buildable layout.': 'نحدّد أهداف الأداء، وندرس متطلبات EVGP، ونختار القطع، ثم نحوّل القيود إلى مخطط قابل للتنفيذ.',
+      'Competition rules': 'قواعد المسابقة',
+      'Component selection': 'اختيار المكوّنات',
+      'Safety planning': 'تخطيط السلامة',
+      'Cobras students at the project room noticeboard': 'طلاب كوبرا أمام لوحة الإعلانات في غرفة المشروع',
+      'Build + assembly': 'البناء والتجميع',
+      'Make it physical': 'تحويل الفكرة إلى واقع',
+      'Fit the frame, steering, seat, wheels, controls, and mechanical systems into one working machine.': 'نركّب الهيكل والتوجيه والمقعد والعجلات وأدوات التحكم والأنظمة الميكانيكية في سيارة واحدة عاملة.',
+      'Chassis assembly': 'تجميع الهيكل',
+      'Driver ergonomics': 'ملاءمة مقصورة السائق',
+      'Mechanical fit': 'تركيب الأجزاء الميكانيكية',
+      'Wiring + controls': 'التوصيلات وأدوات التحكم',
+      'Bring it to life': 'تشغيل الأنظمة',
+      'Connect batteries, controller, motor, kill switch, and driver inputs into an organized 48V system.': 'نصل البطاريات ووحدة التحكم والمحرك ومفتاح الإيقاف ومدخلات السائق ضمن نظام 48 فولت منظّم.',
+      'Power distribution': 'توزيع الطاقة',
+      'Control wiring': 'توصيلات التحكم',
+      'Safe shutdown': 'الإيقاف الآمن',
+      'Testing + troubleshooting': 'الاختبار واستكشاف الأعطال',
+      'Find the weak points': 'اكتشاف نقاط الضعف',
+      'Run the car, observe its behavior, diagnose failures, and record what must change before the next session.': 'نشغّل السيارة ونراقب سلوكها ونشخّص الأعطال ونسجّل التعديلات المطلوبة قبل الجلسة التالية.',
+      'Functional tests': 'اختبارات التشغيل',
+      'Driver feedback': 'ملاحظات السائق',
+      'Fault diagnosis': 'تشخيص الأعطال',
+      'Final adjustments': 'التعديلات النهائية',
+      'Prepare to compete': 'الاستعداد للمنافسة',
+      'Refine balance, reliability, safety, and presentation so the car and team are ready for EVGP.': 'نحسّن التوازن والموثوقية والسلامة والمظهر حتى تصبح السيارة والفريق جاهزين لـ EVGP.',
+      'Weight balance': 'توازن الوزن',
+      'Reliability checks': 'فحوصات الموثوقية',
+      'Race preparation': 'الاستعداد للسباق',
+      'Close': 'إغلاق',
+      'Start with the rules': 'ابدأ من القواعد',
+      'The grid': 'خط الانطلاق',
+      'recorded': 'مسجّلة',
+      'in progress': 'قيد التنفيذ',
+      'pending': 'قيد الانتظار',
+      'Assembly work on the Cobra platform': 'أعمال التجميع على منصة سيارة كوبرا',
+      'Students reviewing the car during systems work': 'الطلاب يراجعون السيارة أثناء العمل على الأنظمة',
+      'The kart being driven during a test session': 'السيارة أثناء القيادة في جلسة اختبار',
+      'Final adjustment work on the kart': 'أعمال التعديلات النهائية على السيارة',
+      'Race target': 'هدف السباق',
+      'Race target: February 13, 2027. Venue, official timing, driver selection and results remain pending team confirmation.': 'هدف السباق: 13 فبراير 2027. الموقع والتوقيت الرسمي واختيار السائق والنتائج تبقى بانتظار تأكيد الفريق.',
+      'Venue pending': 'الموقع قيد التأكيد',
+      'Timing pending': 'التوقيت قيد التأكيد',
+      'Driver pending': 'السائق قيد التأكيد',
+      'Chequered flag': 'علم النهاية',
+      'Turn': 'المنعطف',
+      'TRACK MAP': 'خريطة المسار',
+      'Five turns from first sketch to the grid · SIS Al Jada Cobras': 'خمسة منعطفات من أول رسم إلى خط الانطلاق · فريق كوبرا سيس الجادة',
+      'Drag to pan · ctrl or ⌘ + scroll to zoom · click a turn': 'اسحب للتنقّل · ctrl أو ⌘ مع التمرير للتقريب · اضغط منعطفًا',
+      'Satellite view of Silverstone Circuit, graded, used as the Cobras build chart': 'صورة بالأقمار الصناعية لحلبة سيلفرستون، معالَجة لونيًا، مستخدَمة كمخطط لمراحل بناء كوبرا',
+      'Circuit shown is illustrative — it is not the team\'s race venue, which is not yet confirmed.': 'الحلبة المعروضة للتوضيح فقط، وليست موقع سباق الفريق الذي لم يُؤكَّد بعد.',
+      'Kart is a model built from team photographs, not a photograph.': 'السيارة مجسّم مبني من صور الفريق، وليست صورة فوتوغرافية.'
+    },
+    // The homepage. Most of these are not new translations: the key-based
+    // home.* strings in cobras-lib.js already carried Arabic for the old
+    // homepage, and where the English is word-for-word identical the Arabic is
+    // reused verbatim rather than re-written, so the two systems cannot drift
+    // into two different Arabic voices for the same sentence.
+    'index.html': {
+      'EVGP · SABIS® Al Jada · Sharjah': 'EVGP · سابيس الجادة · الشارقة',
+      'Built to strike.': 'صُنعت للانقضاض.',
+      'Engineered to race.': 'صُممت للسباق.',
+      'We are a Grades 11–12 student team turning classroom knowledge into a competition-ready electric race car—one design, test, and hard-earned improvement at a time.': 'نحن فريق طلابي من الصفين 11–12 نحوّل معرفة الصف إلى سيارة سباق كهربائية جاهزة للمنافسة—تصميماً واختباراً وتحسيناً في كل مرة.',
+      'Follow the build': 'تابع البناء',
+      'Meet the crew': 'تعرّف على الفريق',
+      'Define the mission': 'تحديد المهمة',
+      'Design + planning': 'التصميم والتخطيط',
+      'Set performance targets, study EVGP requirements, choose parts, and turn constraints into a buildable layout.': 'نحدّد أهداف الأداء، وندرس متطلبات EVGP، ونختار القطع، ثم نحوّل القيود إلى مخطط قابل للتنفيذ.',
+      'Competition rules': 'قواعد المسابقة',
+      'Component selection': 'اختيار المكوّنات',
+      'Safety planning': 'تخطيط السلامة',
+      'Make it physical': 'تحويل الفكرة إلى واقع',
+      'Build + assembly': 'البناء والتجميع',
+      'Fit the frame, steering, seat, wheels, controls, and mechanical systems into one working machine.': 'نركّب الهيكل والتوجيه والمقعد والعجلات وأدوات التحكم والأنظمة الميكانيكية في سيارة واحدة عاملة.',
+      'Chassis assembly': 'تجميع الهيكل',
+      'Driver ergonomics': 'ملاءمة مقصورة السائق',
+      'Mechanical fit': 'تركيب الأجزاء الميكانيكية',
+      'Bring it to life': 'تشغيل الأنظمة',
+      'Wiring + controls': 'التوصيلات وأدوات التحكم',
+      'Connect batteries, controller, motor, kill switch, and driver inputs into an organized 48V system.': 'نصل البطاريات ووحدة التحكم والمحرك ومفتاح الإيقاف ومدخلات السائق ضمن نظام 48 فولت منظّم.',
+      'Power distribution': 'توزيع الطاقة',
+      'Control wiring': 'توصيلات التحكم',
+      'Safe shutdown': 'الإيقاف الآمن',
+      'Find the weak points': 'اكتشاف نقاط الضعف',
+      'Testing + troubleshooting': 'الاختبار واستكشاف الأعطال',
+      'Run the car, observe its behavior, diagnose failures, and record what must change before the next session.': 'نشغّل السيارة ونراقب سلوكها ونشخّص الأعطال ونسجّل التعديلات المطلوبة قبل الجلسة التالية.',
+      'Functional tests': 'اختبارات التشغيل',
+      'Driver feedback': 'ملاحظات السائق',
+      'Fault diagnosis': 'تشخيص الأعطال',
+      'Prepare to compete': 'الاستعداد للمنافسة',
+      'Final adjustments': 'التعديلات النهائية',
+      'Refine balance, reliability, safety, and presentation so the car and team are ready for EVGP.': 'نحسّن التوازن والموثوقية والسلامة والمظهر حتى تصبح السيارة والفريق جاهزين لـ EVGP.',
+      'Weight balance': 'توازن الوزن',
+      'Reliability checks': 'فحوصات الموثوقية',
+      'Race preparation': 'الاستعداد للسباق',
+      'Target race date · February 13, 2027': 'موعد السباق المستهدف · 13 فبراير 2027',
+      'The countdown to EVGP is on.': 'العدّ التنازلي لـ EVGP بدأ.',
+      'Days': 'أيام',
+      'Recalculated at each publish — not a live, second-by-second countdown.': 'يُحتسب العدّ مع كل تحديث للموقع، وليس عدًّا تنازليًا لحظيًا بالثواني.',
+      'Current / Build status': 'الحالي / حالة البناء',
+      'Published workshop snapshot': 'ملخص منشور من الورشة',
+      'Current priority: system testing.': 'الأولوية الحالية: اختبار الأنظمة.',
+      'This status comes from the latest workshop log, not a live telemetry feed.': 'تعتمد هذه الحالة على أحدث سجل منشور للورشة، وليست بثًا مباشرًا للبيانات.',
+      'Completion percentage': 'نسبة الإنجاز',
+      'Awaiting team sign-off': 'بانتظار اعتماد الفريق',
+      'Current task': 'المهمة الحالية',
+      'System testing': 'اختبار الأنظمة',
+      'Verify controls, electrical connections, and safe shutdown behavior.': 'التحقق من التحكم والوصلات الكهربائية وإيقاف التشغيل الآمن.',
+      'Next milestone': 'المحطة التالية',
+      'Track refinement': 'تحسين المسار',
+      'Use driving feedback to improve stability, balance, and consistency.': 'استخدام ملاحظات القيادة لتحسين الثبات والتوازن والاستقرار.',
+      'Crew assignment': 'توزيع فريق العمل',
+      'To be confirmed': 'قيد التأكيد',
+      'Latest published update: 1 July 2026': 'آخر تحديث منشور: 1 يوليو 2026',
+      'Read the dated workshop log': 'اقرأ سجل الورشة المؤرخ',
+      '01 / The team': '01 / الفريق',
+      'More than a school project': 'أكثر من مشروع مدرسي',
+      'One car. Many disciplines. A real starting grid.': 'سيارة واحدة. تخصصات كثيرة. خط انطلاق حقيقي.',
+      'The Cobras bring mechanics, electrical systems, safety, design, media, and race strategy into one student-led program. Every member owns part of the result—and every decision has to work on the track.': 'يجمع فريق الكوبرا الميكانيكا والكهرباء والسلامة والتصميم والإعلام واستراتيجية السباق في برنامج طلابي واحد. كل عضو يملك جزءاً من النتيجة—وكل قرار يجب أن يعمل على المسار.',
+      'Discover our mission': 'اكتشف مهمتنا',
+      'Student builders': 'طلاب مشاركون في البناء',
+      '02 / What drives us': '02 / ما يدفعنا',
+      'The Cobra standard': 'معيار الكوبرا',
+      'Built around real engineering.': 'مبني حول هندسة حقيقية.',
+      'Design with purpose': 'تصميم بهدف',
+      'We translate competition rules, driver needs, and safety constraints into a practical car layout.': 'نحوّل قوانين المسابقة واحتياجات السائق وقيود السلامة إلى تخطيط عملي للسيارة.',
+      'Build as one team': 'نبني كفريق واحد',
+      'Mechanical, electrical, safety, and media crews work together instead of operating in isolation.': 'فرق الميكانيكا والكهرباء والسلامة والإعلام تعمل معاً بدل العمل المنفصل.',
+      'Test. Learn. Repeat.': 'اختبر. تعلّم. كرّر.',
+      'Every run gives us data. We troubleshoot, adjust, and return stronger for the next test.': 'كل جولة تعطينا بيانات. نصلح ونضبط ونعود أقوى للاختبار التالي.',
+      '03 / The machine': '03 / الآلة',
+      'Current build dashboard': 'لوحة بيانات السيارة الحالية',
+      'The Cobra by the numbers.': 'الكوبرا بالأرقام.',
+      'These figures reflect the current build and will evolve as testing continues.': 'هذه الأرقام تعكس البناء الحالي وستتغير مع استمرار الاختبار.',
+      'System voltage': 'جهد النظام',
+      '4 × 12V batteries': '4 × بطاريات 12V',
+      'Total weight': 'الوزن الإجمالي',
+      'Current measured build': 'القياس الحالي',
+      'Average speed': 'متوسط السرعة',
+      'Testing benchmark': 'معيار الاختبار',
+      'Estimated runtime': 'مدة التشغيل التقديرية',
+      'hrs': 'ساعة',
+      'Depending on load': 'حسب الحمل',
+      'Open the complete specification sheet': 'افتح ورقة المواصفات الكاملة',
+      '04 / The build': '04 / البناء',
+      'From sketch to circuit': 'من الرسم إلى الدائرة',
+      'We build the car—and the skills behind it.': 'نبني السيارة—والمهارات خلفها.',
+      'Plan': 'خطّط',
+      'Define the targets, rules, layout, parts, and safety requirements.': 'حدد الأهداف والقوانين والتخطيط والقطع ومتطلبات السلامة.',
+      'Assemble': 'ركّب',
+      'Turn the design into a physical chassis, power system, and controls.': 'حوّل التصميم إلى هيكل ونظام طاقة وتحكم فعلي.',
+      'Prove': 'أثبت',
+      'Test performance, diagnose problems, and refine the car for EVGP.': 'اختبر الأداء، وشخّص الأعطال، وحسّن السيارة لـ EVGP.',
+      'See every phase': 'شاهد كل مرحلة',
+      'Renders of the car on this page are an AI-assisted visualisation built from the team\'s own reference photographs, not photographs of the car.': 'صور السيارة في هذه الصفحة تصوّر تخيّلي أُنتج بمساعدة الذكاء الاصطناعي اعتمادًا على صور الفريق المرجعية، وليست صورًا فوتوغرافية للسيارة.',
+      'See the Cobra in 360°': 'شاهد كوبرا بزاوية 360°',
+      '05 / Engineering': '05 / الهندسة',
+      'Problems become progress': 'المشاكل تصبح تقدماً',
+      'What we learn when the first idea fails.': 'ماذا نتعلم عندما تفشل الفكرة الأولى.',
+      'Problem': 'المشكلة',
+      'Uneven weight can change how the car turns and behaves at speed.': 'قد يغيّر توزيع الوزن غير المتوازن طريقة انعطاف السيارة وسلوكها عند السرعة.',
+      'Decision': 'القرار الهندسي',
+      'Mechanics shifted battery placement after low-speed runs.': 'عدّل فريق الميكانيكا مواضع البطاريات بعد جولات منخفضة السرعة.',
+      'Result / next test': 'النتيجة / الاختبار التالي',
+      'Weight remains near 186 kg; a new weigh-in is pending after the next parts change.': 'ما زال الوزن قريبًا من 186 كغ، وستُعاد عملية الوزن بعد تغيير القطع التالي.',
+      'Reliable wiring': 'توصيلات كهربائية موثوقة',
+      'Loose or unclear connections make troubleshooting slower and less safe.': 'الوصلات الضعيفة أو غير الواضحة تبطئ الإصلاح وتقلل السلامة.',
+      'The electrical crew re-checked the 48V layout, secured connectors, and re-labeled critical runs.': 'أعاد فريق الكهرباء فحص نظام 48 فولت وثبّت الموصلات وجدّد تسميات التوصيلات المهمة.',
+      'The next test day has a clearer, faster troubleshooting path.': 'أصبح مسار اكتشاف الأعطال في يوم الاختبار التالي أوضح وأسرع.',
+      'Driver protection': 'حماية السائق',
+      'Performance only matters when the driver and crew can operate safely.': 'الأداء لا يهم إلا عندما يعمل السائق والفريق بأمان.',
+      'Use an emergency kill switch, seat belt, helmet, and repeatable pre-run checks.': 'استخدام مفتاح إيقاف طارئ وحزام أمان وخوذة وفحوصات ثابتة قبل كل جولة.',
+      'The hardware is documented; final race-day safety sign-off is still tracked in the checklist.': 'المعدات موثقة، وما زال اعتماد السلامة النهائي ليوم السباق ضمن قائمة الجاهزية.',
+      '06 / Workshop log': '06 / سجل الورشة',
+      'Dated workshop notes': 'ملاحظات ورشة مؤرخة',
+      'Latest verified updates.': 'أحدث التحديثات الموثقة.',
+      '1 Jul 2026': '1 يوليو 2026',
+      'Electrical': 'الكهرباء',
+      'Kill switch and critical-run labels checked': 'فحص مفتاح الإيقاف وتسميات التوصيلات المهمة',
+      'Connectors were secured and the 48V layout was re-labeled for faster troubleshooting.': 'ثُبّتت الموصلات وأعيدت تسمية توصيلات نظام 48 فولت لتسريع اكتشاف الأعطال.',
+      '18 Jun 2026': '18 يونيو 2026',
+      'Mechanical': 'الميكانيكا',
+      'Battery placement shifted after low-speed runs': 'تعديل مواضع البطاريات بعد جولات منخفضة السرعة',
+      'The build remains near 186 kg; the next parts change will be followed by another weigh-in.': 'ما زال وزن السيارة قريبًا من 186 كغ، وستلي عملية تغيير القطع عملية وزن جديدة.',
+      '4 Jun 2026': '4 يونيو 2026',
+      'Sponsor package prepared': 'إعداد باقة الرعاية',
+      'The media crew published the sponsor PDF and refreshed outreach materials.': 'نشر فريق الإعلام ملف الرعاية وحدّث مواد التواصل مع الشركاء.',
+      'Open the complete workshop log': 'افتح سجل الورشة الكامل',
+      'Ready for the grid': 'جاهزون لخط الانطلاق',
+      'Follow the Cobras from workshop to race day.': 'تابع الكوبرا من الورشة إلى يوم السباق.',
+      'Race Day': 'يوم السباق',
+      'Latest news': 'آخر الأخبار',
+      'Track Map': 'خريطة المسار',
+      'Cobras students at the project room noticeboard': 'طلاب كوبرا أمام لوحة الإعلانات في غرفة المشروع',
+      'Still from the team’s assembly video: a bracket being drilled beside the seat frame, red harness webbing behind it': 'لقطة من فيديو التجميع: ثقب حامل معدني بجوار إطار المقعد، وخلفه أشرطة حزام الأمان الحمراء',
+      'The bare chassis indoors with its seat, red four-point harness and one rear wheel fitted, three students sitting beside it': 'الهيكل المجرّد داخل الورشة وقد رُكّب فيه المقعد وحزام الأمان الرباعي الأحمر وعجلة خلفية واحدة، ويجلس بجانبه ثلاثة طلاب',
+      'The car stopped on paving beside a running track, a helmeted driver seated in it while one team member rests a hand on the roll bar and another holds a clipboard': 'السيارة متوقفة على أرض مرصوفة بجانب مضمار للجري، يجلس فيها سائق يرتدي الخوذة، بينما يضع أحد أعضاء الفريق يده على قضيب الحماية ويحمل آخر حافظة أوراق',
+      'Three team members working around the car’s seat and harness indoors, one holding a helmet, beneath an Al Jada Cobras banner': 'ثلاثة من أعضاء الفريق يعملون حول مقعد السيارة وحزام الأمان داخل الورشة، أحدهم يحمل خوذة، تحت لافتة كوبرا الجادة',
+      'Build stages': 'مراحل البناء',
+      'The team\'s electric race car seen from the front left, an AI-assisted visualisation built from the team\'s own reference photographs': 'سيارة السباق الكهربائية للفريق من الأمام جهة اليسار، تصوّر تخيّلي أُنتج بمساعدة الذكاء الاصطناعي اعتمادًا على صور الفريق المرجعية'
+    },
+    // Track Map. The prototype inside the iframe is a separate document and is
+    // translated by its own copy of this data — apply() cannot reach across the
+    // frame boundary.
+    'trackmap.html': {
+      'The build / interactive circuit': 'المشروع / حلبة تفاعلية',
+      'From sketch to starting grid.': 'من الرسم إلى خط الانطلاق.',
+      'The five stages behind the Cobra, laid out as turns on a circuit. Drag to pan, and click a turn to read what happened there.': 'مراحل بناء كوبرا الخمس، معروضة كمنعطفات على حلبة. اسحب للتنقّل، واضغط على أي منعطف لتقرأ ما جرى فيه.',
+      'Circuit imagery © Planet Labs PBC,': 'صور الحلبة © Planet Labs PBC،',
+      'Racing line traced from OpenStreetMap, © OpenStreetMap contributors,': 'خط السباق مرسوم من بيانات OpenStreetMap، © مساهمو OpenStreetMap،',
+      'The circuit shown is illustrative — it is not the team\'s race venue.': 'الحلبة المعروضة للتوضيح فقط، وليست موقع سباق الفريق.',
+      '5 stages': '5 مراحل',
+      'Design, build, wiring, testing, adjustments': 'التصميم والبناء والتوصيلات والاختبار والتعديلات',
+      'Turn markers': 'علامات المنعطفات',
+      'Click one to open that stage': 'اضغط إحداها لفتح تلك المرحلة',
+      'Racing line': 'خط السباق',
+      'Traced from OpenStreetMap circuit data': 'مرسوم من بيانات حلبات OpenStreetMap',
+      'Drag to pan': 'اسحب للتنقّل',
+      'And zoom to follow the lap': 'وقرّب الصورة لتتابع اللفة',
+      'Interactive circuit map of the SIS Al Jada Cobras build stages': 'خريطة حلبة تفاعلية تعرض مراحل بناء فريق كوبرا سيس الجادة',
+      'Map facts': 'معلومات الخريطة'
+    },
+    // The Cobra 360. Same iframe caveat as trackmap.html above.
+    'car.html': {
+      'The machine / 360° viewer': 'السيارة / عرض 360°',
+      'Meet the Cobra.': 'تعرّف إلى كوبرا.',
+      'Orbit around the team\'s three-wheeled electric race car from eye level to a true top-down view. Drag to inspect it, ctrl or ⌘ + scroll to zoom, or select a component.': 'درْ حول سيارة الفريق الكهربائية ذات العجلات الثلاث، من مستوى النظر إلى منظر علوي كامل. اسحب لتفحّصها، أو اضغط ctrl أو ⌘ مع التمرير للتقريب، أو اختر أحد المكوّنات.',
+      'Rendered visualisation, not photographs of the car. Built to match the team\'s own reference photographs and chassis measurements — the geometry and livery are the real car\'s. Photographs of the actual build are on': 'تصوّر تخيّلي، وليس صورًا فوتوغرافية للسيارة. بُني ليطابق صور الفريق المرجعية وقياسات الهيكل، فالأبعاد والألوان هي أبعاد السيارة الحقيقية وألوانها. صور البناء الفعلي موجودة في',
+      '3 wheels': '3 عجلات',
+      'Two front, one centered rear': 'اثنتان في المقدمة وواحدة في منتصف المؤخرة',
+      '48V system': 'نظام 48 فولت',
+      'Current published build configuration': 'تكوين البناء المنشور حاليًا',
+      'Open cockpit': 'مقصورة مكشوفة',
+      'Handlebars, bucket seat, red harness': 'مقود ومقعد مجوّف وحزام أمان أحمر',
+      'Enclosed rear': 'مؤخرة مغلقة',
+      'Rear wheel covered by the body shell': 'العجلة الخلفية مغطاة بهيكل السيارة',
+      'Interactive 360-degree view of the SIS Al Jada Cobras race car': 'عرض تفاعلي بزاوية 360 درجة لسيارة سباق فريق كوبرا سيس الجادة',
+      'Model facts': 'معلومات المجسّم'
+    },
     'members.html': {
       'Nineteen student builders across mechanics, safety, innovation, media, and driving—each contributing to the Cobra race car.': 'تسعة عشر طالبًا وطالبة يساهمون في سيارة سباق كوبرا عبر الميكانيكا والسلامة والابتكار والإعلام والقيادة.'
     },
@@ -62,6 +308,28 @@
       'Last Updated: May 2026': 'آخر تحديث: مايو 2026', 'Help fund the next test cycle': 'ساهم في تمويل دورة الاختبار التالية'
     },
     'about.html': {
+      // These three paragraphs each wrap their key phrases in <strong>, so the
+      // page has never held the whole sentences that the keys below this block
+      // are written against — only fragments, which matched nothing and left the
+      // page 29% English. The fragments are keyed here, and each Arabic piece is
+      // cut from the already-approved full-sentence translation rather than
+      // written afresh, so joining them back reproduces it word for word.
+      'The SIS Al Jada Cobras': 'فريق كوبرا سيس الجادة',
+      'are a student-led electric race team at': 'هو فريق سباق كهربائي يقوده طلاب',
+      'SABIS® Al Jada': 'سابيس® الجادة',
+      '. Students in': '. يصمّم طلاب',
+      'Grades 11 and 12': 'الصفين الحادي عشر والثاني عشر',
+      'design, build, and test a real race car—combining engineering, safety, media, and teamwork under one black-and-red brand.': 'سيارة سباق حقيقية ويبنونها ويختبرونها، جامعِين الهندسة والسلامة والإعلام والعمل الجماعي تحت هوية واحدة بالأسود والأحمر.',
+      'This season we are preparing a competition-ready car for the': 'نستعد هذا الموسم بسيارة جاهزة للمنافسة في',
+      'Electric Vehicle Grand Prix (EVGP)': 'سباق المركبات الكهربائية الكبير (EVGP)',
+      'on our target date of': '، وموعدنا المستهدف هو',
+      'February 13, 2027': '13 فبراير 2027',
+      '. Every design choice is judged on performance, safety, and reliability—not just looking good in the workshop.': '. نقيم كل قرار تصميمي وفق الأداء والسلامة والموثوقية، لا وفق المظهر داخل الورشة فقط.',
+      'We meet in the': 'نجتمع في',
+      'Electric Car Room': 'غرفة السيارة الكهربائية',
+      'every': 'كل',
+      'Wednesday and Thursday': 'أربعاء وخميس',
+      '. Sessions mix build work, electrical checks, safety drills, and media updates so the whole crew stays race-ready.': '. تجمع الجلسات بين أعمال البناء والفحوصات الكهربائية وتدريبات السلامة والتحديثات الإعلامية ليبقى الفريق مستعدًا للسباق.',
       'About SIS Al Jada Cobras': 'عن فريق كوبرا سيس الجادة', 'Our Mission': 'مهمتنا', 'Build a safe, fast, and efficient electric car while developing teamwork, engineering skills, and confidence through real hands-on experience.': 'بناء سيارة كهربائية آمنة وسريعة وفعّالة، مع تنمية العمل الجماعي والمهارات الهندسية والثقة من خلال تجربة عملية حقيقية.',
       'Who We Are': 'من نحن', 'The SIS Al Jada Cobras are a student-led electric race team at SABIS® Al Jada. Students in Grades 11 and 12 design, build, and test a real race car—combining engineering, safety, media, and teamwork under one black-and-red brand.': 'فريق كوبرا سيس الجادة هو فريق سباق كهربائي يقوده طلاب سابيس® الجادة. يصمّم طلاب الصفين الحادي عشر والثاني عشر سيارة سباق حقيقية ويبنونها ويختبرونها، جامعِين الهندسة والسلامة والإعلام والعمل الجماعي تحت هوية واحدة بالأسود والأحمر.',
       'Our Goal': 'هدفنا', 'This season we are preparing a competition-ready car for the Electric Vehicle Grand Prix (EVGP) on our target date of February 13, 2027. Every design choice is judged on performance, safety, and reliability—not just looking good in the workshop.': 'نستعد هذا الموسم بسيارة جاهزة للمنافسة في سباق المركبات الكهربائية الكبير (EVGP)، وموعدنا المستهدف هو 13 فبراير 2027. نقيم كل قرار تصميمي وفق الأداء والسلامة والموثوقية، لا وفق المظهر داخل الورشة فقط.',
@@ -123,7 +391,8 @@
   };
 
   const TITLES = {
-    'members.html': 'الأعضاء | فريق كوبرا سيس الجادة', 'projects.html': 'مشروعنا | فريق كوبرا سيس الجادة', '101.html': 'أساسيات السيارات الكهربائية | فريق كوبرا سيس الجادة', 'specs.html': 'المواصفات | فريق كوبرا سيس الجادة', 'about.html': 'من نحن | فريق كوبرا سيس الجادة', 'sponsors.html': 'رعاية الفريق | فريق كوبرا سيس الجادة', 'news.html': 'الأخبار | فريق كوبرا سيس الجادة', 'checklist.html': 'قائمة السباق | فريق كوبرا سيس الجادة', 'race-day.html': 'يوم السباق | فريق كوبرا سيس الجادة', 'sponsor-package.html': 'باقة الرعاية | فريق كوبرا سيس الجادة', '404.html': 'الصفحة غير موجودة | فريق كوبرا سيس الجادة'
+    'members.html': 'الأعضاء | فريق كوبرا سيس الجادة', 'projects.html': 'مشروعنا | فريق كوبرا سيس الجادة', '101.html': 'أساسيات السيارات الكهربائية | فريق كوبرا سيس الجادة', 'specs.html': 'المواصفات | فريق كوبرا سيس الجادة', 'about.html': 'من نحن | فريق كوبرا سيس الجادة', 'sponsors.html': 'رعاية الفريق | فريق كوبرا سيس الجادة', 'news.html': 'الأخبار | فريق كوبرا سيس الجادة', 'checklist.html': 'قائمة السباق | فريق كوبرا سيس الجادة', 'race-day.html': 'يوم السباق | فريق كوبرا سيس الجادة', 'sponsor-package.html': 'باقة الرعاية | فريق كوبرا سيس الجادة', '404.html': 'الصفحة غير موجودة | فريق كوبرا سيس الجادة',
+    'index.html': 'فريق كوبرا سيس الجادة | سيارة سباق كهربائية من صنع الطلاب', 'trackmap.html': 'خريطة المسار | فريق كوبرا سيس الجادة', 'car.html': 'الكوبرا | فريق كوبرا سيس الجادة'
   };
 
   function translateText(page, text) {
@@ -151,6 +420,39 @@
       });
     });
     if (TITLES[page]) document.title = TITLES[page];
+    isolateLatin(root);
+  }
+
+  /* Whatever is still in English after the pass above has to survive being laid
+     out inside dir="rtl", and by default it does not. Bidi resolves a run of
+     Latin left-to-right but treats trailing punctuation as neutral, so it takes
+     the direction of the paragraph instead of the sentence: "Meet the Cobra."
+     renders as ".Meet the Cobra", with the full stop thrown to the far left. The
+     text is intact and the reader sees it broken.
+
+     dir="auto" resolves each element from its own first strong character, which
+     is exactly the right rule here — a Latin element lays out LTR and keeps its
+     punctuation, an Arabic one is untouched.
+
+     Only elements that are wholly Latin qualify. An Arabic sentence containing
+     "EVGP" or "Planet Labs PBC" is already correct: bidi nests those runs inside
+     an RTL paragraph properly, and forcing a direction on the parent would be
+     the thing that broke them. Leaf elements only, for the same reason — setting
+     this on a container would re-align its Arabic descendants too.
+
+     This is a safety net, not the fix. The fix is translating the string; the
+     net is for proper nouns, licence names and anything added later that has not
+     been through the dictionary yet. */
+  function isolateLatin(root) {
+    const ARABIC = /[؀-ۿ]/;
+    const LATIN = /[A-Za-z]/;
+    root.querySelectorAll('h1, h2, h3, h4, p, li, figcaption, td, th, dt, dd, strong, em, small, blockquote, button, a').forEach(el => {
+      if (el.querySelector('h1, h2, h3, h4, p, li, figcaption, td, th, dt, dd, blockquote')) return;
+      if (el.hasAttribute('dir')) return;
+      const text = el.textContent;
+      if (!LATIN.test(text) || ARABIC.test(text)) return;
+      el.setAttribute('dir', 'auto');
+    });
   }
 
   const api = { COMMON, PAGES, TITLES, translateText, apply };

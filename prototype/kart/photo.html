@@ -205,6 +205,60 @@
 
 <script>
 (() => {
+  /* ---------- Arabic ----------
+     This viewer runs in its own document inside an iframe, so the site's
+     translator never reaches it: a TreeWalker over the parent stops at the frame
+     boundary. Even reaching in would not be enough — the angle readout and the
+     frame alt text are rebuilt on every drag, so anything swapped in once gets
+     overwritten by the first pointer move. The strings have to come from here.
+
+     Language comes from the embedding page when there is one, and from ?lang=ar
+     when this file is opened on its own. Both are read, so the prototype stays
+     usable standalone. */
+  const LANG = (() => {
+    const q = new URLSearchParams(location.search).get('lang');
+    if (q) return q.startsWith('ar') ? 'ar' : 'en';
+    // localStorage first, and deliberately: it is the parent's own source of
+    // truth for language and it is readable the instant this script runs.
+    // Reading parent.document.documentElement.lang instead would be a race —
+    // site.js sits at the end of the parent's body and sets that attribute, but
+    // this frame can start parsing before it gets there, and the viewer would
+    // render English on an Arabic page depending on network timing.
+    try {
+      const stored = localStorage.getItem('cobras_lang');
+      if (stored) return stored.startsWith('ar') ? 'ar' : 'en';
+    } catch (error) { /* storage blocked: fall through */ }
+    try {
+      if (parent !== window && parent.document.documentElement.lang.startsWith('ar')) return 'ar';
+    } catch (error) { /* cross-origin embed: fall through to the default */ }
+    return document.documentElement.lang.startsWith('ar') ? 'ar' : 'en';
+  })();
+  const AR = {
+    // Camera positions, as read out beside the angle.
+    'Front':'أمامي','Front left':'أمامي يسار','Left front':'يسار أمامي','Left side':'جانبي أيسر',
+    'Left rear':'يسار خلفي','Rear left':'خلفي يسار','Rear':'خلفي','Rear right':'خلفي يمين',
+    'Right rear':'يمين خلفي','Right side':'جانبي أيمن','Right front':'يمين أمامي','Front right':'أمامي يمين',
+    'Eye level':'مستوى النظر','Elevated':'مرتفع','Top':'علوي',
+    // The same three elevations again, in the form the alt sentence needs them.
+    'alt.Eye-level':'من مستوى النظر','alt.Elevated':'من زاوية مرتفعة','alt.Top':'من الأعلى',
+    'alt.frame':'منظر {direction} {elevation} لسيارة سباق كوبرا الكهربائية عند {angle} درجة',
+    'alt.top':'منظر علوي مباشر لسيارة سباق كوبرا الكهربائية',
+    'stage.aria':'سيارة كوبرا عند {angle}، {elevation}. اسحب أفقيًا للتدوير.',
+    'viewer.aria':'عرض تفاعلي بزاوية 360 درجة لسيارة سباق كوبرا',
+    'stage.start':'اسحب أفقيًا للتدوير وعموديًا للإمالة للأعلى. استخدم مفاتيح الأسهم لتغيير الزاوية.',
+    'brand.hint':'اسحب أفقيًا للتدوير · اسحب للأعلى للمنظر العلوي · ctrl أو ⌘ مع التمرير للتقريب',
+    'Camera angle':'زاوية الكاميرا','Drag in any direction':'اسحب في أي اتجاه',
+    'Component detail':'تفاصيل المكوّن','Auto rotate':'دوران تلقائي',
+    'Car details':'تفاصيل السيارة','Close detail':'إغلاق التفاصيل',
+    'Previous angle':'الزاوية السابقة','Next angle':'الزاوية التالية',
+    'Zoom out':'تصغير','Zoom in':'تكبير',
+    'Cockpit':'المقصورة','Front axle':'المحور الأمامي','Rear shell':'المؤخرة',
+    'disclosure':'تصوّر استوديو بمساعدة الذكاء الاصطناعي، مثبّت على تصميم رئيسي واحد: عجلتان أماميتان بخمس أذرع، وعجلة خلفية واحدة في المنتصف يغطيها الهيكل بالكامل.'
+  };
+  const t = (key, fallback) => (LANG === 'ar' && AR[key]) || fallback || key;
+  const fill = (template, values) =>
+    Object.keys(values).reduce((out, k) => out.split(`{${k}}`).join(values[k]), template);
+
   const viewer = document.getElementById('viewer');
   const stage = document.getElementById('stage');
   const topFrame = document.querySelector('.top-frame');
@@ -237,7 +291,9 @@
       image.dataset.index = String(index);
       image.dataset.angle = String(angle);
       image.src = `../../assets/car-turntable-smooth-nose/${prefix}-${suffix}.jpg?v=${frameAssetVersion}`;
-      image.alt = `${elevation} ${labels[index].toLowerCase()} view of the Cobras electric race car at ${angle} degrees`;
+      image.alt = LANG === 'ar'
+        ? fill(t('alt.frame'), { direction: t(labels[index]), elevation: t(`alt.${elevation}`), angle })
+        : `${elevation} ${labels[index].toLowerCase()} view of the Cobras electric race car at ${angle} degrees`;
       image.draggable = false;
       image.decoding = 'async';
       image.setAttribute('aria-hidden', 'true');
@@ -253,7 +309,11 @@
   const detail = document.getElementById('detail');
   const detailTitle = document.getElementById('detailTitle');
   const detailBody = document.getElementById('detailBody');
-  const details = {
+  const details = LANG === 'ar' ? {
+    cockpit:['مقصورة مكشوفة','مقعد مجوّف أسود، وحزام أمان رباعي أحمر زاهٍ، وهيكل حماية أنبوبي، وتوجيه بمقود.'],
+    axle:['محور أمامي واحد','عجلتان أماميتان من الكروم بخمس أذرع، مركّبتان جنبًا إلى جنب على محور واحد مشترك.'],
+    shell:['مؤخرة مغلقة','العجلة الخلفية الوحيدة في المنتصف تقع داخل الذيل المركّب المتصل ولا تظهر من الخارج.']
+  } : {
     cockpit:['Open cockpit','Black bucket seat, bright red four-point harness, tubular roll structure, and handlebar steering.'],
     axle:['Single front axle','Two chrome five-spoke front wheels mounted side-by-side across one common axle.'],
     shell:['Enclosed rear shell','The single centered rear wheel sits inside the continuous composite tail and is hidden externally.']
@@ -311,8 +371,10 @@
     if (nearest !== renderedIndex || elevation !== renderedElevation) {
       topFrame.style.setProperty('--frame-rotation', `${imageAngle}deg`);
       const angleText = formatDegrees(imageAngle);
-      angleLabel.textContent = `${angleText} · ${labels[nearest]} · ${elevation}`;
-      stage.setAttribute('aria-label', `Cobras car at ${angleText}, ${elevation}. Drag sideways to rotate.`);
+      angleLabel.textContent = `${angleText} · ${t(labels[nearest])} · ${t(elevation)}`;
+      stage.setAttribute('aria-label', LANG === 'ar'
+        ? fill(t('stage.aria'), { angle: angleText, elevation: t(elevation) })
+        : `Cobras car at ${angleText}, ${elevation}. Drag sideways to rotate.`);
       renderedIndex = nearest;
       renderedElevation = elevation;
     }
@@ -390,6 +452,49 @@
   });
   document.querySelector('.detail-close').addEventListener('click', () => detail.classList.remove('is-open'));
   addEventListener('keydown', (event) => {if(event.key === 'Escape') detail.classList.remove('is-open')});
+
+  /* The static chrome, done once. Everything above this point is either rebuilt
+     per frame or read on demand; these are the nodes that are written in the
+     markup and never touched again, so a single pass at startup is enough.
+     dir/lang go on <html> so Arabic lays out right-to-left inside the frame
+     while the stage transforms — which are computed in screen space — stay put. */
+  if (LANG === 'ar') {
+    document.documentElement.lang = 'ar';
+    document.documentElement.dir = 'rtl';
+    const set = (selector, value, attribute) => {
+      const node = document.querySelector(selector);
+      if (!node) return;
+      if (attribute) node.setAttribute(attribute, value); else node.textContent = value;
+    };
+    set('.brand p', t('brand.hint'));
+    set('.hotspots', t('Car details'), 'aria-label');
+    set('.detail-close', t('Close detail'), 'aria-label');
+    set('.detail .eyebrow', t('Component detail'));
+    set('#spinBtn', t('Auto rotate'));
+    set('#prevBtn', t('Previous angle'), 'aria-label');
+    set('#nextBtn', t('Next angle'), 'aria-label');
+    set('#eyeBtn', t('Eye level'));
+    set('#topBtn', t('Top'));
+    set('#zoomOut', t('Zoom out'), 'aria-label');
+    set('#zoomIn', t('Zoom in'), 'aria-label');
+    set('.disclosure', t('disclosure'));
+    set('#viewer', t('viewer.aria'), 'aria-label');
+    set('.top-frame', t('alt.top'), 'alt');
+    // Both of these hold a bare text node alongside an element child, so they
+    // need the text node itself — textContent would delete the sibling.
+    viewer.querySelector('.hint').childNodes.forEach((node) => {
+      if (node.nodeType === 3 && node.nodeValue.trim()) node.nodeValue = t('Drag in any direction');
+    });
+    viewer.querySelector('.angle').childNodes.forEach((node) => {
+      if (node.nodeType === 3 && node.nodeValue.trim()) node.nodeValue = t('Camera angle');
+    });
+    document.querySelectorAll('.hotspot span:first-child').forEach((node) => {
+      node.textContent = t(node.textContent.trim());
+    });
+    // The stage's aria-label is replaced on the first renderView; this covers the
+    // moment before that, when a screen reader could already have reached it.
+    stage.setAttribute('aria-label', t('stage.start'));
+  }
 
   const animate = (now) => {
     const delta = Math.min(.05,(now - previousTime) / 1000);previousTime = now;

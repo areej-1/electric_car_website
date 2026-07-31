@@ -1,5 +1,40 @@
 import { mountMarker } from './kart.js';
 
+/* ---------- Arabic ----------
+   This map runs in its own document inside an iframe on trackmap.html, so the
+   site's translator never reaches it — a TreeWalker over the parent stops at the
+   frame boundary. Reaching in would not be enough either: the turn panel is
+   rebuilt from TURNS on every click, so anything swapped in once is gone the
+   moment a reader opens a turn.
+
+   Strings come from the site's own arabic.js, loaded by index.html, so a
+   sentence that appears both here and on a normal page has exactly one Arabic
+   translation. If that file is missing — this prototype opened straight from a
+   checkout — T() is the identity function and everything stays English.
+
+   Language follows the embedding page, or ?lang=ar when opened standalone. */
+const LANG = (() => {
+  const q = new URLSearchParams(location.search).get('lang');
+  if (q) return q.startsWith('ar') ? 'ar' : 'en';
+  // localStorage first, and deliberately: it is the parent's own source of
+  // truth for language and it is readable the instant this script runs. Reading
+  // parent.document.documentElement.lang instead would be a race — site.js sits
+  // at the end of the parent's body and sets that attribute, but this frame can
+  // start parsing before it gets there, and then the map would render English on
+  // an Arabic page depending on network timing.
+  try {
+    const stored = localStorage.getItem('cobras_lang');
+    if (stored) return stored.startsWith('ar') ? 'ar' : 'en';
+  } catch (error) { /* storage blocked: fall through */ }
+  try {
+    if (parent !== window && parent.document.documentElement.lang.startsWith('ar')) return 'ar';
+  } catch (error) { /* cross-origin embed: fall through to the default */ }
+  return document.documentElement.lang.startsWith('ar') ? 'ar' : 'en';
+})();
+const T = (text) => (LANG === 'ar' && globalThis.CobrasArabic
+  ? globalThis.CobrasArabic.translateText('prototype/trackmap', text)
+  : text);
+
 // Plate intrinsic size. The graded Silverstone derivative is rotated 90 degrees
 // clockwise so the circuit's long axis runs horizontally and the whole lap fits
 // a landscape viewport.
@@ -118,8 +153,8 @@ TURNS.forEach((t, i) => {
   b.type = 'button';
   b.style.left = t.x * PW + 'px';
   b.style.top = t.y * PH + 'px';
-  b.setAttribute('aria-label', `${t.flag ? 'Race target' : 'Turn ' + t.n}: ${t.name}`);
-  b.innerHTML = `<span class="dot">${t.flag ? '' : t.n}</span><span class="lbl">${t.name}</span>`;
+  b.setAttribute('aria-label', `${t.flag ? T('Race target') : T('Turn') + ' ' + t.n}: ${T(t.name)}`);
+  b.innerHTML = `<span class="dot">${t.flag ? '' : t.n}</span><span class="lbl">${T(t.name)}</span>`;
   b.addEventListener('click', (e) => { e.stopPropagation(); select(i); });
   markersEl.appendChild(b);
 });
@@ -153,16 +188,16 @@ function select(i) {
   flyTo(t.x, t.y, minScale * 2.2, true);
 
   panel.innerHTML = `
-    <button class="close" type="button" aria-label="Close">&times;</button>
-    <p class="kicker">${t.flag ? 'Chequered flag' : 'Turn ' + t.n} · ${t.kicker}</p>
-    <h2>${t.name}</h2>
+    <button class="close" type="button" aria-label="${T('Close')}">&times;</button>
+    <p class="kicker">${t.flag ? T('Chequered flag') : T('Turn') + ' ' + t.n} · ${T(t.kicker)}</p>
+    <h2>${T(t.name)}</h2>
     <p class="status s-${t.status.replace(' ', '-')}">
-      <span class="pip" aria-hidden="true"></span>${t.status}</p>
-    <p class="body">${t.body}</p>
-    <ul class="tags">${t.tags.map((x) => `<li>${x}</li>`).join('')}</ul>
+      <span class="pip" aria-hidden="true"></span>${T(t.status)}</p>
+    <p class="body">${T(t.body)}</p>
+    <ul class="tags">${t.tags.map((x) => `<li>${T(x)}</li>`).join('')}</ul>
     ${t.media ? (t.media.type === 'video'
-      ? `<video src="${t.media.src}" muted loop autoplay playsinline aria-label="${t.media.alt}"></video>`
-      : `<img src="${t.media.src}" alt="${t.media.alt}">`) : ''}`;
+      ? `<video src="${t.media.src}" muted loop autoplay playsinline aria-label="${T(t.media.alt)}"></video>`
+      : `<img src="${t.media.src}" alt="${T(t.media.alt)}">`) : ''}`;
   panel.classList.add('open');
   panel.querySelector('.close').addEventListener('click', close);
   [...markersEl.children].forEach((m, j) => m.classList.toggle('is-active', j === i));
@@ -232,7 +267,24 @@ new ResizeObserver(() => {
 
 // ---- kart marker ------------------------------------------------------
 const MK = 78;
-const marker = mountMarker(kartCanvas, MK);
+/* The kart marker is the one part of this map that needs WebGL, and WebGL is not
+   everywhere: an old phone, a blocked or blacklisted GPU, software rendering
+   turned off, a headless browser. Three throws "Error creating WebGL context"
+   when it cannot get one, and unguarded that exception escapes at module top
+   level and takes the entire rest of the file with it — fit() never runs, the
+   plate never scales, pan and zoom are never wired, and the reader gets a dead
+   page instead of a map. The lap marker is decoration; the circuit is the point.
+
+   So a failure here costs the moving kart and nothing else. The stub keeps the
+   three methods the frame loop calls, so the loop does not need to know. */
+const marker = (() => {
+  try {
+    return mountMarker(kartCanvas, MK);
+  } catch (error) {
+    kartCanvas.hidden = true;
+    return { setHeading() {}, setBodywork() {}, render() {} };
+  }
+})();
 
 function pointAt(t) {
   const n = LINE.length;
@@ -278,6 +330,26 @@ function frame(now) {
   marker.render();
 
   requestAnimationFrame(frame);
+}
+
+/* The static chrome, done once. The turn panel above is rebuilt per click and
+   translates itself; these nodes are written in the markup and never touched
+   again. dir/lang go on <html> so Arabic reads right-to-left, which is safe here
+   because the plate is positioned by explicit transforms in pixel space, not by
+   the inline direction. */
+if (LANG === 'ar') {
+  document.documentElement.lang = 'ar';
+  document.documentElement.dir = 'rtl';
+  const hud = document.getElementById('hud');
+  hud.querySelector('h1').textContent = T('TRACK MAP');
+  hud.querySelector('p').textContent = T('Five turns from first sketch to the grid · SIS Al Jada Cobras');
+  const hint = document.getElementById('hint');
+  hint.textContent = T(hint.textContent.trim());
+  const plate = document.getElementById('plate');
+  plate.alt = T(plate.alt);
+  document.querySelectorAll('#credit [data-tm]').forEach((node) => {
+    node.textContent = T(node.textContent.trim());
+  });
 }
 
 const img = document.getElementById('plate');
