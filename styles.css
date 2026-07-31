@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;500;600&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap');
 
 :root {
   --ink: #0a0a0a;
@@ -17,6 +17,22 @@
   --max-width: 1180px;
   --display: 'Orbitron', sans-serif;
   --body: 'Poppins', sans-serif;
+  /* Arabic needs a family of its own, named explicitly.
+
+     Poppins and Orbitron contain no Arabic glyphs at all, so before this token
+     existed every Arabic character on the site fell through to the generic
+     `sans-serif` — which means it was rendered by whatever the reader's OS
+     happened to pick. On macOS that is Geeza Pro, which looks deliberate and is
+     why this went unnoticed through an entire build: the developer machine had a
+     font the readers do not. On Windows the same pages come out in Arial or
+     Segoe UI, with different weights, different proportions and different
+     vertical metrics, so both the type and the layout change.
+
+     Noto Sans Arabic is loaded with the others and named first, so the Arabic
+     side is now the same typeface on every machine instead of a lottery. The
+     rest of the stack is the old lottery, kept in order of preference for the
+     moment before the webfont arrives or if it fails to load. */
+  --arabic: 'Noto Sans Arabic', 'Geeza Pro', 'Segoe UI', Tahoma, sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -284,14 +300,29 @@ nav a[aria-current='page'],
 .secondary-action:hover { color: var(--gold); border-color: var(--gold); transform: translateY(-2px); }
 
 /* Shared page headers */
-header:not(.home-hero) {
+/* `:not(.home-world)` on every rule in this family, and it is load-bearing.
+
+   These rules dress the page headers the rest of the site uses. The homepage
+   hero ported over from the Astro build is also a <header>, so it was caught by
+   them and given a 1180px max-width and 105px of top padding it was never
+   designed for. Both were visible and neither was obvious:
+
+   the strip inside it lays panels out at 100vw each, so clamping the header to
+   1180px turned it into a 1180px window onto an 1856px panel — and since each
+   panel centres its own content, everything inside sat (viewport - 1180) / 2 too
+   far right. That is 130px at 1440px wide, which reads as an odd margin, and
+   338px at 1856px, which reads as broken. The bug got worse the bigger the
+   screen, which is why it survived being built and reviewed on a laptop.
+
+   The padding then pushed the pinned hero down by 105px on top of that. */
+header:not(.home-hero):not(.home-world) {
   width: min(var(--max-width), calc(100% - 40px));
   margin: 0 auto;
   padding: 105px 0 48px;
   position: relative;
   text-align: left;
 }
-header:not(.home-hero)::before {
+header:not(.home-hero):not(.home-world)::before {
   content: 'COBRAS / EVGP';
   display: block;
   margin-bottom: 20px;
@@ -299,8 +330,8 @@ header:not(.home-hero)::before {
   font: 700 11px/1 var(--display);
   letter-spacing: .17em;
 }
-header:not(.home-hero) h1 { max-width: 920px; }
-header:not(.home-hero) > p { max-width: 680px; margin-top: 20px; }
+header:not(.home-hero):not(.home-world) h1 { max-width: 920px; }
+header:not(.home-hero):not(.home-world) > p { max-width: 680px; margin-top: 20px; }
 
 /* Carousels */
 .splide {
@@ -817,7 +848,7 @@ footer::before { display: none; }
   nav a:not(.logo), .site-nav ul a { padding: 12px 14px; font-size: 13px; }
   .home-hero { width: calc(100% - 32px); min-height: 580px; padding: 74px 0; }
   .home-hero::after { right: -25%; width: 76vw; opacity: .14; }
-  header:not(.home-hero), .edu-hero { width: calc(100% - 32px) !important; padding-top: 74px !important; }
+  header:not(.home-hero):not(.home-world), .edu-hero { width: calc(100% - 32px) !important; padding-top: 74px !important; }
   .splide { width: calc(100% - 24px); padding: 10px; }
   .splide__slide { min-height: 0; flex-direction: column; gap: 24px; padding: 14px; }
   .splide__slide img, .splide__slide video { width: 100%; height: 330px; }
@@ -992,7 +1023,12 @@ main { scroll-margin-top: 90px; }
   cursor: pointer;
 }
 .lang-toggle:hover { color: var(--cream); border-color: var(--gold); }
-html[dir="rtl"] body { font-family: var(--body); }
+/* Headings included. Orbitron has no Arabic either, so Arabic headings were
+   already falling back — this just names what they fall back to instead of
+   leaving it to the operating system. */
+html[dir="rtl"] body,
+html[dir="rtl"] h1, html[dir="rtl"] h2, html[dir="rtl"] h3,
+html[dir="rtl"] .logo { font-family: var(--arabic); }
 html[dir="rtl"] h1, html[dir="rtl"] h2, html[dir="rtl"] h3, html[dir="rtl"] .logo {
   letter-spacing: 0;
   text-transform: none;
@@ -1197,7 +1233,7 @@ nav.site-nav .chat-status {
   box-shadow: none;
 }
 
-header:not(.home-hero),
+header:not(.home-hero):not(.home-world),
 .edu-hero {
   padding-top: 76px !important;
   padding-bottom: 42px !important;
@@ -1283,7 +1319,7 @@ header:not(.home-hero),
     bottom: auto;
   }
 
-  header:not(.home-hero),
+  header:not(.home-hero):not(.home-world),
   .edu-hero {
     padding-top: 58px !important;
     padding-bottom: 36px !important;
