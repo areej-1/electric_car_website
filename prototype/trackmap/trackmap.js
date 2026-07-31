@@ -211,10 +211,21 @@ let active = -1;
 // Cover-fit, not contain: the plate fills the viewport and the surplus axis is
 // pannable. A letterboxed portrait plate in a landscape window reads as a picture,
 // not a place.
+// Cover-fit, trimmed back a little. Pure cover — Math.max(w/PW, h/PH) — fills
+// the viewport exactly on its tight axis and crops the other, which is correct
+// and shows less circuit at rest than it should: the lap runs off the edges.
+// FIT_ZOOM_OUT pulls the scale back 13%, so the cropped axis opens up and the
+// previously-tight axis falls a little short and letterboxes evenly against the
+// ink background — clamp() below already centres a plate smaller than the frame.
+// A small even margin reads as the whole circuit on a mat rather than a picture
+// torn off at the edges. Ported from the Astro build, where it was tuned to the
+// 12-15% the owner asked for.
+const FIT_ZOOM_OUT = 0.87;
+
 function fit() {
   const r = stage.getBoundingClientRect();
   if (!r.width || !r.height) return;
-  minScale = Math.max(r.width / PW, r.height / PH);
+  minScale = Math.max(r.width / PW, r.height / PH) * FIT_ZOOM_OUT;
   const s = minScale;
   Object.assign(target, { s, tx: (r.width - PW * s) / 2, ty: (r.height - PH * s) / 2 });
   if (view.s === 1 && view.tx === 0) Object.assign(view, target);
