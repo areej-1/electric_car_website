@@ -1648,3 +1648,27 @@ header:not(.home-hero):not(.home-world),
    simply get longer. */
 .home-world h1 { font-size: clamp(2.25rem, min(6vw, 9vh), 5.6rem); }
 .home-world .hero-lead { font-size: clamp(1rem, min(1.35vw, 2.6vh), 1.35rem); }
+
+/* Feather the car's own edges, not an ellipse inside them.
+
+   The image is a photograph on a studio sweep, and the sweep is a rectangle. It
+   is masked with `radial-gradient(ellipse 66% 62% ...)`, which sounds like it
+   dissolves the edges and does not: those percentages are radii, so at the left
+   and right edges of the box the mask is still about a third opaque, and the
+   boundary of the sweep reads as a hard straight cut against the page.
+
+   Two linear gradients intersected fade each side to fully transparent exactly
+   at the edge, which is where the cut was. The middle is left alone, so the car
+   itself is untouched — only the sweep around it dissolves. The vertical fade is
+   shorter at the top than the bottom because the car sits low in the frame and
+   there is more empty sweep above it to lose. */
+main.cobras-home .world-car {
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 18%, #000 84%, transparent 100%);
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 18%, #000 84%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}

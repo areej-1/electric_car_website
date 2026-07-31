@@ -1,13 +1,8 @@
-# three.js is vendored locally for the prototype. Reproduce with:
-#   curl -sL -o vendor/three.module.js https://unpkg.com/three@0.169.0/build/three.module.js
+# Nothing is vendored here any more. three.js was only ever pulled in to draw the
+# kart marker that travelled the lap; the marker is gone and the 1.4 MB went with
+# it, along with kart.js.
 #
-# three.module.js itself IS committed, and has to be. This site is served as
-# static files with no build step, so anything ignored here simply does not exist
-# on the deployed site — and kart.js imports Three at module load, so a 404 there
-# fails the import and takes the whole of trackmap.js with it: no markers, no
-# pan, no zoom, just a satellite photograph. That is exactly what shipped when
-# this directory was ignored wholesale.
-#
-# The addons are not imported by anything and stay out.
-vendor/*
-!vendor/three.module.js
+# It is worth remembering why this file used to matter: `vendor/` was ignored
+# wholesale, so three.module.js existed on one machine and 404'd on the deployed
+# site, and because kart.js imported it at module load that failure took the
+# whole of trackmap.js down — no markers, no pan, no zoom, just a photograph.
