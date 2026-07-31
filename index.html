@@ -52,7 +52,20 @@
        below are the live site's own, built at runtime by site.js exactly as on
        every other page — only what sits between them is new. `cobras-home`
        carries the design tokens this content needs without leaking them. -->
-  <main id="main" class="cobras-home"><header class="home-world" data-home-world style="--hero-mark:url(assets/home/cobra-race-mark.BrGCG4cY.png)" data-astro-cid-zkhec6xw><div class="world-pin" data-astro-cid-zkhec6xw><!-- The car itself, crossing the hero. Not a cut-out: see
+  <!-- --hero-mark looks like it is missing its directory, and it is not. A
+       relative url() inside a custom property resolves against the stylesheet
+       that *uses* the property, not the document that declares it — and every
+       use of this one is in assets/home/homepage.css. Spelled the obvious way,
+       as `assets/home/cobra-race-mark…`, the browser resolved it against
+       assets/home/ and asked for assets/home/assets/home/…, which 404s. That is
+       the doubled path in the console: eighteen of them, one per element that
+       paints the mark.
+
+       macOS never showed it, because the request 404s identically there — it is
+       just a decorative background at 7–14% opacity, so nothing visibly breaks
+       and only the console complains. Relative to the stylesheet is correct
+       here and works both on the deployed sub-path and when served from root. -->
+  <main id="main" class="cobras-home"><header class="home-world" data-home-world style="--hero-mark:url(cobra-race-mark.BrGCG4cY.png)" data-astro-cid-zkhec6xw><div class="world-pin" data-astro-cid-zkhec6xw><!-- The car itself, crossing the hero. Not a cut-out: see
          tools/build-side-profile.mjs for why one cannot be made honestly from
          these frames. The sweep it is shot on matches --ink closely enough that
          a soft edge mask is all it takes to read as a silhouette here. --><img class="world-car" data-world-car src="assets/home/car-side.CB839PJm.webp" width="1400" height="933" alt="" aria-hidden="true" decoding="async" loading="lazy" draggable="false" data-astro-cid-zkhec6xw><div class="world-strip" data-world style="--panels:6" data-astro-cid-zkhec6xw><section class="world-panel world-intro" data-world-panel data-astro-cid-zkhec6xw><span class="eyebrow" data-astro-cid-zkhec6xw>EVGP · SABIS® Al Jada · Sharjah</span><h1 data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Built to strike.</span><br data-astro-cid-zkhec6xw><span data-astro-cid-zkhec6xw>Engineered to race.</span></h1><p class="hero-lead" data-astro-cid-zkhec6xw>We are a Grades 11–12 student team turning classroom knowledge into a competition-ready electric race car—one design, test, and hard-earned improvement at a time.</p><div class="hero-actions" data-astro-cid-zkhec6xw><a class="btn-primary" href="projects.html" data-astro-cid-zkhec6xw>Follow the build</a><a class="btn-secondary" href="members.html" data-astro-cid-zkhec6xw>Meet the crew</a></div></section><section class="world-panel world-stage" data-world-panel style="--ghost:&quot;01&quot;" data-astro-cid-zkhec6xw><div class="world-stage-copy" data-astro-cid-zkhec6xw><span class="world-n" data-astro-cid-zkhec6xw>01</span><span class="world-kicker" data-astro-cid-zkhec6xw>Define the mission</span><h2 data-astro-cid-zkhec6xw>Design + planning</h2><p data-astro-cid-zkhec6xw>Set performance targets, study EVGP requirements, choose parts, and turn constraints into a buildable layout.</p><ul class="world-tags" data-astro-cid-zkhec6xw><li data-astro-cid-zkhec6xw>Competition rules</li><li data-astro-cid-zkhec6xw>Component selection</li><li data-astro-cid-zkhec6xw>Safety planning</li></ul></div><figure class="world-stage-figure" data-astro-cid-zkhec6xw><!-- `img-skeleton` (see base.css) fills the reserved box with a panel colour
