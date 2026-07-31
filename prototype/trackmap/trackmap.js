@@ -54,103 +54,144 @@ const PH = 1220;
 const TURNS = [
   {
     n: '1', name: 'Design + planning', kicker: 'Start with the rules',
-    x: 0.7918, y: 0.3002, status: 'recorded',
+    x: 0.7764, y: 0.2583, status: 'recorded',
     body: 'Set performance targets, study EVGP requirements, choose parts, and turn constraints into a buildable layout.',
     tags: ['Competition rules', 'Component selection', 'Safety planning'],
     media: { type: 'img', src: '../../design.JPG', alt: 'Cobras students at the project room noticeboard' },
   },
   {
     n: '2', name: 'Build + assembly', kicker: 'Make it physical',
-    x: 0.9249, y: 0.5032, status: 'recorded',
+    x: 0.9413, y: 0.4877, status: 'recorded',
     body: 'Fit the frame, steering, seat, wheels, controls, and mechanical systems into one working machine.',
     tags: ['Chassis assembly', 'Driver ergonomics', 'Mechanical fit'],
     media: { type: 'video', src: '../../build.MP4', alt: 'Assembly work on the Cobra platform' },
   },
   {
     n: '3', name: 'Wiring + controls', kicker: 'Bring it to life',
-    x: 0.7309, y: 0.8955, status: 'recorded',
+    x: 0.7327, y: 0.7991, status: 'recorded',
     body: 'Connect batteries, controller, motor, kill switch, and driver inputs into an organized 48V system.',
     tags: ['Power distribution', 'Control wiring', 'Safe shutdown'],
     media: { type: 'img', src: '../../wiring.JPG', alt: 'Students reviewing the car during systems work' },
   },
   {
     n: '4', name: 'Testing + troubleshooting', kicker: 'Find the weak points',
-    x: 0.5103, y: 0.752, status: 'in progress',
+    x: 0.4998, y: 0.7049, status: 'in progress',
     body: 'Run the car, observe its behavior, diagnose failures, and record what must change before the next session.',
     tags: ['Functional tests', 'Driver feedback', 'Fault diagnosis'],
     media: { type: 'video', src: '../../testing.MP4', alt: 'The kart being driven during a test session' },
   },
   {
     n: '5', name: 'Final adjustments', kicker: 'Prepare to compete',
-    x: 0.0955, y: 0.3472, status: 'pending',
+    x: 0.1334, y: 0.3852, status: 'pending',
     body: 'Refine balance, reliability, safety, and presentation so the car and team are ready for EVGP.',
     tags: ['Weight balance', 'Reliability checks', 'Race preparation'],
     media: { type: 'video', src: '../../adjust.MP4', alt: 'Final adjustment work on the kart' },
   },
   {
     n: 'F', name: 'Race target', kicker: 'The grid', flag: true,
-    x: 0.2156, y: 0.1698, status: 'pending',
+    x: 0.2863, y: 0.2008, status: 'pending',
     body: 'Race target: February 13, 2027. Venue, official timing, driver selection and results remain pending team confirmation.',
     tags: ['Venue pending', 'Timing pending', 'Driver pending'],
   },
 ];
 
-// The racing line, traced from OpenStreetMap's Silverstone Grand Prix circuit.
+// The Silverstone Grand Prix centreline, normalised against the rotated plate.
+// Taken verbatim from the Astro build (site/src/scripts/track-map-geometry.js),
+// which georeferenced it properly. The plate here is the same file, byte for
+// byte, so the coordinates carry across unchanged.
 //
-// The circuit's raceway ways are stitched into one closed loop by shared
-// endpoints, discarding the pit lanes and the other circuits on the site. The
-// check that this is the Grand Prix layout and not one of its neighbours is the
-// perimeter: 5,842 m against a published 5,891 m.
+// Source     27 `highway=raceway` ways forming the only closed cycle through the
+//            GP layout, in racing order from the Hamilton Straight: Abbey, Farm
+//            Curve, Village, The Loop, Aintree, Brooklands, Luffield, Woodcote,
+//            Copse, Maggotts, Becketts, Chapel, Stowe, Vale, Club. The chain
+//            measures 5887 m against the official 5891 m, which is what confirms
+//            it is the GP layout and not the National, International or Stowe
+//            circuits, and not the pit lane.
+// Transform  lat/lon to plate pixels as a similarity, found by maximising the
+//            plate's own black-top-hat asphalt response under the projected loop
+//            and then polished with ICP against the ribbon: scale 1.00971 px/m,
+//            rotation -1.4714 degrees, offset (1815.03, 630.81) px. A full affine
+//            was tried and rejected — 0.29% anisotropy and no better residual, so
+//            the plate really is conformal. Anchors land a median 0.5 px and a
+//            mean 1.7 px from the ribbon's own centre ridge, and all 240 fall
+//            inside a mask of the visible asphalt.
+// Sampling   uniform arc length, 24.8 px apart, so the spline's curvature stays
+//            even rather than bunching through close anchors. Index 0 is the
+//            start/finish line, in the racing direction.
 //
-// Placing it on the plate is a rotation and a fit, and nothing more. Rotate 90
-// degrees, because the imagery is turned to put the circuit's long axis across
-// the frame — the loop's bounding box comes out at 1.625 against the plate's
-// 1.689, so it very nearly fills it — then map that extent onto the plate's.
+// This replaces two of my own attempts. The first rotated the OSM loop and fitted
+// its bounding box to the plate's, which was close but drifted. The second tried
+// to polish that by minimising the difference between the pixels under the path
+// and the asphalt's tone — it reported an improvement, drove the scale to the
+// floor of its own search range, and pulled the whole loop inside the ribbon. In
+// a graded greyscale plate, asphalt, grass and gravel are too close for that
+// score to mean anything. A black-top-hat response and ICP, which is what the
+// Astro build used, measure the ribbon itself instead of its brightness.
 //
-// There was an extra step here for a while that searched position, scale and
-// angle to minimise the difference between the pixels under the path and the
-// asphalt's tone. It reported an improvement and made the line visibly worse:
-// it drove the scale to 0.90, the floor of its own search range, and pulled the
-// whole loop inside the ribbon. Asphalt, grass and gravel are too close in a
-// graded greyscale plate for that score to mean what it claims. The number said
-// one thing and the picture said another, and the picture was right.
-//
-// Resampled by arc length so the corners keep their shape without carrying all
-// 466 points.
+// The six turn markers are placed by eye and are NOT anchors of this line. Three
+// sit on the circuit's shoulder, three on adjacent asphalt, the flag deliberately
+// on the pit straight.
 const LINE = [
-  [0.0748, 0.3646], [0.0955, 0.3472], [0.1152, 0.3265], [0.134, 0.3036],
-  [0.1512, 0.2775], [0.1681, 0.2506], [0.1855, 0.2249], [0.2033, 0.1998],
-  [0.2156, 0.1698], [0.2008, 0.1403], [0.2011, 0.1044], [0.2183, 0.0781],
-  [0.2381, 0.0583], [0.2603, 0.0468], [0.2822, 0.0529], [0.3006, 0.0768],
-  [0.319, 0.1005], [0.3374, 0.1242], [0.3559, 0.1479], [0.3743, 0.1717],
-  [0.3927, 0.1954], [0.4111, 0.2191], [0.4296, 0.2429], [0.448, 0.2666],
-  [0.4663, 0.2905], [0.4845, 0.3147], [0.4935, 0.3498], [0.4937, 0.3888],
-  [0.4903, 0.4275], [0.4867, 0.4662], [0.4865, 0.5052], [0.4931, 0.5425],
-  [0.5062, 0.5747], [0.5206, 0.6052], [0.5351, 0.6358], [0.5496, 0.6663],
-  [0.5633, 0.6977], [0.5546, 0.7288], [0.5325, 0.7405], [0.5103, 0.752],
-  [0.4985, 0.7801], [0.517, 0.802], [0.5389, 0.8147], [0.5615, 0.8227],
-  [0.5847, 0.825], [0.6045, 0.8075], [0.6202, 0.7788], [0.6361, 0.7502],
-  [0.6517, 0.7213], [0.6673, 0.6924], [0.6829, 0.6635], [0.6985, 0.6346],
-  [0.7141, 0.6056], [0.7297, 0.5767], [0.7453, 0.5477], [0.7609, 0.5188],
-  [0.7764, 0.4897], [0.7918, 0.4605], [0.8072, 0.4313], [0.8226, 0.402],
-  [0.8331, 0.3677], [0.8312, 0.3293], [0.8148, 0.304], [0.7918, 0.3002],
-  [0.7692, 0.293], [0.7548, 0.2635], [0.7585, 0.226], [0.7773, 0.2048],
-  [0.7995, 0.2125], [0.8202, 0.2301], [0.841, 0.2472], [0.8616, 0.265],
-  [0.8797, 0.2893], [0.8955, 0.3179], [0.9085, 0.3502], [0.9165, 0.3868],
-  [0.9203, 0.4254], [0.9227, 0.4643], [0.9249, 0.5032], [0.9271, 0.5422],
-  [0.9294, 0.5811], [0.9313, 0.6201], [0.9332, 0.6591], [0.9351, 0.6981],
-  [0.9369, 0.7371], [0.9377, 0.7762], [0.9291, 0.8122], [0.912, 0.8382],
-  [0.8904, 0.8522], [0.8682, 0.8632], [0.8458, 0.8732], [0.8231, 0.8812],
-  [0.8002, 0.8873], [0.7772, 0.8908], [0.754, 0.8934], [0.7309, 0.8955],
-  [0.7077, 0.897], [0.6846, 0.8984], [0.6618, 0.9049], [0.6409, 0.9216],
-  [0.6205, 0.9395], [0.5978, 0.9345], [0.5761, 0.9209], [0.5541, 0.9087],
-  [0.5311, 0.9075], [0.5106, 0.9245], [0.4922, 0.9483], [0.4696, 0.9545],
-  [0.449, 0.9382], [0.4352, 0.9069], [0.4234, 0.8732], [0.4089, 0.843],
-  [0.389, 0.8229], [0.3687, 0.8041], [0.3484, 0.7853], [0.3281, 0.7665],
-  [0.3075, 0.7483], [0.287, 0.7302], [0.2665, 0.712], [0.246, 0.6938],
-  [0.2255, 0.6755], [0.205, 0.6572], [0.1846, 0.6387], [0.1642, 0.6201],
-  [0.1438, 0.6014], [0.1239, 0.5815], [0.1043, 0.5606], [0.0851, 0.5388],
-  [0.0662, 0.5161], [0.0647, 0.4808], [0.0681, 0.442], [0.0714, 0.4033],
+  [0.2929, 0.0892], [0.3027, 0.1011], [0.3124, 0.113], [0.3222, 0.1248],
+  [0.3319, 0.1367], [0.3416, 0.1486], [0.3514, 0.1605], [0.3611, 0.1724],
+  [0.3709, 0.1843], [0.3806, 0.1962], [0.3904, 0.2081], [0.4001, 0.22],
+  [0.4099, 0.2319], [0.4196, 0.2438], [0.4293, 0.2556], [0.4391, 0.2675],
+  [0.4488, 0.2795], [0.4585, 0.2914], [0.4682, 0.3034], [0.4778, 0.3157],
+  [0.4842, 0.3326], [0.4868, 0.3524], [0.4875, 0.3727], [0.4866, 0.3929],
+  [0.4851, 0.413], [0.4835, 0.4332], [0.4819, 0.4533], [0.4809, 0.4735],
+  [0.482, 0.4937], [0.4851, 0.5133], [0.4899, 0.5318], [0.4968, 0.5484],
+  [0.5045, 0.564], [0.5123, 0.5795], [0.5201, 0.595], [0.5278, 0.6105],
+  [0.5356, 0.626], [0.5433, 0.6415], [0.5511, 0.657], [0.5573, 0.6741],
+  [0.555, 0.6932], [0.5445, 0.7025], [0.5332, 0.709], [0.5218, 0.7154],
+  [0.5104, 0.7219], [0.4998, 0.7309], [0.497, 0.7496], [0.5056, 0.763],
+  [0.5167, 0.7711], [0.528, 0.7776], [0.5397, 0.7826], [0.5515, 0.7863],
+  [0.5635, 0.7883], [0.5755, 0.7888], [0.5872, 0.7851], [0.5963, 0.7722],
+  [0.6041, 0.7567], [0.6123, 0.7418], [0.6203, 0.7266], [0.6281, 0.7113],
+  [0.636, 0.6959], [0.6439, 0.6806], [0.6517, 0.6653], [0.6596, 0.6499],
+  [0.6675, 0.6346], [0.6754, 0.6193], [0.6833, 0.6039], [0.6911, 0.5886],
+  [0.699, 0.5732], [0.7068, 0.5578], [0.7147, 0.5424], [0.7225, 0.527],
+  [0.7304, 0.5117], [0.7383, 0.4964], [0.7461, 0.4809], [0.7539, 0.4655],
+  [0.7617, 0.4501], [0.7695, 0.4346], [0.7772, 0.4191], [0.785, 0.4036],
+  [0.7927, 0.388], [0.8, 0.3719], [0.8042, 0.353], [0.8048, 0.3328],
+  [0.8017, 0.3133], [0.7943, 0.2976], [0.783, 0.2914], [0.7711, 0.29],
+  [0.7591, 0.2886], [0.7472, 0.2859], [0.737, 0.2755], [0.7303, 0.2588],
+  [0.7288, 0.2389], [0.7331, 0.2201], [0.7417, 0.2063], [0.753, 0.1996],
+  [0.7648, 0.2023], [0.7757, 0.2108], [0.7866, 0.2195], [0.7975, 0.2279],
+  [0.8084, 0.2364], [0.8194, 0.2449], [0.8301, 0.254], [0.8399, 0.2656],
+  [0.8491, 0.2786], [0.8577, 0.2929], [0.8654, 0.3084], [0.8724, 0.3249],
+  [0.8782, 0.3427], [0.8822, 0.3618], [0.885, 0.3816], [0.8868, 0.4016],
+  [0.8885, 0.4217], [0.89, 0.4419], [0.8914, 0.462], [0.8929, 0.4822],
+  [0.8943, 0.5023], [0.8958, 0.5225], [0.8972, 0.5426], [0.8986, 0.5628],
+  [0.8999, 0.583], [0.9012, 0.6032], [0.9025, 0.6234], [0.9037, 0.6435],
+  [0.905, 0.6637], [0.9063, 0.6839], [0.9075, 0.7041], [0.9082, 0.7244],
+  [0.9059, 0.7442], [0.9007, 0.7624], [0.8929, 0.7778], [0.8831, 0.7894],
+  [0.872, 0.7971], [0.8607, 0.8041], [0.8492, 0.8103], [0.8377, 0.8163],
+  [0.8262, 0.8219], [0.8146, 0.827], [0.8028, 0.8313], [0.791, 0.8353],
+  [0.7792, 0.8386], [0.7672, 0.8409], [0.7553, 0.843], [0.7433, 0.8449],
+  [0.7313, 0.8466], [0.7193, 0.8482], [0.7073, 0.8496], [0.6953, 0.8509],
+  [0.6833, 0.8521], [0.6713, 0.8534], [0.6595, 0.8565], [0.6481, 0.8629],
+  [0.6372, 0.8717], [0.6272, 0.8828], [0.6168, 0.8927], [0.6049, 0.8955],
+  [0.5932, 0.8911], [0.5819, 0.8843], [0.5705, 0.8779], [0.5591, 0.8714],
+  [0.5474, 0.8673], [0.5354, 0.8665], [0.5237, 0.871], [0.5133, 0.8809],
+  [0.504, 0.8938], [0.4947, 0.9066], [0.4834, 0.9136], [0.4715, 0.9142],
+  [0.4601, 0.908], [0.4505, 0.896], [0.4432, 0.88], [0.4365, 0.8631],
+  [0.4301, 0.8459], [0.4235, 0.829], [0.4153, 0.8142], [0.4053, 0.8031],
+  [0.3946, 0.7939], [0.3839, 0.7846], [0.3732, 0.7753], [0.3625, 0.766],
+  [0.3518, 0.7567], [0.3411, 0.7474], [0.3303, 0.7384], [0.3195, 0.7294],
+  [0.3088, 0.7205], [0.298, 0.7116], [0.2872, 0.7026], [0.2764, 0.6936],
+  [0.2656, 0.6846], [0.2548, 0.6756], [0.2441, 0.6666], [0.2333, 0.6576],
+  [0.2225, 0.6485], [0.2118, 0.6395], [0.201, 0.6303], [0.1903, 0.6211],
+  [0.1796, 0.612], [0.1689, 0.6028], [0.1583, 0.5932], [0.1477, 0.5834],
+  [0.1374, 0.5731], [0.127, 0.5627], [0.1169, 0.5519], [0.1067, 0.541],
+  [0.0968, 0.5297], [0.0868, 0.5183], [0.0773, 0.506], [0.0692, 0.4909],
+  [0.0642, 0.4726], [0.0623, 0.4526], [0.0638, 0.4325], [0.0683, 0.4138],
+  [0.0756, 0.3978], [0.0853, 0.3857], [0.0962, 0.3774], [0.1069, 0.3682],
+  [0.1173, 0.358], [0.1274, 0.3468], [0.1372, 0.3351], [0.1467, 0.3227],
+  [0.1558, 0.3094], [0.1643, 0.2952], [0.1729, 0.2809], [0.1815, 0.2666],
+  [0.1902, 0.2528], [0.1992, 0.2392], [0.2082, 0.2258], [0.2172, 0.2123],
+  [0.2241, 0.1965], [0.2191, 0.1789], [0.2104, 0.165], [0.2058, 0.1469],
+  [0.21, 0.1285], [0.2185, 0.1141], [0.2276, 0.1009], [0.2378, 0.0901],
+  [0.2486, 0.0814], [0.2601, 0.0753], [0.2719, 0.0718], [0.2833, 0.0771],
 ];
 
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
