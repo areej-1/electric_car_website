@@ -1,22 +1,3 @@
-/* Loaded dynamically, and the failure is swallowed on purpose.
-
-   kart.js imports Three at module load. As a static `import` at the top of this
-   file, anything that stops kart.js resolving — a 404 on the vendored Three, a
-   parse error, a blocked request — fails this module too, before a single line
-   of it runs. That is not a hypothetical: vendor/ was gitignored, so Three was
-   404 on the deployed site and the live track map was a satellite photograph
-   with no markers, no pan and no zoom, while working perfectly on localhost off
-   an untracked file.
-
-   Awaiting it here costs one tick and buys the guarantee that the map itself
-   cannot be taken down by the decoration on top of it. */
-let mountMarker = null;
-try {
-  ({ mountMarker } = await import('./kart.js'));
-} catch (error) {
-  mountMarker = null;
-}
-
 /* ---------- Arabic ----------
    This map runs in its own document inside an iframe on trackmap.html, so the
    site's translator never reaches it — a TreeWalker over the parent stops at the
@@ -179,15 +160,12 @@ const world = document.getElementById('world');
 const markersEl = document.getElementById('markers');
 const panel = document.getElementById('panel');
 const lineSvg = document.getElementById('line');
-const kartCanvas = document.getElementById('kart');
 
 // ---- view state -------------------------------------------------------
 const view = { s: 1, tx: 0, ty: 0 };
 const target = { s: 1, tx: 0, ty: 0 };
 let minScale = 1;
 let active = -1;
-let lapT = 0;
-let lapTarget = 0;
 
 // Cover-fit, not contain: the plate fills the viewport and the surplus axis is
 // pannable. A letterboxed portrait plate in a landscape window reads as a picture,
@@ -259,7 +237,6 @@ lineSvg.setAttribute('viewBox', `0 0 ${PW} ${PH}`);
 function select(i) {
   active = i;
   const t = TURNS[i];
-  lapTarget = i / (TURNS.length - 1);
   flyTo(t.x, t.y, minScale * 2.2, true);
 
   panel.innerHTML = `
@@ -341,41 +318,12 @@ new ResizeObserver(() => {
 }).observe(stage);
 
 // ---- kart marker ------------------------------------------------------
-const MK = 78;
-/* The kart marker is the one part of this map that needs WebGL, and WebGL is not
-   everywhere: an old phone, a blocked or blacklisted GPU, software rendering
-   turned off, a headless browser. Three throws "Error creating WebGL context"
-   when it cannot get one, and unguarded that exception escapes at module top
-   level and takes the entire rest of the file with it — fit() never runs, the
-   plate never scales, pan and zoom are never wired, and the reader gets a dead
-   page instead of a map. The lap marker is decoration; the circuit is the point.
 
-   So a failure here costs the moving kart and nothing else. The stub keeps the
-   three methods the frame loop calls, so the loop does not need to know. */
-const marker = (() => {
-  try {
-    if (!mountMarker) throw new Error('kart.js unavailable');
-    return mountMarker(kartCanvas, MK);
-  } catch (error) {
-    kartCanvas.hidden = true;
-    return { setHeading() {}, setBodywork() {}, render() {} };
-  }
-})();
-
-function pointAt(t) {
-  const n = LINE.length;
-  const f = ((t % 1) + 1) % 1 * n;
-  const i = Math.floor(f), frac = f - i;
-  const a = LINE[i % n], b = LINE[(i + 1) % n];
-  return [a[0] + (b[0] - a[0]) * frac, a[1] + (b[1] - a[1]) * frac,
-    (b[0] - a[0]) * PW, (b[1] - a[1]) * PH];
-}
 
 // ---- one RAF loop, direct DOM writes, dirty-checked --------------------
 let prev = performance.now();
 let lastTransform = '';
 let lastScale = -1;
-let lastKart = '';
 
 function frame(now) {
   const dt = Math.min(0.05, (now - prev) / 1000);
@@ -385,7 +333,6 @@ function frame(now) {
   view.s += (target.s - view.s) * k;
   view.tx += (target.tx - view.tx) * k;
   view.ty += (target.ty - view.ty) * k;
-  lapT += (lapTarget - lapT) * (REDUCED ? 1 : 1 - Math.exp(-dt * 3.2));
 
   const tf = `translate(${view.tx.toFixed(2)}px,${view.ty.toFixed(2)}px) scale(${view.s.toFixed(5)})`;
   if (tf !== lastTransform) { world.style.transform = tf; lastTransform = tf; }
@@ -393,17 +340,9 @@ function frame(now) {
   if (Math.abs(view.s - lastScale) > 0.0002) {
     const inv = (1 / view.s).toFixed(4);
     markersEl.style.setProperty('--inv', inv);
-    kartCanvas.style.setProperty('--inv', inv);
     lastScale = view.s;
   }
 
-  const [px, py, dx, dy] = pointAt(lapT * 0.999);
-  const kt = `translate(${(px * PW).toFixed(1)}px,${(py * PH).toFixed(1)}px)`;
-  if (kt !== lastKart) { kartCanvas.style.translate = `${(px * PW - MK / 2).toFixed(1)}px ${(py * PH - MK / 2).toFixed(1)}px`; lastKart = kt; }
-  marker.setHeading(Math.atan2(-dx, -dy));
-  // the car gains its white bodywork as the build stages progress
-  marker.setBodywork(lapT);
-  marker.render();
 
   requestAnimationFrame(frame);
 }
