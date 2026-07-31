@@ -47,9 +47,13 @@
         </div>
       </div>
       <div class="map-frame">
-        <!-- Points straight at the prototype's index.html, which is self-contained
-             and loads its own assets relative to prototype/trackmap/. -->
-        <iframe src="prototype/trackmap/index.html" title="Interactive circuit map of the SIS Al Jada Cobras build stages" loading="eager"></iframe>
+        <!-- The directory, WITH the trailing slash — not index.html. Any server
+             that strips .html answers prototype/trackmap/index.html with a 301 to
+             /prototype/trackmap, and that moves the document base up to
+             /prototype/, so the page's own relative assets/track-wide.webp
+             resolves to /prototype/assets/… and 404s. The plate rendered as alt
+             text. car.html carries the same warning for the same reason. -->
+        <iframe src="prototype/trackmap/" title="Interactive circuit map of the SIS Al Jada Cobras build stages" loading="eager"></iframe>
       </div>
       <div class="map-facts" aria-label="Map facts">
         <div class="map-fact"><strong>5 stages</strong>Design, build, wiring, testing, adjustments</div>
