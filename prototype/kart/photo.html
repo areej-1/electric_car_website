@@ -78,6 +78,13 @@
   .controls{
     position:absolute;z-index:6;left:18px;right:18px;bottom:16px;display:flex;
     align-items:center;justify-content:space-between;gap:12px;pointer-events:none;
+    /* Wrap rather than overflow. Seven controls need ~350px of intrinsic width; at
+       320px the box is 278px, so the zoom buttons were pushed clean outside a
+       container that cannot scroll horizontally — unreachable, not just cramped. */
+    flex-wrap:wrap;row-gap:8px;
+  }
+  @media (max-width:400px){
+    .controls{justify-content:center}
   }
   .control-group{display:flex;align-items:center;gap:7px;pointer-events:auto}
   .control{
