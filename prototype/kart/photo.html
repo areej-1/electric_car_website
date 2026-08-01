@@ -98,23 +98,29 @@
   .control[aria-pressed="true"]{background:var(--hot);border-color:var(--hot)}
   .control.is-label{font-size:11px;letter-spacing:.04em}
 
-  .hotspots{
-    position:absolute;z-index:6;right:18px;top:50%;transform:translateY(-50%);
-    display:grid;gap:8px;pointer-events:auto;
-  }
+  .hotspots{position:absolute;inset:0;z-index:6;pointer-events:none}
   .hotspot{
-    display:flex;align-items:center;justify-content:flex-end;gap:9px;border:0;background:transparent;
-    color:var(--steel);font-size:11px;letter-spacing:.04em;cursor:pointer;padding:4px;
+    position:absolute;display:flex;align-items:center;gap:9px;border:0;background:transparent;
+    color:var(--cream);font-size:11px;letter-spacing:.04em;cursor:pointer;padding:0;
+    /* 44px of touch target around a 26px dot, without moving the dot off the part
+       it points at: the padding is the hit area and the margin cancels it. */
+    padding:9px;margin:-9px;
+    transform:translate(-50%,-50%);pointer-events:auto;
+    opacity:0;visibility:hidden;transition:opacity .18s ease,visibility .18s ease;
   }
-  .hotspot span:first-child{
-    opacity:0;transform:translateX(6px);transition:opacity .16s,transform .16s;
-    background:rgba(10,10,10,.76);padding:5px 8px;border-left:2px solid var(--gold);
+  .hotspot.is-visible{opacity:1;visibility:visible}
+  .hotspot .lbl{
+    opacity:0;transform:translateX(-4px);transition:opacity .16s,transform .16s;white-space:nowrap;
+    background:rgba(10,10,10,.82);padding:5px 8px;border-left:2px solid var(--gold);
   }
-  .hotspot:hover span:first-child,.hotspot:focus-visible span:first-child{opacity:1;transform:none}
+  .hotspot:hover .lbl,.hotspot:focus-visible .lbl{opacity:1;transform:none}
   .hotspot-dot{
-    width:26px;height:26px;border-radius:50%;border:1px solid var(--gold);
-    display:grid;place-items:center;color:var(--cream);background:rgba(10,10,10,.76);
+    width:26px;height:26px;flex:0 0 26px;border-radius:50%;border:1px solid var(--gold);
+    display:grid;place-items:center;color:var(--cream);background:rgba(10,10,10,.82);
+    box-shadow:0 0 0 5px rgba(201,162,39,.16);
   }
+  .hotspot:hover .hotspot-dot,.hotspot:focus-visible .hotspot-dot{background:var(--hot);border-color:var(--hot)}
+  .hotspot:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
 
   .detail{
     position:absolute;z-index:7;right:62px;top:50%;width:min(300px,calc(100% - 90px));
@@ -136,7 +142,7 @@
   @media (max-width:720px){
     .topbar{padding:15px}.brand p{display:none}.angle{display:none}
     .controls{left:10px;right:10px;bottom:10px}.control{height:38px;min-width:38px;padding:0 10px}
-    .hotspots{right:10px}.hotspot span:first-child{display:none}
+    .hotspot .lbl{display:none}
     .detail{right:48px}
     /* The disclosure states this is a visualisation rather than a photograph, so it
        must not be hidden on the viewport where most people will see it. Stacked above
@@ -180,17 +186,11 @@
     Drag in any direction
   </div>
 
-  <nav class="hotspots" aria-label="Car details">
-    <button class="hotspot" type="button" data-frame="4" data-detail="cockpit">
-      <span>Cockpit</span><span class="hotspot-dot">1</span>
-    </button>
-    <button class="hotspot" type="button" data-frame="28" data-detail="axle">
-      <span>Front axle</span><span class="hotspot-dot">2</span>
-    </button>
-    <button class="hotspot" type="button" data-frame="12" data-detail="shell">
-      <span>Rear shell</span><span class="hotspot-dot">3</span>
-    </button>
-  </nav>
+  <!-- Dots sit on the car, not in a list beside it. Each one is pinned to a point
+       on a specific frame, so it is only shown when the viewer is actually looking
+       at the angle where that part is visible — a dot over a body panel that hides
+       the part it names would be worse than no dot. Built by the script below. -->
+  <div class="hotspots" id="hotspots" aria-label="Car details"></div>
 
   <aside class="detail" id="detail" aria-live="polite">
     <button class="detail-close" type="button" aria-label="Close detail">×</button>
@@ -359,11 +359,24 @@
   const details = LANG === 'ar' ? {
     cockpit:['مقصورة مكشوفة','مقعد مجوّف أسود، وحزام أمان رباعي أحمر زاهٍ، وهيكل حماية أنبوبي، وتوجيه بمقود.'],
     axle:['محور أمامي واحد','عجلتان أماميتان من الكروم بخمس أذرع، مركّبتان جنبًا إلى جنب على محور واحد مشترك.'],
-    shell:['مؤخرة مغلقة','العجلة الخلفية الوحيدة في المنتصف تقع داخل الذيل المركّب المتصل ولا تظهر من الخارج.']
+    shell:['مؤخرة مغلقة','العجلة الخلفية الوحيدة في المنتصف تقع داخل الذيل المركّب المتصل ولا تظهر من الخارج.'],
+    brakes:['المكابح','يُفحص شدّ التوجيه والمكابح والعجلات والمقعد والمثبّتات قبل كل تشغيل.'],
+    chassis:['الهيكل','يُجمَّع الهيكل والتوجيه والمقعد والعجلات وأدوات التحكم في سيارة واحدة عاملة.'],
+    killSwitch:['مفتاح الإيقاف','جزء من نظام 48 فولت، إلى جانب البطاريات ووحدة التحكم والمحرك ومدخلات السائق. جرى فحصه وإعادة عنونته في سجل الورشة بتاريخ 1 يوليو 2026.'],
+    motor:['المحرك','يعمل من نظام 48 فولت. العجلة الخلفية الوحيدة التي يديرها تقع في منتصف الذيل.'],
+    controller:['وحدة التحكم','تقع بين البطارية والمحرك ضمن نظام 48 فولت.']
   } : {
     cockpit:['Open cockpit','Black bucket seat, bright red four-point harness, tubular roll structure, and handlebar steering.'],
     axle:['Single front axle','Two chrome five-spoke front wheels mounted side-by-side across one common axle.'],
-    shell:['Enclosed rear shell','The single centered rear wheel sits inside the continuous composite tail and is hidden externally.']
+    shell:['Enclosed rear shell','The single centered rear wheel sits inside the continuous composite tail and is hidden externally.'],
+    /* Every line below is taken from something the site already states — the
+       workshop log, the build stages, or the 101 page. Nothing here is a figure
+       invented to fill a panel. */
+    brakes:['Brakes','Steering, brakes, wheels, seat and fasteners are torque-checked before a run.'],
+    chassis:['Chassis','The frame, steering, seat, wheels and controls are assembled into one working machine.'],
+    killSwitch:['Kill switch','Part of the 48V system, alongside the batteries, controller, motor and driver inputs. Checked and re-labelled in the 1 July 2026 workshop log.'],
+    motor:['Motor','Driven from the 48V system. The single rear wheel it turns sits centred inside the tail.'],
+    controller:['Controller','Sits between the battery and the motor on the 48V system.']
   };
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let zoom = 1;
@@ -372,8 +385,12 @@
   let startY = 0;
   let startAzimuth = 0;
   let startTilt = 0;
-  let azimuth = 0;
-  let targetAzimuth = 0;
+  // Opens on frame 5 (56.25°, left front) rather than dead front. Two reasons:
+  // it is the three-quarter view that reads as a car rather than a silhouette,
+  // and it is an anchor — so a first-time reader arrives with a hotspot already
+  // on screen instead of having to rotate before discovering the feature exists.
+  let azimuth = 5;
+  let targetAzimuth = 5;
   let tilt = 0;
   let targetTilt = 0;
   let autoRotate = false;
@@ -430,11 +447,13 @@
         : `Cobras car at ${angleText}, ${elevation}. Drag sideways to rotate.`);
       renderedIndex = nearest;
       renderedElevation = elevation;
+      revealHotspots(nearest, elevation);
     }
   };
   const applyZoom = (next) => {
     zoom = Math.max(1, Math.min(1.9, next));
     viewer.style.setProperty('--zoom', zoom.toFixed(2));
+    placeHotspots();   // the dots scale about the same origin as the frames
   };
   const stopAuto = () => {
     autoRotate = false;
@@ -551,13 +570,93 @@
   document.getElementById('zoomOut').addEventListener('click', () => applyZoom(zoom - .12));
   spinBtn.addEventListener('click', () => autoRotate ? stopAuto() : startAuto());
 
-  document.querySelectorAll('.hotspot').forEach((button) => {
+  /* ---------- hotspots ----------
+     Each one is a point on a specific frame, given as a fraction of the frame
+     image rather than of the viewer, because the frame is letterboxed inside the
+     viewer by object-fit: contain and moves under zoom. Positions were read off
+     the frames themselves.
+
+     A dot only appears while the viewer is within a frame or so of its angle. A
+     dot pinned to the near front wheel is meaningless — and misleading — once the
+     car has rotated so that wheel is on the far side or behind bodywork. */
+  const HOTSPOTS = [
+    { id:'cockpit',    n:1, frame:4,  x:0.680, y:0.330 },
+    { id:'axle',       n:2, frame:28, x:0.556, y:0.602 },
+    { id:'shell',      n:3, frame:12, x:0.725, y:0.567 },
+    { id:'brakes',     n:4, frame:5,  x:0.478, y:0.622 },
+    { id:'chassis',    n:5, frame:7,  x:0.440, y:0.445 },
+    { id:'killSwitch', n:6, frame:10, x:0.620, y:0.410 },
+    { id:'motor',      n:7, frame:16, x:0.487, y:0.382 },
+    { id:'controller', n:8, frame:21, x:0.400, y:0.360 },
+  ];
+  const hotspotLayer = document.getElementById('hotspots');
+  const FRAME_W = 1536, FRAME_H = 1024;   // intrinsic size of every turntable frame
+  // ±1 frame, and no wider. Each dot's x/y was read off one specific frame, so it
+  // is only in the right place at that angle: opened up to ±4 the chassis dot
+  // drifted off the frame rails and onto the nose decal, which is worse than not
+  // showing it. The cost is that twelve of the thirty-two angles name no part —
+  // honest, since those views have no anchored part facing the camera — and it is
+  // why the viewer now opens on an anchor instead of dead front.
+  const SPOT_TOLERANCE = 1;
+
+  const spots = HOTSPOTS.map((h) => {
+    const button = document.createElement('button');
+    button.className = 'hotspot';
+    button.type = 'button';
+    const [label] = details[h.id];
+    button.innerHTML = `<span class="hotspot-dot">${h.n}</span><span class="lbl"></span>`;
+    button.querySelector('.lbl').textContent = label;
+    button.setAttribute('aria-label', label);
     button.addEventListener('click', () => {
-      stopAuto();targetAzimuth = Number(button.dataset.frame);targetTilt = .26;
-      const [title, body] = details[button.dataset.detail];
-      detailTitle.textContent = title;detailBody.textContent = body;detail.classList.add('is-open');
+      stopAuto();
+      targetAzimuth = h.frame;
+      targetTilt = .26;
+      const [title, body] = details[h.id];
+      detailTitle.textContent = title;
+      detailBody.textContent = body;
+      detail.classList.add('is-open');
     });
+    hotspotLayer.appendChild(button);
+    return { ...h, button };
   });
+
+  // Where the frame image actually paints, and where a point on it lands after
+  // the stage's zoom. object-fit: contain letterboxes on one axis; the zoom is a
+  // scale about 50% 52%, the same origin the frames use.
+  function placeHotspots() {
+    const box = stage.getBoundingClientRect();
+    if (!box.width || !box.height) return;
+    const fit = Math.min(box.width / FRAME_W, box.height / FRAME_H);
+    const paintedW = FRAME_W * fit;
+    const paintedH = FRAME_H * fit;
+    const originX = box.width / 2;
+    const originY = box.height * 0.52;
+    const left = (box.width - paintedW) / 2;
+    const top = (box.height - paintedH) / 2;
+    for (const spot of spots) {
+      const x = left + spot.x * paintedW;
+      const y = top + spot.y * paintedH;
+      spot.button.style.left = `${(originX + (x - originX) * zoom).toFixed(1)}px`;
+      spot.button.style.top = `${(originY + (y - originY) * zoom).toFixed(1)}px`;
+    }
+  }
+
+  // Visible only near its own angle, and only at eye level — the positions were
+  // read off the eye-level ring, and the elevated and overhead frames show the
+  // car from somewhere those points do not correspond to.
+  function revealHotspots(index, elevation) {
+    const count = lowFrames.length;
+    for (const spot of spots) {
+      const delta = Math.min((index - spot.frame + count) % count, (spot.frame - index + count) % count);
+      const near = delta <= SPOT_TOLERANCE && elevation === 'Eye level';
+      spot.button.classList.toggle('is-visible', near);
+      spot.button.tabIndex = near ? 0 : -1;
+      spot.button.setAttribute('aria-hidden', near ? 'false' : 'true');
+    }
+  }
+  addEventListener('resize', placeHotspots, { passive: true });
+  placeHotspots();
+  revealHotspots(renderedIndex, renderedElevation);
   document.querySelector('.detail-close').addEventListener('click', () => detail.classList.remove('is-open'));
   addEventListener('keydown', (event) => {if(event.key === 'Escape') detail.classList.remove('is-open')});
 
