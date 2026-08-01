@@ -56,6 +56,23 @@
   }
   .brand h1{font-family:var(--display);font-size:clamp(1rem,2.5vw,1.35rem);letter-spacing:.08em;margin:0}
   .brand p{font-size:12px;color:var(--steel);margin:5px 0 0}
+  .parts{
+    display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0;max-width:min(560px,60vw);
+    pointer-events:auto;   /* the topbar itself is click-through */
+  }
+  .parts button{
+    border:1px solid rgba(154,163,168,.28);background:rgba(20,20,20,.82);color:var(--steel);
+    font-size:11px;letter-spacing:.03em;padding:6px 10px;border-radius:2px;cursor:pointer;
+    transition:color .16s,border-color .16s,background .16s;
+  }
+  .parts button:hover{color:var(--cream);border-color:var(--gold);background:var(--raised)}
+  .parts button[aria-current="true"]{color:var(--cream);border-color:var(--hot);background:rgba(230,57,43,.18)}
+  .parts button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  /* The site's own 44px standard, which these missed at 35px. Keyed on the input
+     device rather than the width — this viewer is embedded on tablets too. */
+  @media (pointer: coarse){
+    .parts button{min-block-size:44px;padding-inline:12px}
+  }
   .angle{
     font-family:var(--display);font-size:11px;letter-spacing:.13em;color:var(--gold);
     text-align:right;text-transform:uppercase;
@@ -143,6 +160,10 @@
     .topbar{padding:15px}.brand p{display:none}.angle{display:none}
     .controls{left:10px;right:10px;bottom:10px}.control{height:38px;min-width:38px;padding:0 10px}
     .hotspot .lbl{display:none}
+    /* The jump list stays — it is the only way to reach a part whose dot is
+       not on screen — but it gets the full width once the hint is hidden. */
+    .parts{max-width:none;margin-top:8px}
+    .parts button{padding:8px 10px}
     .detail{right:48px}
     /* The disclosure states this is a visualisation rather than a photograph, so it
        must not be hidden on the viewport where most people will see it. Stacked above
@@ -177,6 +198,12 @@
     <div class="brand">
       <h1>COBRA 360</h1>
       <p>Drag sideways to rotate · drag upward for top view · ctrl or ⌘ + scroll to zoom</p>
+      <!-- Jump to a part from here regardless of where the car is pointing. The
+           dots only exist within a frame of their own angle, so on eleven of the
+           thirty-two views there is nothing on the car to click; this list is
+           always present and is the same eight destinations. Built by the script
+           from the same data, so the two can never disagree. -->
+      <nav class="parts" id="parts" aria-label="Jump to a part"></nav>
     </div>
     <div class="angle">Camera angle<strong id="angleLabel">Front</strong></div>
   </header>
@@ -599,25 +626,41 @@
   // why the viewer now opens on an anchor instead of dead front.
   const SPOT_TOLERANCE = 1;
 
+  // One action, two ways in: the dot on the car and the named button under the
+  // title. Both call this, so they cannot drift apart.
+  function focusPart(h) {
+    stopAuto();
+    targetAzimuth = h.frame;
+    targetTilt = .26;
+    const [title, body] = details[h.id];
+    detailTitle.textContent = title;
+    detailBody.textContent = body;
+    detail.classList.add('is-open');
+  }
+
+  const partsNav = document.getElementById('parts');
+
   const spots = HOTSPOTS.map((h) => {
+    const [label] = details[h.id];
+
     const button = document.createElement('button');
     button.className = 'hotspot';
     button.type = 'button';
-    const [label] = details[h.id];
     button.innerHTML = `<span class="hotspot-dot">${h.n}</span><span class="lbl"></span>`;
     button.querySelector('.lbl').textContent = label;
     button.setAttribute('aria-label', label);
-    button.addEventListener('click', () => {
-      stopAuto();
-      targetAzimuth = h.frame;
-      targetTilt = .26;
-      const [title, body] = details[h.id];
-      detailTitle.textContent = title;
-      detailBody.textContent = body;
-      detail.classList.add('is-open');
-    });
+    button.addEventListener('click', () => focusPart(h));
     hotspotLayer.appendChild(button);
-    return { ...h, button };
+
+    // The same destination, always reachable. The dot only exists near its own
+    // angle; this does not.
+    const jump = document.createElement('button');
+    jump.type = 'button';
+    jump.textContent = label;
+    jump.addEventListener('click', () => focusPart(h));
+    partsNav.appendChild(jump);
+
+    return { ...h, button, jump };
   });
 
   // Where the frame image actually paints, and where a point on it lands after
@@ -652,6 +695,7 @@
       spot.button.classList.toggle('is-visible', near);
       spot.button.tabIndex = near ? 0 : -1;
       spot.button.setAttribute('aria-hidden', near ? 'false' : 'true');
+      spot.jump.setAttribute('aria-current', near ? 'true' : 'false');
     }
   }
   addEventListener('resize', placeHotspots, { passive: true });
