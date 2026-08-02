@@ -621,6 +621,19 @@
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => { /* offline path still ok */ });
   }
+
+  /* The pixel crew, fetched only when it can do something.
+     The members page needs it for the buttons; any other page needs it only if
+     somebody left a chibi out and it should walk back on. On every other page
+     this costs one localStorage read and no network at all. */
+  const wantsCrew = document.querySelector('.members-grid')
+    || (() => { try { return JSON.parse(localStorage.getItem('cobras_crew_out') || '[]').length > 0; }
+                catch (error) { return false; } })();
+  if (wantsCrew) {
+    import('./assets/crew/crew-roam.js')
+      .then((crew) => { crew.restore(); crew.mountButtons(); })
+      .catch(() => { /* the site works perfectly well without anyone walking about */ });
+  }
   } catch (err) {
     console.error('Cobras site.js failed', err);
   }
