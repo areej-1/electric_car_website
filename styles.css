@@ -1701,3 +1701,55 @@ main.cobras-home .world-car {
    file — so it wins both on specificity and on order unless matched and beaten. */
 main.cobras-home .home-world[data-astro-cid-zkhec6xw].is-enhanced .world-pin[data-astro-cid-zkhec6xw]
   { block-size: calc(100vh - var(--nav-h, 76px)); }
+
+/* ---------------------------------------------------------------- pixel crew
+   The chibis walk along the bottom of the viewport. Fixed rather than absolute,
+   so they stay with the reader instead of scrolling off the top of a long page,
+   and behind the nav and the chat button so they never cover a control. */
+.crew-layer {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  block-size: 96px;
+  z-index: 40;
+  pointer-events: none;
+}
+.crew-chibi {
+  position: absolute;
+  bottom: 0;
+  inset-inline-start: 0;
+  inline-size: 72px;
+  block-size: 96px;
+  padding: 0;
+  border: 0;
+  /* Contained rather than sized: every sprite shares a canvas height with its
+     feet on the bottom row, so this scales them all by the same amount and
+     stands them on one floor whatever their width. */
+  background: transparent center bottom / contain no-repeat;
+  image-rendering: pixelated;
+  cursor: pointer;
+  pointer-events: auto;
+  /* No transition. The frame loop writes transform sixty times a second and a
+     transition on top of that fights it. */
+  transition: none;
+}
+.crew-chibi:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+.crew-send {
+  margin-top: 12px;
+  padding: 9px 14px;
+  min-block-size: 44px;
+  border: 1px solid var(--border-gold);
+  background: transparent;
+  color: var(--muted);
+  font: 600 .72rem/1 var(--body);
+  letter-spacing: .04em;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: color .16s, border-color .16s, background .16s;
+}
+.crew-send:hover { color: var(--cream); border-color: var(--gold); background: rgba(201,162,39,.08); }
+.crew-send[aria-pressed="true"] { color: var(--cream); border-color: var(--hot-red); background: rgba(230,57,43,.14); }
+.crew-send:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+@media print { .crew-layer { display: none; } }
