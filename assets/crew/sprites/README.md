@@ -8,15 +8,13 @@ hyphens:
     shiqi-lin.png
     ...
 
-Then point the roster at it — in `../crew-roster.js`, add `sprite` to that member
-and flip `fromPhoto`:
+Then add a line to `../crew-roster.js`:
 
-    { name: 'Basar Ural', role: 'Driver', character: 'chef',
-      sprite: 'assets/crew/sprites/basar-ural.png', fromPhoto: true },
+    { name: 'Basar Ural', sprite: 'assets/crew/sprites/basar-ural.png' },
 
-That is the whole integration. Anyone without a `sprite` keeps the generated
-version, at the same size and on the same walk, so a crowd still reads as one
-crew rather than two.
+That is the whole integration. Being on that list is what gives someone the
+"send for a walk" button on their card, so a member without artwork simply has
+no button.
 
 ## What the file should be
 
@@ -37,12 +35,13 @@ crew rather than two.
 
 ## Still needed
 
-Four members have no artwork and are generated for now:
+Four members have no artwork and so no button:
 
 - Ayah Yousif
 - Joud Hassan
 - Taim Saadi
 - Yas Shahriari
 
-`fromPhoto: false` in the roster marks them, so this list can be regenerated
-rather than trusted.
+There was a generator here that drew a stand-in for them from a text grid. It
+was recognisably a stand-in next to fifteen drawn characters, so it is gone
+rather than sitting in the repo waiting to be re-enabled.

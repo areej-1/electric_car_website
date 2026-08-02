@@ -1,38 +1,30 @@
-/* The nineteen, in the order the members page lists them.
+/* Everyone with a drawn chibi, in the order the members page lists them.
  *
- * `character` is the rubber duck each person already had on that page. The ducks
- * stay — they are the portraits and they are personal — and the character is
- * reused as the chibi's prop so the two agree about who someone is.
+ * Being on this list is what gives a member the "send for a walk" button. The
+ * roster used to cover the whole team and fall back to a generated sprite for
+ * anyone without artwork; the generated ones read as placeholders next to the
+ * drawn ones, so they are gone. A member who is not here simply has no button,
+ * which is a smaller absence than a stand-in nobody recognises.
  *
- * `sprite` is a drawn sprite — a real one, by a person, which beats anything
- * generated. When it is set the code loads that image and leaves the generator
- * alone. When it is absent the member is drawn from the text grid instead, to the
- * same size and on the same walk, so a crowd looks like one crew rather than two.
- *
- * `look` tunes the generated version, as { hair: [base, shadow], skin: [...] };
- * it is ignored once `sprite` is set. `fromPhoto` records which members still
- * need art, so the remainder is a visible list rather than something to remember.
+ * To add someone: drop their PNG in `sprites/` — see the README there for what
+ * the file has to be — and add a line.
  */
 export const CREW = [
-  { name: 'Areej Dridi',      role: 'Mechanic',   character: 'coffee',      sprite: 'assets/crew/sprites/areej-dridi.png', fromPhoto: true },
-  { name: 'Abdulla Sumaity',  role: 'Safety',     character: 'dolphin',     sprite: 'assets/crew/sprites/abdulla-sumaity.png', fromPhoto: true },
-  { name: 'Ali Husseinpoor',  role: 'Mechanic',   character: 'hedgehog',    sprite: 'assets/crew/sprites/ali-husseinpoor.png', fromPhoto: true },
-  { name: 'Ayah Yousif',      role: 'Media',      character: 'selfie',      fromPhoto: false },
-  { name: 'Basar Ural',       role: 'Driver',     character: 'chef',        sprite: 'assets/crew/sprites/basar-ural.png', fromPhoto: true },
-  { name: 'Bushra Al Sultan', role: 'Mechanic',   character: 'leopard',     sprite: 'assets/crew/sprites/bushra-al-sultan.png', fromPhoto: true },
-  { name: 'Dua Hasan',        role: 'Mechanic',   character: 'blueglitter', sprite: 'assets/crew/sprites/dua-hasan.png', fromPhoto: true },
-  { name: 'Jiayi Lin',        role: 'Media',      character: 'influencer',  sprite: 'assets/crew/sprites/jiayi-lin.png', fromPhoto: true },
-  { name: 'Joud Hassan',      role: 'Innovation', character: 'batman',      fromPhoto: false },
-  { name: 'Mansour Banna',    role: 'Driver',     character: 'chef',        sprite: 'assets/crew/sprites/mansour-banna.png', fromPhoto: true },
-  { name: 'Mirza Akova',      role: 'Mechanic',   character: 'chef',        sprite: 'assets/crew/sprites/mirza-akova.png', fromPhoto: true },
-  { name: 'Salma Rashdan',    role: 'Mechanic',   character: 'minion',      sprite: 'assets/crew/sprites/salma-rashdan.png', fromPhoto: true },
-  { name: 'Selma Labchaki',   role: 'Mechanic',   character: 'clownfish',   sprite: 'assets/crew/sprites/selma-labchaki.png', fromPhoto: true },
-  { name: 'Shiqi Lin',        role: 'Media',      character: 'holland',     sprite: 'assets/crew/sprites/shiqi-lin.png', fromPhoto: true },
-  { name: 'Taim Adi',         role: 'Driver',     character: 'muslce',      sprite: 'assets/crew/sprites/taim-adi.png', fromPhoto: true },
-  { name: 'Taim Saadi',       role: 'Safety',     character: 'hat',         fromPhoto: false },
-  { name: 'Taim Yasin',       role: 'Mechanic',   character: 'golf',        sprite: 'assets/crew/sprites/taim-yasin.png', fromPhoto: true },
-  { name: 'Yas Shahriari',    role: 'Innovation', character: 'singer',      fromPhoto: false },
-  { name: 'Zainab Baber',     role: 'Media',      character: 'vacation',    sprite: 'assets/crew/sprites/zainab-baber.png', fromPhoto: true },
+  { name: 'Areej Dridi',      sprite: 'assets/crew/sprites/areej-dridi.png' },
+  { name: 'Abdulla Sumaity',  sprite: 'assets/crew/sprites/abdulla-sumaity.png' },
+  { name: 'Ali Husseinpoor',  sprite: 'assets/crew/sprites/ali-husseinpoor.png' },
+  { name: 'Basar Ural',       sprite: 'assets/crew/sprites/basar-ural.png' },
+  { name: 'Bushra Al Sultan', sprite: 'assets/crew/sprites/bushra-al-sultan.png' },
+  { name: 'Dua Hasan',        sprite: 'assets/crew/sprites/dua-hasan.png' },
+  { name: 'Jiayi Lin',        sprite: 'assets/crew/sprites/jiayi-lin.png' },
+  { name: 'Mansour Banna',    sprite: 'assets/crew/sprites/mansour-banna.png' },
+  { name: 'Mirza Akova',      sprite: 'assets/crew/sprites/mirza-akova.png' },
+  { name: 'Salma Rashdan',    sprite: 'assets/crew/sprites/salma-rashdan.png' },
+  { name: 'Selma Labchaki',   sprite: 'assets/crew/sprites/selma-labchaki.png' },
+  { name: 'Shiqi Lin',        sprite: 'assets/crew/sprites/shiqi-lin.png' },
+  { name: 'Taim Adi',         sprite: 'assets/crew/sprites/taim-adi.png' },
+  { name: 'Taim Yasin',       sprite: 'assets/crew/sprites/taim-yasin.png' },
+  { name: 'Zainab Baber',     sprite: 'assets/crew/sprites/zainab-baber.png' },
 ];
 
 export const byName = (name) => CREW.find((m) => m.name === name);

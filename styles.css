@@ -1718,11 +1718,14 @@ main.cobras-home .home-world[data-astro-cid-zkhec6xw].is-enhanced .world-pin[dat
   position: absolute;
   bottom: 0;
   inset-inline-start: 0;
-  inline-size: 60px;
+  inline-size: 72px;
   block-size: 96px;
   padding: 0;
   border: 0;
-  background: transparent 0 0 / 120px 96px no-repeat;
+  /* Contained rather than sized: every sprite shares a canvas height with its
+     feet on the bottom row, so this scales them all by the same amount and
+     stands them on one floor whatever their width. */
+  background: transparent center bottom / contain no-repeat;
   image-rendering: pixelated;
   cursor: pointer;
   pointer-events: auto;
@@ -1730,10 +1733,6 @@ main.cobras-home .home-world[data-astro-cid-zkhec6xw].is-enhanced .world-pin[dat
      transition on top of that fights it. */
   transition: none;
 }
-/* A generated sprite is a two-frame sheet twice as wide as one frame, positioned
-   by background-position. A drawn one is a single pose at its own proportions, so
-   it is contained in the box rather than stepped through. */
-.crew-chibi.is-drawn { inline-size: 72px; background-size: contain; background-position: center bottom; }
 .crew-chibi:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 .crew-send {

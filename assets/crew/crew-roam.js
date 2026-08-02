@@ -21,38 +21,18 @@
  */
 
 import { CREW, byName } from './crew-roster.js';
-import { drawMember, SPRITE_W, SPRITE_H, CELL } from './crew-sprites.js';
 
 const STORE = 'cobras_crew_out';
-const FRAME_W = SPRITE_W * CELL;
-const FRAME_H = SPRITE_H * CELL;
+const CHIBI_W = 72;        // the box each sprite is drawn into; see .crew-chibi
 const SPEED = 34;          // px per second — a stroll, not a commute
 const STEP_MS = 190;       // walk-frame swap
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)');
 
-const sheets = new Map();  // name -> data URL, drawn once and kept
 const walking = new Map(); // name -> state
 let layer = null;
 let raf = 0;
 let last = 0;
 let viewportW = window.innerWidth;
-
-/* Two kinds of sprite, one walk.
- *
- * A member with `sprite` gets the drawn artwork — a single standing pose, which
- * is what a person naturally draws. A member without one is generated from the
- * text grid, which comes as two frames with the legs stepping.
- *
- * So the walk differs: a two-frame sprite swaps frames, a one-pose sprite bobs a
- * pixel. Both read as walking at this size and neither needs the other's art,
- * which is what lets four members without a drawing walk alongside fifteen with
- * one and not look like a different feature. */
-function sheetFor(member) {
-  if (!sheets.has(member.name)) {
-    sheets.set(member.name, member.sprite || drawMember(member).toDataURL());
-  }
-  return sheets.get(member.name);
-}
 
 function ensureLayer() {
   if (layer) return layer;
@@ -78,25 +58,15 @@ export function send(member) {
   const el = document.createElement('button');
   el.type = 'button';
   el.className = 'crew-chibi';
-  el.style.backgroundImage = `url(${sheetFor(member)})`;
+  el.style.backgroundImage = `url(${member.sprite})`;
   el.title = `${member.name} — click to send home`;
   el.setAttribute('aria-label', `${member.name}, walking. Click to send home.`);
   el.addEventListener('click', () => recall(member.name));
   ensureLayer().appendChild(el);
 
-  // A drawn sprite is one pose and its own size; a generated one is two frames of
-  // a known size. Everything downstream reads these two fields rather than
-  // caring which kind it got.
-  const drawn = Boolean(member.sprite);
-  if (drawn) {
-    el.classList.add('is-drawn');
-    el.style.backgroundSize = 'contain';
-  }
-
   walking.set(member.name, {
-    drawn,
     el,
-    x: Math.random() * Math.max(1, viewportW - FRAME_W),
+    x: Math.random() * Math.max(1, viewportW - CHIBI_W),
     dir: Math.random() < 0.5 ? -1 : 1,
     frame: 0,
     nextStep: 0,
@@ -137,15 +107,11 @@ function frameLoop(now) {
     } else {
       state.x += state.dir * SPEED * dt;
       if (state.x <= 0) { state.x = 0; state.dir = 1; }
-      else if (state.x >= viewportW - FRAME_W) { state.x = viewportW - FRAME_W; state.dir = -1; }
+      else if (state.x >= viewportW - CHIBI_W) { state.x = viewportW - CHIBI_W; state.dir = -1; }
 
       if (now >= state.nextStep) {
         state.nextStep = now + STEP_MS;
         state.frame ^= 1;
-        // Two-frame sheets step; a single drawn pose bobs instead. The bob is
-        // folded into the transform below rather than written separately, so the
-        // loop still touches exactly one property.
-        if (!state.drawn) state.el.style.backgroundPositionX = `${-state.frame * FRAME_W}px`;
       }
       if (now >= state.nextIdle) {
         state.idleUntil = now + 600 + Math.random() * 1800;
@@ -153,9 +119,11 @@ function frameLoop(now) {
         if (Math.random() < 0.5) state.dir *= -1;
       }
     }
-    // The sprite is drawn facing right; scaleX turns it round rather than
-    // needing a second sheet.
-    const bob = state.drawn && now >= state.idleUntil && state.frame ? -1 : 0;
+    // The artwork is a single standing pose, so the walk is a one-pixel bob
+    // rather than a leg swap. The bob is folded into the transform rather than
+    // written separately, so the loop still touches exactly one property. The
+    // pose faces right; scaleX turns it round rather than needing a second file.
+    const bob = now >= state.idleUntil && state.frame ? -1 : 0;
     state.el.style.transform = `translate3d(${state.x.toFixed(1)}px,${bob}px,0) scaleX(${state.dir})`;
   }
   raf = requestAnimationFrame(frameLoop);
@@ -184,7 +152,7 @@ function stop() {
 addEventListener('resize', () => {
   viewportW = window.innerWidth;
   for (const state of walking.values()) {
-    state.x = Math.min(state.x, Math.max(0, viewportW - FRAME_W));
+    state.x = Math.min(state.x, Math.max(0, viewportW - CHIBI_W));
   }
 }, { passive: true });
 
@@ -238,4 +206,4 @@ export function mountButtons(root = document) {
   return mounted;
 }
 
-export { CREW, FRAME_W, FRAME_H };
+export { CREW };
