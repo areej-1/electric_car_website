@@ -1710,7 +1710,7 @@ main.cobras-home .home-world[data-astro-cid-zkhec6xw].is-enhanced .world-pin[dat
   position: fixed;
   inset-inline: 0;
   bottom: 0;
-  block-size: 72px;
+  block-size: 96px;
   z-index: 40;
   pointer-events: none;
 }
@@ -1719,10 +1719,10 @@ main.cobras-home .home-world[data-astro-cid-zkhec6xw].is-enhanced .world-pin[dat
   bottom: 0;
   inset-inline-start: 0;
   inline-size: 60px;
-  block-size: 72px;
+  block-size: 96px;
   padding: 0;
   border: 0;
-  background: transparent 0 0 / 120px 72px no-repeat;
+  background: transparent 0 0 / 120px 96px no-repeat;
   image-rendering: pixelated;
   cursor: pointer;
   pointer-events: auto;
@@ -1733,7 +1733,7 @@ main.cobras-home .home-world[data-astro-cid-zkhec6xw].is-enhanced .world-pin[dat
 /* A generated sprite is a two-frame sheet twice as wide as one frame, positioned
    by background-position. A drawn one is a single pose at its own proportions, so
    it is contained in the box rather than stepped through. */
-.crew-chibi.is-drawn { inline-size: 64px; background-size: contain; background-position: center bottom; }
+.crew-chibi.is-drawn { inline-size: 72px; background-size: contain; background-position: center bottom; }
 .crew-chibi:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 .crew-send {
