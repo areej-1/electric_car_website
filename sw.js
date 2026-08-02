@@ -1,5 +1,5 @@
 /* Cobras PWA service worker — offline shell cache */
-const CACHE = 'cobras-shell-v13';
+const CACHE = 'cobras-shell-v14';
 const SHELL = [
   './',
   './index.html',
