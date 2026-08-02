@@ -33,6 +33,18 @@ no button.
   exported over a coloured background keeps a fringe of that colour, which shows
   up as a halo once it is walking over a dark page.
 
+## Cutting one out
+
+These fifteen came off two sheets where each character sat on a bordered card,
+and cutting them by colour did not work — the edge pixels are a blend of the
+character and whatever was behind them, so no threshold separates the two. Both
+attempts at automating it failed differently: keeping the blended edge left a
+blue halo, and stripping it dissolved black hair into a dark page.
+
+What worked was drawing a red line by hand around each character, then deleting
+the line and everything outside it. A marked boundary is unambiguous where a
+sampled colour is not. If the next four arrive the same way, mark them first.
+
 ## Still needed
 
 Four members have no artwork and so no button:

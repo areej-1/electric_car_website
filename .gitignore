@@ -4,3 +4,4 @@ node_modules/
 *.log
 
 cargpt.config.js
+.DS_Store
