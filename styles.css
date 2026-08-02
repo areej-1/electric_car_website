@@ -1717,7 +1717,11 @@ main.cobras-home .home-world[data-astro-cid-zkhec6xw].is-enhanced .world-pin[dat
 .crew-chibi {
   position: absolute;
   bottom: 0;
-  inset-inline-start: 0;
+  /* Physical, not logical: the frame loop computes x from the viewport's left
+     edge whatever the reading direction. inset-inline-start flips to the right
+     edge under RTL, which marched the whole crew off-screen on the Arabic
+     pages — or pinned them to the right corner when the clamp caught them. */
+  left: 0;
   inline-size: 72px;
   block-size: 96px;
   padding: 0;
