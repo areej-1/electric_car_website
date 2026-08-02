@@ -29,6 +29,18 @@ const STEP_MS = 190;       // walk-frame swap
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)');
 
 const walking = new Map(); // name -> state
+
+/* Labels go through the site's Arabic layer. The page-wide translation pass has
+   already run by the time these buttons exist, so the module looks its own
+   strings up, the way the trackmap prototype does — the dictionary holds a
+   template and the name is substituted after lookup. English is the template
+   itself. Read the language at call time: it is fixed per page load (the
+   toggle reloads), but this module also restores chibis on every other page. */
+function phrase(template, name) {
+  const arabic = document.documentElement.lang === 'ar' && window.CobrasArabic;
+  const text = arabic ? window.CobrasArabic.translateText('crew', template) : template;
+  return text.replace('{name}', name);
+}
 let layer = null;
 let raf = 0;
 let last = 0;
@@ -59,8 +71,8 @@ export function send(member) {
   el.type = 'button';
   el.className = 'crew-chibi';
   el.style.backgroundImage = `url(${member.sprite})`;
-  el.title = `${member.name} — click to send home`;
-  el.setAttribute('aria-label', `${member.name}, walking. Click to send home.`);
+  el.title = phrase('{name} — click to send home', member.name);
+  el.setAttribute('aria-label', phrase('{name}, walking. Click to send home.', member.name));
   el.addEventListener('click', () => recall(member.name));
   ensureLayer().appendChild(el);
 
@@ -184,9 +196,9 @@ export function mountButtons(root = document) {
     button.type = 'button';
     button.className = 'crew-send';
     const first = member.name.split(' ')[0];
-    const label = () => (isOut(member.name)
-      ? `Send ${first} back`
-      : `Send ${first} for a walk`);
+    const label = () => phrase(isOut(member.name)
+      ? 'Send {name} back'
+      : 'Send {name} for a walk', first);
     button.textContent = label();
     button.setAttribute('aria-pressed', String(isOut(member.name)));
     button.addEventListener('click', () => {

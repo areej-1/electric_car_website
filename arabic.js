@@ -17,6 +17,19 @@
     // panel markup is rebuilt on every click, so the prototype looks these up
     // itself. Kept here rather than inlined there so both languages of the same
     // sentence stay in one file.
+    // The crew buttons on the members page, built at runtime by
+    // assets/crew/crew-roam.js after the page-wide pass has already happened,
+    // so it looks these up itself the way the trackmap prototype does. They are
+    // templates, not sentences: the module substitutes {name} after looking the
+    // string up, which keeps nineteen names out of this file. Names stay in
+    // Latin script, matching the cards, and bidi nests them correctly inside an
+    // Arabic sentence. The phrasing is deliberately ungendered.
+    'crew': {
+      'Send {name} for a walk': 'أرسل {name} في نزهة',
+      'Send {name} back': 'أعد {name}',
+      '{name} — click to send home': '{name} — انقر للإعادة',
+      '{name}, walking. Click to send home.': '{name} في نزهة. انقر للإعادة.'
+    },
     'prototype/trackmap': {
       'Design + planning': 'التصميم والتخطيط',
       'Set performance targets, study EVGP requirements, choose parts, and turn constraints into a buildable layout.': 'نحدّد أهداف الأداء، وندرس متطلبات EVGP، ونختار القطع، ثم نحوّل القيود إلى مخطط قابل للتنفيذ.',
