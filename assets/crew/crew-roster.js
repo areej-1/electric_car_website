@@ -4,11 +4,14 @@
  * stay — they are the portraits and they are personal — and the character is
  * reused as the chibi's prop so the two agree about who someone is.
  *
- * `look` is where a photograph goes, as { hair: [base, shadow], skin: [...] }.
- * Anything it sets wins; anything it omits is generated from the name, which is
- * deterministic, so an unphotographed member is drawn to the same standard and
- * differs only in being invented rather than observed. `fromPhoto` records which
- * is which so the remainder is a visible list rather than something to remember.
+ * `sprite` is a drawn sprite — a real one, by a person, which beats anything
+ * generated. When it is set the code loads that image and leaves the generator
+ * alone. When it is absent the member is drawn from the text grid instead, to the
+ * same size and on the same walk, so a crowd looks like one crew rather than two.
+ *
+ * `look` tunes the generated version, as { hair: [base, shadow], skin: [...] };
+ * it is ignored once `sprite` is set. `fromPhoto` records which members still
+ * need art, so the remainder is a visible list rather than something to remember.
  */
 export const CREW = [
   { name: 'Areej Dridi',      role: 'Mechanic',   character: 'coffee',      fromPhoto: false },

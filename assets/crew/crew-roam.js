@@ -37,9 +37,19 @@ let raf = 0;
 let last = 0;
 let viewportW = window.innerWidth;
 
+/* Two kinds of sprite, one walk.
+ *
+ * A member with `sprite` gets the drawn artwork — a single standing pose, which
+ * is what a person naturally draws. A member without one is generated from the
+ * text grid, which comes as two frames with the legs stepping.
+ *
+ * So the walk differs: a two-frame sprite swaps frames, a one-pose sprite bobs a
+ * pixel. Both read as walking at this size and neither needs the other's art,
+ * which is what lets four members without a drawing walk alongside fifteen with
+ * one and not look like a different feature. */
 function sheetFor(member) {
   if (!sheets.has(member.name)) {
-    sheets.set(member.name, drawMember(member).toDataURL());
+    sheets.set(member.name, member.sprite || drawMember(member).toDataURL());
   }
   return sheets.get(member.name);
 }
@@ -74,7 +84,17 @@ export function send(member) {
   el.addEventListener('click', () => recall(member.name));
   ensureLayer().appendChild(el);
 
+  // A drawn sprite is one pose and its own size; a generated one is two frames of
+  // a known size. Everything downstream reads these two fields rather than
+  // caring which kind it got.
+  const drawn = Boolean(member.sprite);
+  if (drawn) {
+    el.classList.add('is-drawn');
+    el.style.backgroundSize = 'contain';
+  }
+
   walking.set(member.name, {
+    drawn,
     el,
     x: Math.random() * Math.max(1, viewportW - FRAME_W),
     dir: Math.random() < 0.5 ? -1 : 1,
@@ -122,7 +142,10 @@ function frameLoop(now) {
       if (now >= state.nextStep) {
         state.nextStep = now + STEP_MS;
         state.frame ^= 1;
-        state.el.style.backgroundPositionX = `${-state.frame * FRAME_W}px`;
+        // Two-frame sheets step; a single drawn pose bobs instead. The bob is
+        // folded into the transform below rather than written separately, so the
+        // loop still touches exactly one property.
+        if (!state.drawn) state.el.style.backgroundPositionX = `${-state.frame * FRAME_W}px`;
       }
       if (now >= state.nextIdle) {
         state.idleUntil = now + 600 + Math.random() * 1800;
@@ -132,7 +155,8 @@ function frameLoop(now) {
     }
     // The sprite is drawn facing right; scaleX turns it round rather than
     // needing a second sheet.
-    state.el.style.transform = `translate3d(${state.x.toFixed(1)}px,0,0) scaleX(${state.dir})`;
+    const bob = state.drawn && now >= state.idleUntil && state.frame ? -1 : 0;
+    state.el.style.transform = `translate3d(${state.x.toFixed(1)}px,${bob}px,0) scaleX(${state.dir})`;
   }
   raf = requestAnimationFrame(frameLoop);
 }

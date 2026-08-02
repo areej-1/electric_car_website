@@ -1730,6 +1730,10 @@ main.cobras-home .home-world[data-astro-cid-zkhec6xw].is-enhanced .world-pin[dat
      transition on top of that fights it. */
   transition: none;
 }
+/* A generated sprite is a two-frame sheet twice as wide as one frame, positioned
+   by background-position. A drawn one is a single pose at its own proportions, so
+   it is contained in the box rather than stepped through. */
+.crew-chibi.is-drawn { inline-size: 64px; background-size: contain; background-position: center bottom; }
 .crew-chibi:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 .crew-send {
