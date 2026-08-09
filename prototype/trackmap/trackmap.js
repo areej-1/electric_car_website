@@ -225,7 +225,27 @@ const FIT_ZOOM_OUT = 0.87;
 function fit() {
   const r = stage.getBoundingClientRect();
   if (!r.width || !r.height) return;
-  minScale = Math.max(r.width / PW, r.height / PH) * FIT_ZOOM_OUT;
+  // Cover-fit suits a landscape frame: the world is landscape too, so the crop
+  // is modest. A portrait frame — a phone — covers by HEIGHT, which pushes
+  // half the circuit out of the sides and shows an unrecognisable middle
+  // slice. There, contain instead: the whole circuit, letterboxed into the
+  // bands the HUD and the credit already occupy.
+  const cover = Math.max(r.width / PW, r.height / PH) * FIT_ZOOM_OUT;
+  // 0.90, not ~1: the dots render at screen scale whatever the map scale, so
+  // a turn sitting near the world's edge overhangs it by half a dot — about
+  // 18px — and needs that much frame to itself.
+  const contain = Math.min(r.width / PW, r.height / PH) * 0.90;
+  // "Portrait" is relative to the world, not to itself: a square frame is
+  // already far narrower than a 1.69:1 circuit, and covering it crops both
+  // ends of the track. Compare aspect ratios, not sides.
+  const contained = (r.width / r.height) < (PW / PH);
+  minScale = contained ? contain : cover;
+  // In contain mode the labels go and the dots carry the numbers. Not only for
+  // room: a marker centres its dot-plus-label pair on the anchor, so while the
+  // label is visible the dot sits half a label off the true point — absorbed
+  // by cover-fit's cropped margins, but past the frame edge once the whole
+  // plate is in view. Dot-only, the centring is exact.
+  markersEl.classList.toggle('is-labelless', contained);
   const s = minScale;
   Object.assign(target, { s, tx: (r.width - PW * s) / 2, ty: (r.height - PH * s) / 2 });
   if (view.s === 1 && view.tx === 0) Object.assign(view, target);
