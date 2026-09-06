@@ -122,9 +122,9 @@ else pass('no fake sponsor email exposed');
 if (!read('index.html').includes('class="build-status"') || !read('specs.html').includes('class="test-data"') || !read('sponsors.html').includes('class="sponsor-progress"')) {
   fail('new status surfaces', 'missing build status, engineering data, or sponsor progress');
 } else pass('build, data, and sponsor status surfaces present');
-if (!read('sponsors.html').includes('data-i18n="sponsor.remaining"')) fail('sponsor remaining state', 'remaining-to-goal status is missing');
+if (!read('sponsors.html').includes('remaining funding need cannot be calculated until figures are approved')) fail('sponsor remaining state', 'remaining-to-goal status is missing');
 else pass('sponsor remaining state stays explicit');
-if (!read('site.js').includes('member-contribution') || !read('site.js').includes('member.assignmentLabel')) fail('member responsibilities', 'role focus or pending individual assignment is not generated');
+if (!read('site.js').includes('member-contribution') || !read('members.html').includes('Individual assignments await team confirmation.')) fail('member responsibilities', 'role focus or pending individual assignment is not generated');
 else pass('member role focus generated');
 const countdownDates = PAGES.map(read).flatMap(html => [...html.matchAll(/data-race-date="([^"]+)"/g)].map(match => match[1]));
 if (!countdownDates.length || new Set(countdownDates).size !== 1 || countdownDates[0] !== '2027-02-13T00:00:00+04:00') fail('shared planning countdown', 'countdowns do not share the unconfirmed planning date start');
