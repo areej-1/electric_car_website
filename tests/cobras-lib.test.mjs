@@ -60,6 +60,15 @@ check('countdownParts future day math', () => {
   assert.equal(parts.done, false);
 });
 
+check('race calendar countdown uses UAE days and stays at zero after the target', () => {
+  const target = Date.parse(Lib.RACE_ISO);
+  assert.equal(Lib.raceCalendarDays(Date.parse('2026-09-06T14:30:00+04:00'), target), 160);
+  assert.equal(Lib.raceCalendarDays(Date.parse('2026-09-06T19:59:59Z'), target), 160);
+  assert.equal(Lib.raceCalendarDays(Date.parse('2026-09-06T20:00:00Z'), target), 159);
+  assert.equal(Lib.raceCalendarDays(Date.parse('2027-02-13T00:00:00+04:00'), target), 0);
+  assert.equal(Lib.raceCalendarDays(Date.parse('2027-02-14T00:00:00+04:00'), target), 0);
+});
+
 check('buildScoreShareText includes mode and score', () => {
   const text = Lib.buildScoreShareText({ score: 1234, best: 5000, mode: 'f1', level: 3 });
   assert.match(text, /F1/);

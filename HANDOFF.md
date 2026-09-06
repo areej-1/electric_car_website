@@ -149,8 +149,9 @@ the viewport, and follows you across pages (`localStorage.cobras_crew_out`).
   on purpose: source art stays on disk rather than being deleted.
 
 19 members are on the page; 15 have art. The other four (Ayah Yousif, Joud
-Hassan, Taim Saadi, Yas Shahriari) still show placeholder duck images and have no
-walk button.
+Hassan, Taim Saadi, Yas Shahriari) show matching initials placeholders and have no
+walk button. Role keys are explicit in each card’s `data-role` attribute so the
+Arabic filters do not depend on image alt text.
 
 ---
 
@@ -161,21 +162,14 @@ npm test          # cobras-lib.test.mjs + arabic.test.mjs + verify-site.mjs
 npx serve -l 3000 # optional; verify-site.mjs adds a live HTTP probe if it's up
 ```
 
-**Two tests fail on `main` today. They are a real regression, not old cruft** —
-both point at the same thing, and both are fixable:
+The full `npm test` suite passes after the September homepage cleanup. The July
+homepage regression had dropped the CarGPT markup and changed the build-status
+class; both contracts are restored. Keep those checks passing.
 
-- `new status surfaces — missing build status, engineering data, or sponsor progress`
-- `localized CarGPT states — prompts, sponsor CTA, or live fallback states bypass i18n`
-
-Each is failing on exactly one missing piece, and both are in `index.html`:
-`class="build-status"` and `data-i18n="chat.prompt48"`. The other files the two
-tests check still have their parts. Commit `4df4de6` (31 Jul) rewrote the
-homepage — 152 lines out, 60 in — and dropped both. `4df4de6^` has them; every
-commit since does not. The homepage has had no build-status section since.
-
-The lesson for whoever checks next: a baseline commit only proves something is
-pre-existing if it predates the change you suspect. Picking one dated *after* the
-regression makes a fresh break look ancient.
+The homepage uses a compact, normal-flow layout in `assets/home/homepage.css`.
+Its countdown uses UAE calendar days and the shared planning target in
+`cobras-lib.js`; other countdowns retain their existing hours/minutes behavior.
+The old scroll island in `assets/home/homepage.js` is no longer loaded.
 
 **For anything visual, the test suite is not enough.** Drive a real browser:
 
@@ -199,7 +193,7 @@ Every one of these has already cost time on this project.
 
 **The service worker serves assets cache-first.** The non-navigation branch of the `fetch`
 handler ends in `return cached || network` (`sw.js:60`). Change any image, font, or asset and returning visitors keep
-the old one *forever* until the `CACHE` constant is bumped. It is at `v17`; it
+the old one *forever* until the `CACHE` constant is bumped. It is at `v18`; it
 has been bumped once per asset-changing PR. Forgetting this is the single most
 common way a correct fix looks broken.
 
@@ -249,8 +243,10 @@ her work forward rather than replacing it.
 
 ## Current state
 
-`main` is at "Give the two Selmas each other's portraits and walkers (#32)".
-Service worker `v17`. Site verified live.
+September cleanup: compact homepage, direct sponsor contact and PDF actions,
+UAE calendar countdown, and consistent member placeholders. Service worker
+`v18`. The latest published workshop log remains 1 July 2026; fresh updates,
+measurement dates, and individual assignments still need team confirmation.
 
 **Uncommitted in the working tree** (left alone deliberately, not mine to
 decide): `prototype/kart/index.html` shows as deleted, and

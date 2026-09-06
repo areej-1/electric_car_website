@@ -430,7 +430,13 @@
       const raw = countdown.getAttribute('data-race-date') || countdown.dataset?.raceDate || Lib.RACE_ISO;
       const target = new Date(raw).getTime();
       if (!Number.isFinite(target)) return;
+      const calendarDays = countdown.getAttribute('data-countdown-mode') === 'calendar-days';
       const tick = () => {
+        if (calendarDays) {
+          const node = countdown.querySelector('[data-countdown="days"]');
+          if (node) node.textContent = String(Lib.raceCalendarDays(Date.now(), target));
+          return;
+        }
         const parts = Lib.countdownParts(Date.now(), target);
         ['days', 'hours', 'minutes', 'seconds'].forEach((key) => {
           const node = countdown.querySelector(`[data-countdown="${key}"]`);
@@ -438,7 +444,8 @@
         });
       };
       tick();
-      setInterval(tick, 1000);
+      setInterval(tick, calendarDays ? 60000 : 1000);
+      if (calendarDays) document.addEventListener('visibilitychange', tick);
     });
   } catch (err) {
     console.warn('Countdown init skipped', err);
@@ -495,7 +502,7 @@
     cards.forEach(card => {
       const roleNode = card.querySelector('p');
       const alt = card.querySelector('img')?.alt || '';
-      const roleKey = roleKeys.find(key => roleNode?.textContent.trim() === key || alt.endsWith(`, ${key}`)) || roleNode?.textContent.trim();
+      const roleKey = card.dataset.role || roleKeys.find(key => roleNode?.textContent.trim() === key || alt.endsWith(`, ${key}`)) || roleNode?.textContent.trim();
       if (roleKey) card.dataset.role = roleKey;
       roleNode?.classList.add('member-role');
       if (roleNode && roleKey) roleNode.textContent = Lib.t(lang, `role.${roleKey}`);
@@ -504,7 +511,7 @@
       if (!card.querySelector('.member-contribution') && roleKey) {
         const contribution = document.createElement('p');
         contribution.className = 'member-contribution';
-        contribution.textContent = `${Lib.t(lang, 'member.focusLabel')}: ${Lib.t(lang, `member.focus.${roleKey}`)} · ${Lib.t(lang, 'member.assignmentLabel')}: ${Lib.t(lang, 'common.toBeConfirmed')}`;
+        contribution.textContent = `${Lib.t(lang, 'member.focusLabel')}: ${Lib.t(lang, `member.focus.${roleKey}`)}`;
         card.appendChild(contribution);
       }
     });

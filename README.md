@@ -45,7 +45,10 @@ Checks every HTML page for shared assets/branding, evaluates `site.js` in a sand
 
 - **Collapsing sticky nav** shrinks after scroll (`is-collapsed` on `.site-nav`)
 - **Resources navigation** groups Race Day, News, Electric Cars 101, and the Race Checklist
-- **Build status + engineering data** use verified values and clearly labeled pending fields
+- **Homepage** puts current build status directly below the hero, followed by car facts, the latest published workshop update, a UAE calendar-day countdown, and sponsor actions
+- **Build status + engineering data** distinguish published figures, estimates, and pending measurement details
+- **Sponsor contact** links directly to the public Instagram account and package PDF
+- **Member portraits** use initials placeholders for the four members awaiting art; role filters work in both languages
 - **Shared chrome** rebuilt from `cobras-lib.js` + `site.js` on every page
 - **EN/AR toggle** stores `localStorage.cobras_lang`
 - **CarGPT live path**: set `localStorage.CARGPT_ENDPOINT` / `CARGPT_API_KEY` or copy `cargpt.config.example.js` → `cargpt.config.js` (gitignored)

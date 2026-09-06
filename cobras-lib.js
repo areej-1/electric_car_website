@@ -816,6 +816,13 @@
     };
   }
 
+  // Calendar days in the team's UAE timezone, independent of the visitor's zone.
+  function raceCalendarDays(nowMs, targetMs) {
+    const offset = 4 * 3600000;
+    return Math.max(0, Math.floor((Number(targetMs) + offset) / 86400000)
+      - Math.floor((Number(nowMs) + offset) / 86400000));
+  }
+
   function buildScoreShareText(payload) {
     const score = Math.max(0, Math.floor(Number(payload && payload.score) || 0));
     const best = Math.max(0, Math.floor(Number(payload && payload.best) || 0));
@@ -920,6 +927,7 @@
     currentPageName,
     isCurrentNav,
     countdownParts,
+    raceCalendarDays,
     buildScoreShareText,
     checklistProgress,
     resolveChatConfig,
