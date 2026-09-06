@@ -161,14 +161,21 @@ npm test          # cobras-lib.test.mjs + arabic.test.mjs + verify-site.mjs
 npx serve -l 3000 # optional; verify-site.mjs adds a live HTTP probe if it's up
 ```
 
-**Two tests fail on `main` today and have for a long time** — confirmed still
-failing at `a8e6f8d` (1 Aug):
+**Two tests fail on `main` today. They are a real regression, not old cruft** —
+both point at the same thing, and both are fixable:
 
 - `new status surfaces — missing build status, engineering data, or sponsor progress`
 - `localized CarGPT states — prompts, sponsor CTA, or live fallback states bypass i18n`
 
-They are pre-existing, not something recent work broke. Do not assume a green run
-means you changed nothing; do check the count did not go **up**.
+Each is failing on exactly one missing piece, and both are in `index.html`:
+`class="build-status"` and `data-i18n="chat.prompt48"`. The other files the two
+tests check still have their parts. Commit `4df4de6` (31 Jul) rewrote the
+homepage — 152 lines out, 60 in — and dropped both. `4df4de6^` has them; every
+commit since does not. The homepage has had no build-status section since.
+
+The lesson for whoever checks next: a baseline commit only proves something is
+pre-existing if it predates the change you suspect. Picking one dated *after* the
+regression makes a fresh break look ancient.
 
 **For anything visual, the test suite is not enough.** Drive a real browser:
 
