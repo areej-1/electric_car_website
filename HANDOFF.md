@@ -44,8 +44,8 @@ to show judges the build is real.
 - **Live:** https://areej-1.github.io/electric_car_website/
 - **Repo:** `areej-1/electric_car_website` (`origin`). `fork` points at
   `fabricyo-dev/electric_car_website` and is not the deploy target.
-- **Hosting:** GitHub Pages, built from the `main` branch. No Actions workflow —
-  pushing to `main` *is* the deploy.
+- **Hosting:** GitHub Pages, built from the `main` branch. The Actions workflow
+  checks PRs only; pushing to `main` *is* the deploy.
 
 Branding is black / red / gold "Cobra Race". 19 team members. Content is
 bilingual English / Arabic.
@@ -161,6 +161,14 @@ Arabic filters do not depend on image alt text.
 npm test          # cobras-lib.test.mjs + arabic.test.mjs + verify-site.mjs
 npx serve -l 3000 # optional; verify-site.mjs adds a live HTTP probe if it's up
 ```
+
+`npm test` also exercises the cache-version guard against temporary Git histories.
+Ready PRs run this suite, the guard against the PR base, and six English/Arabic
+Chromium browser scenarios. The workflow uses one Ubuntu job capped at five
+minutes; drafts and Markdown/license-only changes avoid runner usage. No push,
+deployment, or scheduled test runs. Older runs cancel on new commits; failure
+screenshots expire after three days. `README.md` has local commands and limits.
+Direct edits to `main` retain their existing deploy behavior and bypass PR checks.
 
 The full `npm test` suite passes after the September homepage cleanup. The July
 homepage regression had dropped the CarGPT markup and changed the build-status

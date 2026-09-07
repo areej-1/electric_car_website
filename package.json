@@ -4,9 +4,14 @@
   "description": "SIS Al Jada Cobras static team website",
   "scripts": {
     "start": "npx --yes serve -l 3000",
-    "test": "node tests/cobras-lib.test.mjs && node tests/arabic.test.mjs && node tests/verify-site.mjs",
+    "test": "node tests/cobras-lib.test.mjs && node tests/arabic.test.mjs && node tests/verify-site.mjs && node tests/check-cache-version.test.mjs",
     "test:lib": "node tests/cobras-lib.test.mjs",
     "test:site": "node tests/verify-site.mjs",
-    "verify": "node tests/cobras-lib.test.mjs && node tests/arabic.test.mjs && node tests/verify-site.mjs"
+    "verify": "npm test",
+    "test:cache": "node tests/check-cache-version.mjs",
+    "test:browser": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
   }
 }

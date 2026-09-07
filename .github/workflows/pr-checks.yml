@@ -1,0 +1,53 @@
+name: PR checks
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
+    paths-ignore:
+      - '**/*.md'
+      - 'LICENSE*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-checks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Static, cache and browser checks
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          # The PR merge commit and its parents include the base SHA; no full history.
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Static and cache-guard tests
+        run: npm test
+      - name: Require cache bump for public changes
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: node tests/check-cache-version.mjs "$BASE_SHA"
+      - name: Install pinned test dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install Chromium headless shell only
+        run: npx playwright install --with-deps --only-shell chromium
+      - name: English and Arabic browser checks
+        run: npm run test:browser
+      - name: Keep failure screenshots briefly
+        if: failure()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: browser-failures
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 3

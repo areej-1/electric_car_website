@@ -18,10 +18,36 @@ Or open `index.html` directly in a browser (some features work better with a loc
 ## Verify
 
 ```bash
-node tests/verify-site.mjs
+npm test
 ```
 
 Checks every HTML page for shared assets/branding, evaluates `site.js` in a sandbox (menu + CarGPT APIs + offline FAQ), and probes a live server on port 3000 when available.
+
+### PR checks
+
+`.github/workflows/pr-checks.yml` runs the static tests, cache-version guard, and six Chromium browser scenarios for ready PRs targeting `main`. The browser scenarios cover English and Arabic navigation, language switching, member filtering, narrow build stages, and car controls at phone and desktop widths.
+
+To limit Actions usage: one Ubuntu job, one browser worker, a five-minute job limit, no retries, no schedules, and no duplicate push/deployment runs. New commits cancel older runs for the same PR. Draft PRs use no runner; changes limited to Markdown or license files skip the workflow. Only failure screenshots are uploaded, with three-day retention. Dependencies are pinned and npm downloads are cached; only Chromium's headless shell is installed.
+
+Run the browser checks locally:
+
+```bash
+npm ci
+npx playwright install --only-shell chromium
+npm run test:browser
+```
+
+The browser runner starts its own loopback server on port 4327 and tests under `/electric_car_website/`, matching the Pages URL prefix. It blocks service workers and stubs external requests so public fonts or chat outages cannot break CI; local scripts and images are real. It does not replace a visual check with real fonts or a returning-visitor cache check.
+
+Check **committed** public-file changes against a base revision:
+
+```bash
+npm run test:cache -- origin/main
+```
+
+The guard compares the numeric `CACHE` in `sw.js` against the PR base, including added, deleted, and renamed assets outside `SHELL`. Public changes need a strictly larger version. Development files and Markdown do not need a bump. Recheck after merging newer `main` changes: another PR may have used your chosen version.
+
+Checks report on PRs; they do not change branch protection or prevent direct edits to `main`. Areej's direct edits still deploy through the existing GitHub Pages setup. Use a PR to get these checks before deployment. If checks become required later, account for doc-only workflows being skipped.
 
 ## Pages
 
