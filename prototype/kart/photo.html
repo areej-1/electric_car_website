@@ -17,13 +17,13 @@
   *{box-sizing:border-box}
   html,body{width:100%;height:100%;margin:0}
   body{overflow:hidden;background:var(--ink);color:var(--cream);font-family:var(--body)}
-  button{font:inherit}
+  button,select,input{font:inherit}
 
   .viewer{
-    position:relative;width:100%;height:100%;min-height:480px;overflow:hidden;display:flex;flex-direction:column;
+    position:relative;width:100%;height:100%;overflow-x:hidden;overflow-y:auto;display:flex;flex-direction:column;
     background:#0b0b0c;isolation:isolate;touch-action:pan-y;user-select:none;
   }
-  .view-area{position:relative;flex:1;min-height:220px}
+  .view-area{position:relative;flex:1;min-height:220px;overflow:hidden}
   /* pan-y on the element that handles the drag, not only on its wrapper:
      touch-action does not inherit, so the stage was computing `auto`.
      Horizontal drags rotate the car; vertical ones belong to the page. */
@@ -72,7 +72,7 @@
   }
   .keyboard-help{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 
-  .viewer-footer{position:relative;z-index:6;padding:12px 16px;background:var(--ink);border-top:1px solid #292929}
+  .viewer-footer{position:relative;flex:none;z-index:6;padding:12px 16px;background:var(--ink);border-top:1px solid #292929}
   .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
   .control-group{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;max-width:100%}
   .control{
@@ -86,6 +86,11 @@
   .control:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
   .control[aria-pressed="true"]{background:var(--hot);border-color:var(--hot)}
   .control.is-label{font-size:11px;letter-spacing:.04em}
+  .component-menu{display:flex;align-items:end;gap:8px;margin:14px 0 0}
+  .component-field{flex:1;min-width:0}
+  .component-field label{display:block;color:var(--steel);font-size:12px;margin-bottom:6px}
+  .component-field select{width:100%;font-size:14px;color-scheme:dark}
+  .component-menu button{flex:none;font-size:13px}
 
   .hotspots{position:absolute;inset:0;z-index:6;pointer-events:none}
   .hotspot{
@@ -119,6 +124,10 @@
   .detail p{font-size:12px;line-height:1.6;color:var(--steel);margin:0}
   .detail-close{position:absolute;top:4px;inset-inline-end:4px;width:44px;height:44px;border:0;background:none;color:var(--cream);font-size:24px;cursor:pointer}
   .detail-close:focus-visible{outline:2px solid var(--gold);outline-offset:-4px}
+  .detail-share{margin-top:18px;font-size:13px}
+  .detail .share-status{margin-top:8px}
+  .share-link{width:100%;margin-top:8px;padding:10px;min-height:44px;background:var(--ink);color:var(--cream);border:1px solid var(--steel);font-size:13px;user-select:text}
+  .share-link:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
   .disclosure{
     margin:12px 0 0;color:var(--steel);font-size:11px;line-height:1.5;text-align:center;
@@ -173,6 +182,9 @@
     <div class="eyebrow">Component detail</div>
     <h2 id="detailTitle"></h2>
     <p id="detailBody"></p>
+    <button class="control detail-share" id="copyLink" type="button">Copy link</button>
+    <p class="share-status" id="shareStatus" role="status"></p>
+    <input class="share-link" id="shareLink" type="url" readonly hidden dir="ltr" aria-label="Component link">
   </dialog>
   </div>
 
@@ -192,6 +204,14 @@
       <button class="control" id="zoomIn" type="button" aria-label="Zoom in">+</button>
     </div>
   </div>
+
+  <form class="component-menu" id="componentMenu">
+    <div class="component-field">
+      <label for="componentSelect">Explore a component</label>
+      <select class="control" id="componentSelect" name="component"></select>
+    </div>
+    <button class="control" type="submit" aria-haspopup="dialog">View</button>
+  </form>
 
   <p class="disclosure">AI-assisted studio visualization locked to one master design: two five-spoke front wheels and one centered rear wheel fully enclosed by the shell.</p>
   </div>
@@ -247,6 +267,10 @@
     'Auto rotate is unavailable with reduced motion.':'الدوران التلقائي غير متاح عند تفعيل تقليل الحركة.',
     'Component detail':'تفاصيل المكوّن','Auto rotate':'دوران تلقائي',
     'Car details':'تفاصيل السيارة','Close detail':'إغلاق التفاصيل',
+    'Explore a component':'استكشف أحد المكوّنات','View':'عرض',
+    'Copy link':'نسخ الرابط','Link copied.':'تم نسخ الرابط.',
+    'Select and copy this link:':'حدّد هذا الرابط وانسخه:',
+    'Component link':'رابط المكوّن',
     'Previous angle':'الزاوية السابقة','Next angle':'الزاوية التالية',
     'Zoom out':'تصغير','Zoom in':'تكبير',
     'Cockpit':'المقصورة','Front axle':'المحور الأمامي','Rear shell':'المؤخرة',
@@ -362,7 +386,8 @@
     motor:['Motor','Driven from the 48V system. The single rear wheel it turns sits centred inside the tail.'],
     controller:['Controller','Sits between the battery and the motor on the 48V system.']
   };
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+  let reduced = motionPreference.matches;
   if (reduced) {
     spinBtn.disabled = true;
     spinBtn.title = t('Auto rotate is unavailable with reduced motion.');
@@ -384,7 +409,9 @@
   let tilt = 0;
   let targetTilt = 0;
   let autoRotate = false;
-  let previousTime = performance.now();
+  let previousTime = null;
+  let animationId = null;
+  let inView = true;
   let activeFrame = null;
   let renderedIndex = -1;
   let renderedElevation = '';
@@ -426,6 +453,12 @@
     const showHigh = !showTop && tilt >= .34;
     const nextFrame = showTop ? topFrame : showHigh ? highFrames[nearest] : lowFrames[nearest];
     setActiveFrame(nextFrame);
+    // A late image must not leave labels or dots describing a different view.
+    if (activeFrame !== nextFrame) {
+      revealHotspots(-1, '');
+      renderedIndex = -1;
+      return;
+    }
     const imageAngle = nearest * angleStep;
     const elevation = showTop ? 'Top' : showHigh ? 'Elevated' : 'Eye level';
     if (nearest !== renderedIndex || elevation !== renderedElevation) {
@@ -449,11 +482,13 @@
   const stopAuto = () => {
     autoRotate = false;
     spinBtn.setAttribute('aria-pressed', 'false');
+    wake();
   };
   const startAuto = () => {
     if (reduced) return;
     autoRotate = true;
     spinBtn.setAttribute('aria-pressed', 'true');
+    wake();
   };
 
   /* Open on a coarse ring rather than the whole turntable.
@@ -524,6 +559,7 @@
     if (!dragging) return;
     targetAzimuth = startAzimuth - (event.clientX - startX) / 23;
     targetTilt = Math.max(0, Math.min(1, startTilt - (event.clientY - startY) / 280));
+    wake();
   });
   const finishDrag = (event) => {
     if (!dragging) return;
@@ -586,6 +622,49 @@
   // honest, since those views have no anchored part facing the camera — and it is
   // why the viewer now opens on an anchor instead of dead front.
   const SPOT_TOLERANCE = 1;
+  const componentMenu = document.getElementById('componentMenu');
+  const componentSelect = document.getElementById('componentSelect');
+  const copyLink = document.getElementById('copyLink');
+  const shareLink = document.getElementById('shareLink');
+  const shareStatus = document.getElementById('shareStatus');
+  let selectedComponent = null;
+  let detailOpener = null;
+  // On the public car page the address bar belongs to the parent. Other embeds
+  // and standalone use keep their own URL; cross-origin parents are untouched.
+  const addressWindow = (() => {
+    try {
+      if (parent !== window && parent.location.origin === location.origin && /\/car(?:\.html)?$/.test(parent.location.pathname)) return parent;
+    } catch { /* cross-origin embed */ }
+    return window;
+  })();
+  const componentFromAddress = () => new URLSearchParams(addressWindow.location.hash.slice(1)).get('component');
+  const setComponentAddress = (id) => {
+    const url = new URL(addressWindow.location.href);
+    url.hash = id ? `component=${id}` : '';
+    try { addressWindow.history.replaceState(addressWindow.history.state, '', url); } catch { /* local file or restricted embed */ }
+  };
+  const openComponent = (h, opener = componentMenu.querySelector('button')) => {
+    stopAuto();
+    // Jump straight to the anchored view, including with reduced motion. Reset
+    // zoom so a component selected from any previous angle remains in frame.
+    azimuth = targetAzimuth = h.frame;
+    tilt = targetTilt = 0;
+    applyZoom(1);
+    request(lowFrames[h.frame]);
+    renderView();
+    selectedComponent = h.id;
+    detailOpener = opener;
+    componentSelect.value = h.id;
+    [detailTitle.textContent, detailBody.textContent] = details[h.id];
+    shareStatus.textContent = '';
+    shareLink.hidden = true;
+    const url = new URL('../../car.html', location.href);
+    url.hash = `component=${h.id}`;
+    shareLink.value = url.href;
+    setComponentAddress(h.id);
+    if (!detail.open) detail.showModal();
+    detail.querySelector('.detail-close').focus();
+  };
 
   const spots = HOTSPOTS.map((h) => {
     const button = document.createElement('button');
@@ -596,18 +675,43 @@
     button.querySelector('.lbl').textContent = label;
     button.setAttribute('aria-label', label);
     button.setAttribute('aria-haspopup', 'dialog');
-    button.addEventListener('click', () => {
-      stopAuto();
-      targetAzimuth = h.frame;
-      targetTilt = .26;
-      const [title, body] = details[h.id];
-      detailTitle.textContent = title;
-      detailBody.textContent = body;
-      detail.showModal();
-    });
+    button.addEventListener('click', () => openComponent(h, button));
     hotspotLayer.appendChild(button);
+    const option = document.createElement('option');
+    option.value = h.id;
+    option.textContent = `${h.n}. ${label}`;
+    componentSelect.appendChild(option);
     return { ...h, button };
   });
+  componentSelect.value = 'brakes';
+  componentMenu.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const component = HOTSPOTS.find(h => h.id === componentSelect.value);
+    if (component) openComponent(component);
+  });
+  copyLink.addEventListener('click', async () => {
+    const id = selectedComponent;
+    try {
+      await navigator.clipboard.writeText(shareLink.value);
+      if (detail.open && selectedComponent === id) shareStatus.textContent = t('Link copied.');
+    } catch {
+      if (!detail.open || selectedComponent !== id) return;
+      shareStatus.textContent = t('Select and copy this link:');
+      shareLink.hidden = false;
+      shareLink.focus();
+      shareLink.select();
+    }
+  });
+  const readComponentAddress = () => {
+    const component = HOTSPOTS.find(h => h.id === componentFromAddress());
+    if (component) {
+      openComponent(component);
+      // A modal is clipped to its iframe. Make a shared detail visible even
+      // when the public page's mobile introduction fills the first viewport.
+      try { window.frameElement?.scrollIntoView({ block: 'center', behavior: 'instant' }); } catch {}
+    } else if (detail.open) detail.close();
+  };
+  addressWindow.addEventListener('hashchange', readComponentAddress);
 
   // Where the frame image actually paints, and where a point on it lands after
   // the stage's zoom. object-fit: contain letterboxes on one axis; the zoom is a
@@ -660,15 +764,24 @@
     }
   }
   // The toolbar also changes height after fonts load or translations wrap.
-  new ResizeObserver(placeHotspots).observe(stage);
+  new ResizeObserver(() => { placeHotspots(); wake(); }).observe(stage);
   placeHotspots();
   revealHotspots(renderedIndex, renderedElevation);
   document.querySelector('.detail-close').addEventListener('click', () => detail.close());
+  detail.addEventListener('close', () => {
+    // Do not erase a different fragment chosen by browser navigation.
+    if (componentFromAddress() === selectedComponent) setComponentAddress(null);
+    selectedComponent = null;
+    detailOpener?.focus();
+    wake();
+  });
   detail.addEventListener('keydown', (event) => {
     // A modal inside an iframe can otherwise Tab into the embedding page.
     if (event.key === 'Tab') {
       event.preventDefault();
-      detail.querySelector('.detail-close').focus();
+      const focusable = [...detail.querySelectorAll('button, input')].filter(el => !el.hidden && !el.disabled);
+      const index = focusable.indexOf(document.activeElement);
+      focusable[(index + (event.shiftKey ? -1 : 1) + focusable.length) % focusable.length].focus();
     }
   });
 
@@ -701,6 +814,10 @@
     set('.top-frame', t('alt.top'), 'alt');
     set('.hint', t('Drag sideways to rotate. Use Top to look down.'));
     set('#keyboardHelp', t('Keyboard: arrows rotate and tilt; + and − zoom.'));
+    set('label[for="componentSelect"]', t('Explore a component'));
+    set('#componentMenu button', t('View'));
+    set('#copyLink', t('Copy link'));
+    set('#shareLink', t('Component link'), 'aria-label');
     // Preserve the angle readout alongside this bare text node.
     viewer.querySelector('.angle').childNodes.forEach((node) => {
       if (node.nodeType === 3 && node.nodeValue.trim()) node.nodeValue = t('Camera angle');
@@ -719,17 +836,51 @@
   const brandHint = document.querySelector('.brand p');
   if (brandHint) brandHint.textContent = zoomKey(brandHint.textContent);
 
-  const animate = (now) => {
-    const delta = Math.min(.05,(now - previousTime) / 1000);previousTime = now;
+  // One outstanding callback at most. Once interpolation settles, rendering
+  // sleeps until input, an image load, a resize or visibility change wakes it.
+  function pause() {
+    if (animationId !== null) cancelAnimationFrame(animationId);
+    animationId = null;
+    previousTime = null;
+  }
+  function wake() {
+    if (animationId === null && !document.hidden && inView) animationId = requestAnimationFrame(animate);
+  }
+  function animate(now) {
+    animationId = null;
+    if (document.hidden || !inView) { previousTime = null; return; }
+    const delta = previousTime === null ? 1 / 60 : Math.min(.05, (now - previousTime) / 1000);
+    previousTime = now;
     if (autoRotate && !dragging) targetAzimuth += delta * (27.9 / angleStep);
     const smoothing = reduced ? 1 : 1 - Math.exp(-delta * 12);
     azimuth += (targetAzimuth - azimuth) * smoothing;
     tilt += (targetTilt - tilt) * smoothing;
+    const moving = Math.abs(targetAzimuth - azimuth) > .001 || Math.abs(targetTilt - tilt) > .001;
+    if (!moving) {
+      azimuth = targetAzimuth = normalizeAngle(targetAzimuth);
+      tilt = targetTilt;
+    }
     renderView();
-    requestAnimationFrame(animate);
-  };
+    if (autoRotate || moving) wake(); else previousTime = null;
+  }
+  frames.forEach(frame => frame.addEventListener('load', wake));
+  new IntersectionObserver(([entry]) => {
+    inView = entry.isIntersecting;
+    if (inView) wake(); else pause();
+  }).observe(viewer);
+  document.addEventListener('visibilitychange', () => document.hidden ? pause() : wake());
+  window.addEventListener('pagehide', pause);
+  window.addEventListener('pageshow', wake);
+  motionPreference.addEventListener('change', (event) => {
+    reduced = event.matches;
+    spinBtn.disabled = reduced;
+    spinBtn.title = reduced ? t('Auto rotate is unavailable with reduced motion.') : '';
+    if (reduced) stopAuto();
+    wake();
+  });
   renderView();
-  requestAnimationFrame(animate);
+  readComponentAddress();
+  wake();
 })();
 </script>
 </body>

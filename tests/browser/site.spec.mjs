@@ -100,9 +100,9 @@ for (const lang of ['en', 'ar']) {
       const controlLayout = async () => frame.locator('.viewer-footer').evaluate(footer => {
         const controls = footer.querySelector('.controls').getBoundingClientRect();
         const disclosure = footer.querySelector('.disclosure').getBoundingClientRect();
-        return { fits: footer.getBoundingClientRect().bottom <= innerHeight + 1, separated: controls.bottom <= disclosure.top, buttons: [...footer.querySelectorAll('button')].every(button => { const b = button.getBoundingClientRect(); return b.width >= 44 && b.height >= 44 && b.left >= 0 && b.right <= innerWidth; }) };
+        return { fits: footer.getBoundingClientRect().bottom <= innerHeight + 1, stable: document.querySelector('#viewer').scrollTop === 0, separated: controls.bottom <= disclosure.top, buttons: [...footer.querySelectorAll('button')].every(button => { const b = button.getBoundingClientRect(); return b.width >= 44 && b.height >= 44 && b.left >= 0 && b.right <= innerWidth; }) };
       });
-      expect(await controlLayout()).toEqual({ fits: true, separated: true, buttons: true });
+      expect(await controlLayout()).toEqual({ fits: true, stable: true, separated: true, buttons: true });
 
       const component = frame.getByRole('button', { name: label.brake, exact: true });
       await component.press('Enter');
@@ -111,7 +111,7 @@ for (const lang of ['en', 'ar']) {
       await expect(dialog).toBeVisible();
       await expect(close).toBeFocused();
       await page.keyboard.press('Tab');
-      await expect(close).toBeFocused();
+      await expect(dialog.locator('#copyLink')).toBeFocused();
       await page.keyboard.press('Shift+Tab');
       await expect(close).toBeFocused();
       await page.keyboard.press('Escape');
@@ -128,7 +128,7 @@ for (const lang of ['en', 'ar']) {
       // Check painted-image bounds, not the larger transparent <img> box.
       for (const width of [320, 1280]) {
         await page.setViewportSize({ width, height: 844 });
-        await expect.poll(controlLayout).toEqual({ fits: true, separated: true, buttons: true });
+        await expect.poll(controlLayout).toEqual({ fits: true, stable: true, separated: true, buttons: true });
         await expect.poll(async () => frame.locator('.top-frame').evaluate(img => {
           const stage = img.parentElement.getBoundingClientRect();
           const matrix = new DOMMatrix(getComputedStyle(img).transform);
@@ -143,6 +143,63 @@ for (const lang of ['en', 'ar']) {
       await expect(frame.locator('#viewer')).toHaveAttribute('style', /--zoom: 1\.12/);
       await frame.getByRole('button', { name: label.eye, exact: true }).click();
       await expect(frame.locator('.ring-low.is-active')).toBeVisible();
+    });
+
+    test('component menu, shared addresses and clipboard fallback', async ({ page, context }) => {
+      // Deterministically exercise denied clipboard access without touching the
+      // machine's clipboard. Real permission policies differ between browsers.
+      await context.addInitScript(() => Object.defineProperty(navigator, 'clipboard', {
+        value: { writeText: async () => { throw new Error('Clipboard denied'); } },
+      }));
+      await page.setViewportSize({ width: 320, height: 844 });
+      await page.goto('car.html');
+      const frame = page.frameLocator('iframe');
+      const menu = frame.locator('#componentSelect');
+      const view = frame.locator('#componentMenu button');
+      await expect(menu.locator('option')).toHaveCount(8);
+      const anchors = { cockpit: 4, axle: 28, shell: 12, brakes: 5, chassis: 7, killSwitch: 10, motor: 16, controller: 21 };
+      for (const [id, index] of Object.entries(anchors)) {
+        await menu.selectOption(id);
+        await view.press('Enter');
+        await expect(frame.locator('#detail')).toBeVisible();
+        await expect(page).toHaveURL(new RegExp(`#component=${id}$`));
+        await expect(frame.locator('.ring-low.is-active')).toHaveAttribute('data-index', String(index));
+        await expect(frame.locator('#shareLink')).toHaveValue(`${origin}/electric_car_website/car.html#component=${id}`);
+        if (lang === 'ar') await expect(frame.locator('#detailTitle')).toHaveText(/[\u0600-\u06ff]/);
+        await page.keyboard.press('Escape');
+        await expect(frame.locator('#detail')).toBeHidden();
+        await expect(view).toBeFocused();
+        await expect(page).toHaveURL(/car\.html$/);
+      }
+      await view.click(); // controller remains selected
+      await frame.locator('#copyLink').click();
+      await expect(frame.locator('#shareLink')).toBeVisible();
+      await expect(frame.locator('#shareLink')).toBeFocused();
+      await page.keyboard.press('Tab');
+      await expect(frame.locator('.detail-close')).toBeFocused();
+      await page.keyboard.press('Shift+Tab');
+      await expect(frame.locator('#shareLink')).toBeFocused();
+      await page.reload();
+      await expect(frame.locator('#detail')).toBeVisible();
+      await expect(menu).toHaveValue('controller');
+      await expect(frame.locator('.ring-low.is-active')).toHaveAttribute('data-index', '21');
+      await expect(frame.locator('html')).toHaveAttribute('lang', lang);
+      // Unknown fragments never become HTML or open a bogus component.
+      await page.goto('car.html#component=unknown');
+      await expect(frame.locator('#detail')).toBeHidden();
+      await page.goto(`prototype/kart/photo.html?lang=${lang}#component=motor`);
+      await expect(page.locator('#detail')).toBeVisible();
+      await expect(page.locator('.ring-low.is-active')).toHaveAttribute('data-index', '16');
+      await expect(page.locator('html')).toHaveAttribute('lang', lang);
+      await page.keyboard.press('Escape');
+      await page.setViewportSize({ width: 320, height: 400 });
+      await page.locator('#componentMenu button').press('Tab');
+      // Short standalone windows can scroll to the new menu and disclosure.
+      await page.locator('#componentSelect').selectOption('brakes');
+      await page.locator('#componentMenu button').click();
+      await expect(page.locator('#detailTitle')).toHaveText(label.brake);
+      await page.keyboard.press('Escape');
+      await expect(page.locator('#componentMenu button')).toBeFocused();
     });
   });
 }
