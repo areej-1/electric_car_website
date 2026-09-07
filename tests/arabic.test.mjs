@@ -10,6 +10,7 @@ const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
 const pages = ['index.html','members.html','projects.html','game.html','101.html','specs.html','checklist.html','race-day.html','about.html','sponsors.html','news.html','sponsor-package.html','404.html'];
 
 const checks = [
+  ['projects.html', 'Build stages', 'مراحل البناء'],
   ['projects.html', 'Design + planning', 'التصميم والتخطيط'],
   ['101.html', 'Battery', 'البطارية'],
   ['specs.html', 'Car Specifications', 'مواصفات السيارة'],

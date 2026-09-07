@@ -300,6 +300,11 @@
       'Nineteen student builders across mechanics, safety, innovation, media, and driving—each contributing to the Cobra race car.': 'تسعة عشر طالبًا وطالبة يساهمون في سيارة سباق كوبرا عبر الميكانيكا والسلامة والابتكار والإعلام والقيادة.'
     },
     'projects.html': {
+      'Build stages': 'مراحل البناء',
+      'Cobras students in the electric car project room': 'طلاب كوبرا في غرفة مشروع السيارة الكهربائية',
+      'Students working beside the Cobra electric race car': 'طلاب يعملون بجانب سيارة سباق كوبرا الكهربائية',
+      'Cobras electric car testing footage': 'لقطات لاختبار سيارة كوبرا الكهربائية',
+      'Final Cobra adjustments': 'التعديلات النهائية على سيارة كوبرا',
       'From sketch': 'من الرسم', 'to starting grid.': 'إلى خط الانطلاق.',
       'Scroll through the five stages behind the Cobra—each one turning an idea into a safer, faster, more complete electric race car.': 'تعرّف إلى المراحل الخمس لبناء كوبرا، حيث تحوّل كل مرحلة الفكرة إلى سيارة سباق كهربائية أكثر أمانًا وسرعةً واكتمالًا.',
       'Define the mission': 'تحديد المهمة', 'Design + planning': 'التصميم والتخطيط',

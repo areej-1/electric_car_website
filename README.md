@@ -49,6 +49,8 @@ Checks every HTML page for shared assets/branding, evaluates `site.js` in a sand
 - **Build status + engineering data** distinguish published figures, estimates, and pending measurement details
 - **Sponsor contact** links directly to the public Instagram account and package PDF
 - **Member portraits** use initials placeholders for the four members awaiting art; role filters work in both languages
+- **Build timeline** has keyboard-accessible stage links, readable phone layouts, and video posters without preloading the clips
+- **360° viewer** keeps controls separate from its disclosure, fits the overhead view at every angle, and uses keyboard-accessible component dialogs in English and Arabic
 - **Shared chrome** rebuilt from `cobras-lib.js` + `site.js` on every page
 - **EN/AR toggle** stores `localStorage.cobras_lang`
 - **CarGPT live path**: set `localStorage.CARGPT_ENDPOINT` / `CARGPT_API_KEY` or copy `cargpt.config.example.js` → `cargpt.config.js` (gitignored)
