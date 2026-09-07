@@ -6,12 +6,13 @@
 <title>Cobra 360 — photoreal locked turntable</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;500;600&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#0a0a0a;--panel:#141414;--raised:#1a1a1a;--hot:#e6392b;
     --gold:#c9a227;--cream:#f5f0e8;--steel:#9aa3a8;
     --display:'Orbitron',system-ui,sans-serif;--body:'Poppins',system-ui,sans-serif;
+    --arabic:'Noto Sans Arabic','Geeza Pro','Segoe UI',Tahoma,sans-serif;
   }
   *{box-sizing:border-box}
   html,body{width:100%;height:100%;margin:0}
@@ -19,14 +20,16 @@
   button{font:inherit}
 
   .viewer{
-    position:relative;width:100%;height:100%;min-height:480px;overflow:hidden;
+    position:relative;width:100%;height:100%;min-height:480px;overflow:hidden;display:flex;flex-direction:column;
     background:#0b0b0c;isolation:isolate;touch-action:pan-y;user-select:none;
   }
+  .view-area{position:relative;flex:1;min-height:220px}
   /* pan-y on the element that handles the drag, not only on its wrapper:
      touch-action does not inherit, so the stage was computing `auto`.
      Horizontal drags rotate the car; vertical ones belong to the page. */
   .stage{position:absolute;inset:0;display:grid;place-items:center;cursor:grab;touch-action:pan-y}
   .stage.is-dragging{cursor:grabbing}
+  .stage:focus-visible{outline:2px solid var(--gold);outline-offset:-4px}
   .stage::after{
     content:"";position:absolute;inset:0;pointer-events:none;
     background:linear-gradient(180deg,rgba(10,10,10,.18),transparent 24%,transparent 72%,rgba(10,10,10,.68));
@@ -39,6 +42,7 @@
     -webkit-user-drag:none;pointer-events:none;
   }
   .frame.is-active{will-change:transform}
+  .top-frame{transform:scale(calc(var(--zoom,1) * var(--top-fit,1))) rotate(var(--frame-rotation,0deg));transform-origin:center}
   .loading{
     position:absolute;inset:0;display:grid;place-items:center;z-index:8;background:#0b0b0c;
     transition:opacity .35s ease,visibility .35s ease;
@@ -63,37 +67,22 @@
   .angle strong{display:block;color:var(--cream);font-size:14px;margin-top:4px}
 
   .hint{
-    position:absolute;z-index:5;left:50%;bottom:86px;transform:translateX(-50%);
-    display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(154,163,168,.2);
-    background:rgba(10,10,10,.7);backdrop-filter:blur(8px);font-size:11px;color:var(--steel);
-    letter-spacing:.05em;white-space:nowrap;pointer-events:none;transition:opacity .25s ease;
+    display:flex;justify-content:center;align-items:center;gap:8px;margin:0 0 12px;
+    font-size:12px;color:var(--steel);text-align:center;
   }
-  .viewer.has-dragged .hint{opacity:0}
-  .drag-icon{width:28px;height:14px;position:relative}
-  .drag-icon::before,.drag-icon::after{content:"";position:absolute;top:6px;width:8px;height:8px;border-top:1px solid var(--cream)}
-  .drag-icon::before{left:0;border-left:1px solid var(--cream);transform:rotate(-45deg)}
-  .drag-icon::after{right:0;border-right:1px solid var(--cream);transform:rotate(45deg)}
-  .drag-icon span{position:absolute;left:5px;right:5px;top:7px;height:1px;background:var(--cream)}
+  .keyboard-help{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 
-  .controls{
-    position:absolute;z-index:6;left:18px;right:18px;bottom:16px;display:flex;
-    align-items:center;justify-content:space-between;gap:12px;pointer-events:none;
-    /* Wrap rather than overflow. Seven controls need ~350px of intrinsic width; at
-       320px the box is 278px, so the zoom buttons were pushed clean outside a
-       container that cannot scroll horizontally — unreachable, not just cramped. */
-    flex-wrap:wrap;row-gap:8px;
-  }
-  @media (max-width:400px){
-    .controls{justify-content:center}
-  }
-  .control-group{display:flex;align-items:center;gap:7px;pointer-events:auto}
+  .viewer-footer{position:relative;z-index:6;padding:12px 16px;background:var(--ink);border-top:1px solid #292929}
+  .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .control-group{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;max-width:100%}
   .control{
-    min-width:42px;height:42px;padding:0 13px;border:1px solid rgba(154,163,168,.28);
+    min-width:44px;min-height:44px;padding:10px 12px;border:1px solid rgba(154,163,168,.28);
     background:rgba(20,20,20,.9);color:var(--cream);cursor:pointer;border-radius:2px;
     transition:border-color .16s,background .16s,transform .16s;
   }
   .control:hover{border-color:var(--gold);background:var(--raised)}
   .control:active{transform:translateY(1px)}
+  .control:disabled{opacity:.55;cursor:default}
   .control:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
   .control[aria-pressed="true"]{background:var(--hot);border-color:var(--hot)}
   .control.is-label{font-size:11px;letter-spacing:.04em}
@@ -122,36 +111,27 @@
   .hotspot:hover .hotspot-dot,.hotspot:focus-visible .hotspot-dot{background:var(--hot);border-color:var(--hot)}
   .hotspot:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
 
-  .detail{
-    position:absolute;z-index:7;right:62px;top:50%;width:min(300px,calc(100% - 90px));
-    transform:translateY(-50%) translateX(20px);opacity:0;visibility:hidden;
-    background:rgba(20,20,20,.95);border:1px solid rgba(201,162,39,.34);
-    padding:18px;box-shadow:0 20px 70px rgba(0,0,0,.35);transition:.2s ease;
-  }
-  .detail.is-open{opacity:1;visibility:visible;transform:translateY(-50%)}
-  .detail .eyebrow{font-family:var(--display);font-size:10px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase}
+  .detail{width:min(360px,calc(100% - 32px));max-height:calc(100% - 32px);margin:auto;overflow:auto;
+    color:var(--cream);background:var(--panel);border:1px solid var(--gold);padding:24px}
+  .detail::backdrop{background:rgba(0,0,0,.65)}
+  .detail .eyebrow{font-family:var(--display);font-size:10px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase;padding-inline-end:30px}
   .detail h2{font-family:var(--display);font-size:1rem;margin:8px 0}
   .detail p{font-size:12px;line-height:1.6;color:var(--steel);margin:0}
-  .detail-close{position:absolute;top:8px;right:8px;border:0;background:none;color:var(--steel);font-size:20px;cursor:pointer}
+  .detail-close{position:absolute;top:4px;inset-inline-end:4px;width:44px;height:44px;border:0;background:none;color:var(--cream);font-size:24px;cursor:pointer}
+  .detail-close:focus-visible{outline:2px solid var(--gold);outline-offset:-4px}
 
   .disclosure{
-    position:absolute;z-index:5;right:18px;bottom:70px;max-width:34ch;text-align:right;
-    color:rgba(154,163,168,.78);font-size:10px;line-height:1.5;pointer-events:none;
+    margin:12px 0 0;color:var(--steel);font-size:11px;line-height:1.5;text-align:center;
   }
 
   @media (max-width:720px){
     .topbar{padding:15px}.brand p{display:none}.angle{display:none}
-    .controls{left:10px;right:10px;bottom:10px}.control{height:38px;min-width:38px;padding:0 10px}
     .hotspot .lbl{display:none}
-    .detail{right:48px}
-    /* The disclosure states this is a visualisation rather than a photograph, so it
-       must not be hidden on the viewport where most people will see it. Stacked above
-       the controls with the drag hint above it, so the three never overlap. */
-    .disclosure{
-      left:10px;right:10px;bottom:56px;max-width:none;text-align:center;font-size:9.5px;
-    }
-    .hint{bottom:104px}
   }
+  @media (max-width:560px){.controls{flex-direction:column;gap:8px}.control{padding-inline:10px}.viewer-footer{padding:12px}}
+  html[dir="rtl"] body,html[dir="rtl"] .detail h2,html[dir="rtl"] .detail .eyebrow{font-family:var(--arabic);letter-spacing:0}
+  html[dir="rtl"] .control.is-label{font-size:13px;letter-spacing:0}
+  html[dir="rtl"] .disclosure{font-size:12px}
   @media (prefers-reduced-motion:reduce){
     .frame,.loading,.detail{transition:none}.loader-mark{animation:none}
   }
@@ -159,11 +139,12 @@
 </head>
 <body>
 <main class="viewer" id="viewer" aria-label="Interactive 360-degree view of the Cobras race car">
+  <div class="view-area">
   <div class="loading" id="loading" aria-live="polite">
     <div class="loader-mark" aria-hidden="true"></div>
   </div>
 
-  <div class="stage" id="stage" tabindex="0" aria-label="Drag horizontally to rotate and vertically to tilt up. Use arrow keys to change angle.">
+  <div class="stage" id="stage" tabindex="0" aria-describedby="viewerHelp keyboardHelp" aria-label="Drag horizontally to rotate and vertically to tilt up. Use arrow keys to change angle.">
     <!-- AVIF with a JPEG fallback, same as the generated frames. data-src rather
          than src because nothing shows this frame until the reader tilts all the
          way up, so it belongs in the last loading wave, not competing with the
@@ -181,39 +162,39 @@
     <div class="angle">Camera angle<strong id="angleLabel">Front</strong></div>
   </header>
 
-  <div class="hint" aria-hidden="true">
-    <span class="drag-icon"><span></span></span>
-    Drag in any direction
-  </div>
-
   <!-- Dots sit on the car, not in a list beside it. Each one is pinned to a point
        on a specific frame, so it is only shown when the viewer is actually looking
        at the angle where that part is visible — a dot over a body panel that hides
        the part it names would be worse than no dot. Built by the script below. -->
   <div class="hotspots" id="hotspots" aria-label="Car details"></div>
 
-  <aside class="detail" id="detail" aria-live="polite">
+  <dialog class="detail" id="detail" aria-labelledby="detailTitle" aria-describedby="detailBody">
     <button class="detail-close" type="button" aria-label="Close detail">×</button>
     <div class="eyebrow">Component detail</div>
     <h2 id="detailTitle"></h2>
     <p id="detailBody"></p>
-  </aside>
+  </dialog>
+  </div>
 
+  <div class="viewer-footer">
+  <p class="hint" id="viewerHelp">Drag sideways to rotate. Use Top to look down.</p>
+  <p class="keyboard-help" id="keyboardHelp">Keyboard: arrows rotate and tilt; + and − zoom.</p>
   <div class="controls">
     <div class="control-group">
       <button class="control is-label" id="spinBtn" type="button" aria-pressed="false">Auto rotate</button>
       <button class="control" id="prevBtn" type="button" aria-label="Previous angle">←</button>
       <button class="control" id="nextBtn" type="button" aria-label="Next angle">→</button>
-      <button class="control is-label" id="eyeBtn" type="button">Eye level</button>
-      <button class="control is-label" id="topBtn" type="button">Top</button>
     </div>
     <div class="control-group">
+      <button class="control is-label" id="eyeBtn" type="button">Eye level</button>
+      <button class="control is-label" id="topBtn" type="button">Top</button>
       <button class="control" id="zoomOut" type="button" aria-label="Zoom out">−</button>
       <button class="control" id="zoomIn" type="button" aria-label="Zoom in">+</button>
     </div>
   </div>
 
   <p class="disclosure">AI-assisted studio visualization locked to one master design: two five-spoke front wheels and one centered rear wheel fully enclosed by the shell.</p>
+  </div>
 </main>
 
 <script>
@@ -260,7 +241,10 @@
     'viewer.aria':'عرض تفاعلي بزاوية 360 درجة لسيارة سباق كوبرا',
     'stage.start':'اسحب أفقيًا للتدوير وعموديًا للإمالة للأعلى. استخدم مفاتيح الأسهم لتغيير الزاوية.',
     'brand.hint':'اسحب أفقيًا للتدوير · اسحب للأعلى للمنظر العلوي · ctrl أو ⌘ مع التمرير للتقريب',
-    'Camera angle':'زاوية الكاميرا','Drag in any direction':'اسحب في أي اتجاه',
+    'Camera angle':'زاوية الكاميرا',
+    'Drag sideways to rotate. Use Top to look down.':'اسحب أفقيًا للتدوير. اختر «علوي» للنظر من الأعلى.',
+    'Keyboard: arrows rotate and tilt; + and − zoom.':'لوحة المفاتيح: الأسهم للتدوير والإمالة؛ + و − للتكبير والتصغير.',
+    'Auto rotate is unavailable with reduced motion.':'الدوران التلقائي غير متاح عند تفعيل تقليل الحركة.',
     'Component detail':'تفاصيل المكوّن','Auto rotate':'دوران تلقائي',
     'Car details':'تفاصيل السيارة','Close detail':'إغلاق التفاصيل',
     'Previous angle':'الزاوية السابقة','Next angle':'الزاوية التالية',
@@ -379,7 +363,13 @@
     controller:['Controller','Sits between the battery and the motor on the 48V system.']
   };
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) {
+    spinBtn.disabled = true;
+    spinBtn.title = t('Auto rotate is unavailable with reduced motion.');
+  }
   let zoom = 1;
+  let stageWidth = 0;
+  let stageHeight = 0;
   let dragging = false;
   let startX = 0;
   let startY = 0;
@@ -440,6 +430,7 @@
     const elevation = showTop ? 'Top' : showHigh ? 'Elevated' : 'Eye level';
     if (nearest !== renderedIndex || elevation !== renderedElevation) {
       topFrame.style.setProperty('--frame-rotation', `${imageAngle}deg`);
+      fitTopFrame(imageAngle);
       const angleText = formatDegrees(imageAngle);
       angleLabel.textContent = `${angleText} · ${t(labels[nearest])} · ${t(elevation)}`;
       stage.setAttribute('aria-label', LANG === 'ar'
@@ -498,20 +489,19 @@
   });
   const request = (img) => { if (img.dataset.src) { img.src = img.dataset.src; delete img.dataset.src; } };
 
-  /* Three waves, in the order the viewer needs them.
+  /* Two waves, in the order the viewer needs them.
 
-     Opening: every eighth angle at eye level. Enough to turn the car through a
+     Opening: the initial view and every eighth angle at eye level. Enough to turn the car through a
      full circle, and small enough to arrive almost at once. The overlay lifts
      here.
 
-     Then the rest of the eye-level ring, which is what a reader is looking at
-     while they first drag, and only then the elevated ring and the overhead
-     frame, which nothing shows until they tilt up.
+     Then the remaining eye-level angles, the elevated ring and overhead frame.
 
-     Each wave waits for the one before rather than firing on a timer, so on a
-     fast connection all three land in quick succession and on a slow one the
+     The second wave waits for the first, so on a
+     fast connection both land in quick succession and on a slow one the
      later waves never compete with the frames being looked at. */
-  const opening = lowFrames.filter((_, index) => index % 8 === 0);
+  // Include the initial 56° view in the first wave, before dismissing its loader.
+  const opening = lowFrames.filter((_, index) => index === 5 || index % 8 === 0);
   const rest = [...lowFrames.filter((f) => !opening.includes(f)), ...highFrames, topFrame];
 
   const reveal = () => loading.classList.add('is-ready');
@@ -534,13 +524,11 @@
     if (!dragging) return;
     targetAzimuth = startAzimuth - (event.clientX - startX) / 23;
     targetTilt = Math.max(0, Math.min(1, startTilt - (event.clientY - startY) / 280));
-    viewer.classList.add('has-dragged');
   });
   const finishDrag = (event) => {
     if (!dragging) return;
     dragging = false;stage.classList.remove('is-dragging');
     try{stage.releasePointerCapture(event.pointerId)}catch{}
-    if (Math.hypot(event.clientX - startX,event.clientY - startY) > 4) viewer.classList.add('has-dragged');
   };
   stage.addEventListener('pointerup', finishDrag);
   stage.addEventListener('pointercancel', finishDrag);
@@ -607,6 +595,7 @@
     button.innerHTML = `<span class="hotspot-dot">${h.n}</span><span class="lbl"></span>`;
     button.querySelector('.lbl').textContent = label;
     button.setAttribute('aria-label', label);
+    button.setAttribute('aria-haspopup', 'dialog');
     button.addEventListener('click', () => {
       stopAuto();
       targetAzimuth = h.frame;
@@ -614,7 +603,7 @@
       const [title, body] = details[h.id];
       detailTitle.textContent = title;
       detailBody.textContent = body;
-      detail.classList.add('is-open');
+      detail.showModal();
     });
     hotspotLayer.appendChild(button);
     return { ...h, button };
@@ -626,6 +615,9 @@
   function placeHotspots() {
     const box = stage.getBoundingClientRect();
     if (!box.width || !box.height) return;
+    stageWidth = box.width;
+    stageHeight = box.height;
+    fitTopFrame();
     const fit = Math.min(box.width / FRAME_W, box.height / FRAME_H);
     const paintedW = FRAME_W * fit;
     const paintedH = FRAME_H * fit;
@@ -641,6 +633,19 @@
     }
   }
 
+  // The overhead image is portrait-shaped. Fit its rotated bounds before zooming
+  // so changing angle never crops the default top view on a narrow screen.
+  function fitTopFrame(angle = renderedIndex * angleStep) {
+    if (!stageWidth || !stageHeight) return;
+    const width = topFrame.naturalWidth || 1024;
+    const height = topFrame.naturalHeight || 1536;
+    const fit = Math.min(stageWidth / width, stageHeight / height);
+    const rad = angle * Math.PI / 180;
+    const c = Math.abs(Math.cos(rad)), s = Math.abs(Math.sin(rad));
+    const scale = Math.min(1, stageWidth / (fit * (width * c + height * s)), stageHeight / (fit * (width * s + height * c)));
+    topFrame.style.setProperty('--top-fit', scale.toFixed(4));
+  }
+
   // Visible only near its own angle, and only at eye level — the positions were
   // read off the eye-level ring, and the elevated and overhead frames show the
   // car from somewhere those points do not correspond to.
@@ -654,11 +659,18 @@
       spot.button.setAttribute('aria-hidden', near ? 'false' : 'true');
     }
   }
-  addEventListener('resize', placeHotspots, { passive: true });
+  // The toolbar also changes height after fonts load or translations wrap.
+  new ResizeObserver(placeHotspots).observe(stage);
   placeHotspots();
   revealHotspots(renderedIndex, renderedElevation);
-  document.querySelector('.detail-close').addEventListener('click', () => detail.classList.remove('is-open'));
-  addEventListener('keydown', (event) => {if(event.key === 'Escape') detail.classList.remove('is-open')});
+  document.querySelector('.detail-close').addEventListener('click', () => detail.close());
+  detail.addEventListener('keydown', (event) => {
+    // A modal inside an iframe can otherwise Tab into the embedding page.
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      detail.querySelector('.detail-close').focus();
+    }
+  });
 
   /* The static chrome, done once. Everything above this point is either rebuilt
      per frame or read on demand; these are the nodes that are written in the
@@ -687,11 +699,9 @@
     set('.disclosure', t('disclosure'));
     set('#viewer', t('viewer.aria'), 'aria-label');
     set('.top-frame', t('alt.top'), 'alt');
-    // Both of these hold a bare text node alongside an element child, so they
-    // need the text node itself — textContent would delete the sibling.
-    viewer.querySelector('.hint').childNodes.forEach((node) => {
-      if (node.nodeType === 3 && node.nodeValue.trim()) node.nodeValue = t('Drag in any direction');
-    });
+    set('.hint', t('Drag sideways to rotate. Use Top to look down.'));
+    set('#keyboardHelp', t('Keyboard: arrows rotate and tilt; + and − zoom.'));
+    // Preserve the angle readout alongside this bare text node.
     viewer.querySelector('.angle').childNodes.forEach((node) => {
       if (node.nodeType === 3 && node.nodeValue.trim()) node.nodeValue = t('Camera angle');
     });

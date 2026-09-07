@@ -193,7 +193,7 @@ Every one of these has already cost time on this project.
 
 **The service worker serves assets cache-first.** The non-navigation branch of the `fetch`
 handler ends in `return cached || network` (`sw.js:60`). Change any image, font, or asset and returning visitors keep
-the old one *forever* until the `CACHE` constant is bumped. It is at `v18`; it
+the old one *forever* until the `CACHE` constant is bumped. It is at `v19`; it
 has been bumped once per asset-changing PR. Forgetting this is the single most
 common way a correct fix looks broken.
 
@@ -245,12 +245,15 @@ her work forward rather than replacing it.
 
 September cleanup: compact homepage, direct sponsor contact and PDF actions,
 UAE calendar countdown, and consistent member placeholders. Service worker
-`v18`. The latest published workshop log remains 1 July 2026; fresh updates,
+`v19`. The car viewer now keeps controls and disclosure in normal flow, uses native
+component dialogs with an iframe focus guard, and fits the rotated overhead
+image. Hotspot geometry observes stage resizing, including font reflow. The
+build timeline has stage jump links, full-width phone content, video posters,
+and no visibility-based dimming. The latest published workshop log remains 1 July 2026; fresh updates,
 measurement dates, and individual assignments still need team confirmation.
 
 **Uncommitted in the working tree** (left alone deliberately, not mine to
-decide): `prototype/kart/index.html` shows as deleted, and
-`assets/crew/portrait-design-language-prompt.txt` plus
+decide): `assets/crew/portrait-design-language-prompt.txt` plus
 `assets/crew/portraits-detailed-preview.png` are untracked.
 
 **Open, waiting on the team rather than on code:**

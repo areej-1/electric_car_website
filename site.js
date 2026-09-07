@@ -584,15 +584,10 @@
     paint('All');
   }
 
-  /* ---------- Timeline visibility ---------- */
+  /* ---------- Timeline progress (content stays readable without JavaScript) ---------- */
   const timeline = document.querySelector('.build-timeline');
   const timelineProgress = document.querySelector('.timeline-progress span');
   if (timeline && timelineProgress) {
-    const steps = [...timeline.querySelectorAll('.timeline-step')];
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => entry.target.classList.toggle('is-visible', entry.isIntersecting));
-    }, { threshold: 0.18 });
-    steps.forEach(step => observer.observe(step));
     const updateTimeline = () => {
       const rect = timeline.getBoundingClientRect();
       const progress = Math.max(0, Math.min(1, -rect.top / Math.max(1, rect.height - innerHeight)));

@@ -13,6 +13,7 @@ const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace
 const PAGES = [
   'index.html',
   'members.html',
+  'car.html',
   'projects.html',
   'race-day.html',
   'game.html',
