@@ -25,7 +25,7 @@ Checks every HTML page for shared assets/branding, evaluates `site.js` in a sand
 
 ### PR checks
 
-`.github/workflows/pr-checks.yml` runs the static tests, cache-version guard, and six Chromium browser scenarios for ready PRs targeting `main`. The browser scenarios cover English and Arabic navigation, language switching, member filtering, narrow build stages, and car controls at phone and desktop widths.
+`.github/workflows/pr-checks.yml` runs the static tests, cache-version guard, and ten Chromium browser scenarios for ready PRs targeting `main`. The browser scenarios cover English and Arabic navigation, language switching, member filtering, narrow build stages, car controls, component links, and viewer rendering at phone and desktop widths.
 
 To limit Actions usage: one Ubuntu job, one browser worker, a five-minute job limit, no retries, no schedules, and no duplicate push/deployment runs. New commits cancel older runs for the same PR. Draft PRs use no runner; changes limited to Markdown or license files skip the workflow. Only failure screenshots are uploaded, with three-day retention. Dependencies are pinned and npm downloads are cached; only Chromium's headless shell is installed.
 
@@ -76,7 +76,7 @@ Checks report on PRs; they do not change branch protection or prevent direct edi
 - **Sponsor contact** links directly to the public Instagram account and package PDF
 - **Member portraits** use initials placeholders for the four members awaiting art; role filters work in both languages
 - **Build timeline** has keyboard-accessible stage links, readable phone layouts, and video posters without preloading the clips
-- **360° viewer** keeps controls separate from its disclosure, fits the overhead view at every angle, and uses keyboard-accessible component dialogs in English and Arabic
+- **360° viewer** keeps controls separate from its disclosure, fits the overhead view at every angle, and uses keyboard-accessible component dialogs in English and Arabic. Its component menu jumps to all eight mapped parts; Copy link shares addresses such as `car.html#component=controller`, with a selectable URL if clipboard access is denied. Rendering stops at rest and pauses while hidden or outside the viewport; auto-rotation resumes when visible and respects changes to reduced-motion settings.
 - **Shared chrome** rebuilt from `cobras-lib.js` + `site.js` on every page
 - **EN/AR toggle** stores `localStorage.cobras_lang`
 - **CarGPT live path**: set `localStorage.CARGPT_ENDPOINT` / `CARGPT_API_KEY` or copy `cargpt.config.example.js` → `cargpt.config.js` (gitignored)

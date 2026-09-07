@@ -163,8 +163,8 @@ npx serve -l 3000 # optional; verify-site.mjs adds a live HTTP probe if it's up
 ```
 
 `npm test` also exercises the cache-version guard against temporary Git histories.
-Ready PRs run this suite, the guard against the PR base, and six English/Arabic
-Chromium browser scenarios. The workflow uses one Ubuntu job capped at five
+Ready PRs run this suite, the guard against the PR base, and ten Chromium browser
+scenarios, including English/Arabic component links and idle rendering. The workflow uses one Ubuntu job capped at five
 minutes; drafts and Markdown/license-only changes avoid runner usage. No push,
 deployment, or scheduled test runs. Older runs cancel on new commits; failure
 screenshots expire after three days. `README.md` has local commands and limits.
@@ -201,7 +201,7 @@ Every one of these has already cost time on this project.
 
 **The service worker serves assets cache-first.** The non-navigation branch of the `fetch`
 handler ends in `return cached || network` (`sw.js:60`). Change any image, font, or asset and returning visitors keep
-the old one *forever* until the `CACHE` constant is bumped. It is at `v19`; it
+the old one *forever* until the `CACHE` constant is bumped. It is at `v20`; it
 has been bumped once per asset-changing PR. Forgetting this is the single most
 common way a correct fix looks broken.
 
@@ -253,9 +253,16 @@ her work forward rather than replacing it.
 
 September cleanup: compact homepage, direct sponsor contact and PDF actions,
 UAE calendar countdown, and consistent member placeholders. Service worker
-`v19`. The car viewer now keeps controls and disclosure in normal flow, uses native
+`v20`. The car viewer now keeps controls and disclosure in normal flow, uses native
 component dialogs with an iframe focus guard, and fits the rotated overhead
-image. Hotspot geometry observes stage resizing, including font reflow. The
+image. Hotspot geometry observes stage resizing, including font reflow. Its menu
+opens the eight mapped components at their anchored angles; `car.html#component=brakes`
+and the other component IDs are shareable. `photo.html` owns the parent car page's
+fragment when embedded there, and its own fragment otherwise. Selection and close
+replace the current fragment without adding history entries. New dialog controls
+must be included in its iframe Tab focus guard. The viewer's rAF sleeps at rest:
+input, image load, resize and visibility events wake it, while offscreen or hidden
+views pause. Keep image-load wakeups or a delayed frame can stay stuck. The
 build timeline has stage jump links, full-width phone content, video posters,
 and no visibility-based dimming. The latest published workshop log remains 1 July 2026; fresh updates,
 measurement dates, and individual assignments still need team confirmation.
