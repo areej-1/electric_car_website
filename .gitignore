@@ -6,3 +6,5 @@ node_modules/
 cargpt.config.js
 .DS_Store
 assets/crew/portraits-detailed/
+test-results/
+playwright-report/
