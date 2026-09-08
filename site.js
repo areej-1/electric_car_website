@@ -151,7 +151,11 @@
 
   /* ---------- Collapsing sticky top bar ---------- */
   const applyNavCollapse = () => {
-    const collapsed = Lib.shouldCollapseNav(window.scrollY || window.pageYOffset || 0, Lib.NAV_COLLAPSE_THRESHOLD);
+    // Shrinking the in-flow bar makes scroll anchoring adjust scrollY. Using
+    // the same boundary to expand it oscillates forever at 48/49px. Leave room
+    // for that layout adjustment before expanding again near the page top.
+    const threshold = nav.classList.contains('is-collapsed') ? 16 : Lib.NAV_COLLAPSE_THRESHOLD;
+    const collapsed = Lib.shouldCollapseNav(window.scrollY || window.pageYOffset || 0, threshold);
     nav.classList.toggle('is-collapsed', collapsed);
     document.documentElement.classList.toggle('nav-collapsed', collapsed);
   };

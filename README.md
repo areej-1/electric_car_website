@@ -25,7 +25,7 @@ Checks every HTML page for shared assets/branding, evaluates `site.js` in a sand
 
 ### PR checks
 
-`.github/workflows/pr-checks.yml` runs the static tests, cache-version guard, and ten Chromium browser scenarios for ready PRs targeting `main`. The browser scenarios cover English and Arabic navigation, language switching, member filtering, narrow build stages, car controls, component links, and viewer rendering at phone and desktop widths.
+`.github/workflows/pr-checks.yml` runs the static tests, cache-version guard, and fourteen Chromium browser scenarios for ready PRs targeting `main`. The browser scenarios cover English and Arabic navigation, collapse-boundary stability, homepage car motion, language switching, member filtering, narrow build stages, car controls, component links, and viewer rendering at phone and desktop widths.
 
 To limit Actions usage: one Ubuntu job, one browser worker, a five-minute job limit, no retries, no schedules, and no duplicate push/deployment runs. New commits cancel older runs for the same PR. Draft PRs use no runner; changes limited to Markdown or license files skip the workflow. Only failure screenshots are uploaded, with three-day retention. Dependencies are pinned and npm downloads are cached; only Chromium's headless shell is installed.
 
@@ -69,9 +69,9 @@ Checks report on PRs; they do not change branch protection or prevent direct edi
 
 ## Feature notes
 
-- **Collapsing sticky nav** shrinks after scroll (`is-collapsed` on `.site-nav`)
+- **Collapsing sticky nav** shrinks after scroll (`is-collapsed` on `.site-nav`) and expands nearer the page top; separate thresholds prevent scroll anchoring from making it flicker
 - **Resources navigation** groups Race Day, News, Electric Cars 101, and the Race Checklist
-- **Homepage** puts current build status directly below the hero, followed by car facts, the latest published workshop update, a UAE calendar-day countdown, and sponsor actions
+- **Homepage** puts current build status directly below the hero, followed by car facts, the latest published workshop update, a UAE calendar-day countdown, and sponsor actions. Its car moves forward with normal scrolling, using the opposite side image in Arabic; reduced motion keeps it still, and there is no idle animation loop.
 - **Build status + engineering data** distinguish published figures, estimates, and pending measurement details
 - **Sponsor contact** links directly to the public Instagram account and package PDF
 - **Member portraits** use initials placeholders for the four members awaiting art; role filters work in both languages

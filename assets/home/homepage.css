@@ -15,6 +15,15 @@
 #main.cobras-home .home-actions a { min-height: 48px; padding: 12px 20px; text-align: center; }
 #main.cobras-home .hero-car { margin: 0; min-width: 0; }
 #main.cobras-home .hero-car img { width: 100%; height: auto; border-radius: 10px; }
+/* Leave travel room inside the figure. Only the car moves; its disclosure and
+   link stay still, and scrolling never pins or lengthens the page. */
+#main.cobras-home .hero-drive { display: flex; overflow: hidden; }
+#main.cobras-home .hero-drive img {
+  flex: 0 0 80%; width: 80%; border-radius: 0;
+  transform: translateX(calc(var(--drive-progress, 0) * 25%));
+  mask-image: radial-gradient(ellipse 66% 62% at 50% 50%, #000 46%, transparent 88%);
+}
+html[dir="rtl"] #main.cobras-home .hero-drive img { transform: translateX(calc(var(--drive-progress, 0) * -25%)); }
 #main.cobras-home figcaption { margin-top: 12px; font-size: .75rem; color: var(--muted); }
 #main.cobras-home .hero-car .text-link { margin-top: 8px; font-size: .85rem; }
 #main.cobras-home .text-link { min-height: 44px; display: inline-flex; align-items: center; gap: 10px; margin-top: 14px; color: var(--cream); }
@@ -55,7 +64,7 @@ html[dir="rtl"] #main.cobras-home .hero-copy { text-align: right; }
   #main.cobras-home .home-hero { grid-template-columns: 1fr; gap: 28px; padding-block: 36px; }
   #main.cobras-home h1 { max-width: 20ch; font-size: clamp(2rem, 6vw, 3rem); }
   #main.cobras-home .hero-car { width: min(580px, 100%); }
-  #main.cobras-home .hero-car img { aspect-ratio: 2 / 1; object-fit: cover; object-position: center 70%; }
+  #main.cobras-home .hero-car img { aspect-ratio: 3 / 2; object-fit: contain; }
   #main.cobras-home .status-layout { grid-template-columns: 1fr; gap: 24px; }
   #main.cobras-home .home-workshop { gap: 32px; }
 }

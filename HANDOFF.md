@@ -163,8 +163,9 @@ npx serve -l 3000 # optional; verify-site.mjs adds a live HTTP probe if it's up
 ```
 
 `npm test` also exercises the cache-version guard against temporary Git histories.
-Ready PRs run this suite, the guard against the PR base, and ten Chromium browser
-scenarios, including English/Arabic component links and idle rendering. The workflow uses one Ubuntu job capped at five
+Ready PRs run this suite, the guard against the PR base, and fourteen Chromium browser
+scenarios, including English/Arabic component links, idle rendering, homepage car
+motion and navigation collapse boundaries. The workflow uses one Ubuntu job capped at five
 minutes; drafts and Markdown/license-only changes avoid runner usage. No push,
 deployment, or scheduled test runs. Older runs cancel on new commits; failure
 screenshots expire after three days. `README.md` has local commands and limits.
@@ -177,7 +178,10 @@ class; both contracts are restored. Keep those checks passing.
 The homepage uses a compact, normal-flow layout in `assets/home/homepage.css`.
 Its countdown uses UAE calendar days and the shared planning target in
 `cobras-lib.js`; other countdowns retain their existing hours/minutes behavior.
-The old scroll island in `assets/home/homepage.js` is no longer loaded.
+`assets/home/homepage.js` now moves the car within the compact hero as the page
+scrolls. It has no pinned strip or idle rAF loop. Arabic uses the opposite side
+image, with its own JPEG fallback, so the livery is never mirrored. Reduced motion
+keeps the car still and visible.
 
 **For anything visual, the test suite is not enough.** Drive a real browser:
 
@@ -201,7 +205,7 @@ Every one of these has already cost time on this project.
 
 **The service worker serves assets cache-first.** The non-navigation branch of the `fetch`
 handler ends in `return cached || network` (`sw.js:60`). Change any image, font, or asset and returning visitors keep
-the old one *forever* until the `CACHE` constant is bumped. It is at `v20`; it
+the old one *forever* until the `CACHE` constant is bumped. It is at `v21`; it
 has been bumped once per asset-changing PR. Forgetting this is the single most
 common way a correct fix looks broken.
 
@@ -234,6 +238,11 @@ looks frozen while the preview pane is hidden is probably fine. Check
 `document.visibilityState` before debugging, or use the CDP harness, which
 launches with backgrounding disabled.
 
+**The sticky nav changes document flow when it shrinks.** Scroll anchoring can
+move `scrollY` across the collapse threshold again, causing a 48/49px flicker
+every frame. Collapse after 48px, expand at 16px or less; keep these boundaries
+separate. The browser regression records the menu over multiple frames.
+
 **Squash-merge races.** If a PR is merged while you still have commits in flight,
 `main` gets a stale tree. Recover by cherry-picking the stranded commits onto a
 fresh branch — do **not** re-merge the old branch, whose tree may predate other
@@ -253,7 +262,9 @@ her work forward rather than replacing it.
 
 September cleanup: compact homepage, direct sponsor contact and PDF actions,
 UAE calendar countdown, and consistent member placeholders. Service worker
-`v20`. The car viewer now keeps controls and disclosure in normal flow, uses native
+`v21`. The homepage car's scroll-driven travel is restored within the shorter
+layout, and the top navigation has separate collapse/expansion thresholds to stop
+boundary flicker. The car viewer keeps controls and disclosure in normal flow, uses native
 component dialogs with an iframe focus guard, and fits the rotated overhead
 image. Hotspot geometry observes stage resizing, including font reflow. Its menu
 opens the eight mapped components at their anchored angles; `car.html#component=brakes`
