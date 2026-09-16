@@ -297,6 +297,7 @@
       'Model facts': 'معلومات المجسّم'
     },
     'members.html': {
+      'Staring contest winner': 'المركز الأول في مسابقة التحديق',
       'Nineteen student builders across mechanics, safety, innovation, media, and driving—each contributing to the Cobra race car.': 'تسعة عشر طالبًا وطالبة يساهمون في سيارة سباق كوبرا عبر الميكانيكا والسلامة والابتكار والإعلام والقيادة.'
     },
     'projects.html': {

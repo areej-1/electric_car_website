@@ -1802,3 +1802,32 @@ main.cobras-home .home-world[data-astro-cid-zkhec6xw].is-enhanced .world-pin[dat
   .timeline-copy ul { margin-top: 18px; }
   .timeline-step img, .timeline-step video { height: auto; max-height: 420px; aspect-ratio: 4 / 3; }
 }
+
+/* A member's badge beside their role pill: same shape as the role, in yellow so
+   it reads as an honour rather than a second job title. The row wraps, so on a
+   narrow card the badge drops under the role instead of being clipped. The role
+   stays the first <p> in the card, which is what site.js looks for. */
+.members-grid .member-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; }
+.members-grid .member-tags > p { margin-top: 0; }
+.members-grid .member-badge {
+  /* inline-block, not flex: when the badge wraps on a narrow phone the trophy
+     follows the last word instead of floating beside the whole block. */
+  display: inline-block;
+  max-width: 100%;
+  padding: 5px 8px;
+  color: #ffd43b;
+  background: rgba(255, 212, 59, .1);
+  border: 1px solid rgba(255, 212, 59, .5);
+  border-radius: 999px;
+  font-size: .62rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+@media (max-width: 820px), (pointer: coarse) {
+  .members-grid .member-badge { font-size: .72rem; }
+}
+@media (max-width: 600px) {
+  .members-grid section > .member-tags { grid-column: 2; margin: 0; }
+  .members-grid .member-badge { font-size: .7rem; }
+}
