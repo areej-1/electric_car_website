@@ -649,8 +649,21 @@
     || (() => { try { return JSON.parse(localStorage.getItem('cobras_crew_out') || '[]').length > 0; }
                 catch (error) { return false; } })();
   if (wantsCrew) {
-    import('./assets/crew/crew-roam.js')
-      .then((crew) => { crew.restore(); crew.mountButtons(); })
+    /* Classic scripts, loaded in order: dynamic import() is blocked on file://,
+       and the crew should walk even when the page is opened straight from disk. */
+    const loadScript = (src) => new Promise((resolve, reject) => {
+      const el = document.createElement('script');
+      el.src = src;
+      el.onload = resolve;
+      el.onerror = reject;
+      document.body.appendChild(el);
+    });
+    loadScript('assets/crew/crew-roster.js')
+      .then(() => loadScript('assets/crew/crew-roam.js'))
+      .then(() => {
+        const crew = window.CobrasCrewRoam;
+        if (crew) { crew.restore(); crew.mountButtons(); }
+      })
       .catch(() => { /* the site works perfectly well without anyone walking about */ });
   }
   } catch (err) {

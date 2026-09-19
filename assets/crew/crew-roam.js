@@ -20,7 +20,10 @@
  *     second, not per frame
  */
 
-import { CREW, byName } from './crew-roster.js';
+/* Classic script (not a module) so file:// pages get the crew too. Depends on
+   crew-roster.js having run first — site.js loads them in order. */
+window.CobrasCrewRoam = (() => {
+const { CREW, byName } = window.CobrasCrew;
 
 const STORE = 'cobras_crew_out';
 const CHIBI_W = 72;        // the box each sprite is drawn into; see .crew-chibi
@@ -61,11 +64,11 @@ function remember() {
   } catch (error) { /* private mode: they just will not follow you between pages */ }
 }
 
-export function isOut(name) {
+function isOut(name) {
   return walking.has(name);
 }
 
-export function send(member) {
+function send(member) {
   if (walking.has(member.name)) return;
   const el = document.createElement('button');
   el.type = 'button';
@@ -91,7 +94,7 @@ export function send(member) {
   return el;
 }
 
-export function recall(name) {
+function recall(name) {
   const state = walking.get(name);
   if (!state) return;
   state.el.remove();
@@ -101,7 +104,7 @@ export function recall(name) {
   if (!walking.size) stop();
 }
 
-export function toggle(member) {
+function toggle(member) {
   if (walking.has(member.name)) recall(member.name);
   else {
     send(member);
@@ -169,7 +172,7 @@ addEventListener('resize', () => {
 }, { passive: true });
 
 /* Anyone who was out when you left the last page walks back on. */
-export function restore() {
+function restore() {
   let saved = [];
   try { saved = JSON.parse(localStorage.getItem(STORE) || '[]'); } catch (error) { /* ignore */ }
   for (const name of saved) {
@@ -182,7 +185,7 @@ export function restore() {
    roster, so a card the roster does not know about is skipped instead of
    throwing, and the roster cannot silently add a button for someone who is not
    on the page. */
-export function mountButtons(root = document) {
+function mountButtons(root = document) {
   const cards = root.querySelectorAll('.members-grid section');
   if (!cards.length) return 0;
   let mounted = 0;
@@ -218,4 +221,5 @@ export function mountButtons(root = document) {
   return mounted;
 }
 
-export { CREW };
+return { CREW, isOut, send, recall, toggle, restore, mountButtons };
+})();

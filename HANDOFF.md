@@ -133,9 +133,10 @@ Language choice persists in `localStorage.cobras_lang`; the toggle reloads.
 Press a button on a member's card and their pixel chibi walks along the bottom of
 the viewport, and follows you across pages (`localStorage.cobras_crew_out`).
 
-- `assets/crew/crew-roster.js` — the 15 members who have art. **Being on this
+- `assets/crew/crew-roster.js` — the 14 members who have art. **Being on this
   list is what creates the button**; a member without art simply has none. There
-  are deliberately no generated stand-ins.
+  are deliberately no generated stand-ins. It and crew-roam.js are classic
+  scripts (not modules) so the buttons also work on file:// pages.
 - `assets/crew/crew-roam.js` — one shared rAF for all chibis, transform-only
   writes, no layout reads in the loop. This discipline is deliberate: an earlier
   always-on animation cost the homepage 30 fps. Keep it.
