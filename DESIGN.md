@@ -256,7 +256,7 @@ Recorded, estimated, and pending values must look different. Avoid oversized dec
 
 Purpose: become the useful race-week hub.
 
-Show only confirmed information. The target date is **13 February 2027** until the event date is officially verified. Driver selection, official timing, schedule, and results should retain clear pending states.
+Show only confirmed information. The target is **March 2027 (exact date to be confirmed)** until the event date is officially verified. Official timing, schedule, and results should retain clear pending states.
 
 ### Sponsors
 

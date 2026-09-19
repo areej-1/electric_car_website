@@ -17,6 +17,7 @@ const PAGES = [
   'projects.html',
   'race-day.html',
   'game.html',
+  'strategy.html',
   '101.html',
   'specs.html',
   'about.html',
@@ -123,12 +124,12 @@ else pass('no fake sponsor email exposed');
 if (!read('index.html').includes('class="build-status"') || !read('specs.html').includes('class="test-data"') || !read('sponsors.html').includes('class="sponsor-progress"')) {
   fail('new status surfaces', 'missing build status, engineering data, or sponsor progress');
 } else pass('build, data, and sponsor status surfaces present');
-if (!read('sponsors.html').includes('remaining funding need cannot be calculated until figures are approved')) fail('sponsor remaining state', 'remaining-to-goal status is missing');
-else pass('sponsor remaining state stays explicit');
+if (!read('sponsors.html').includes('AED 60,000') || !read('sponsors.html').includes('Qamia')) fail('sponsor funding state', 'funding target or confirmed partner is missing');
+else pass('sponsor funding target and confirmed partner shown');
 if (!read('site.js').includes('member-contribution') || !read('members.html').includes('Individual assignments await team confirmation.')) fail('member responsibilities', 'role focus or pending individual assignment is not generated');
 else pass('member role focus generated');
 const countdownDates = PAGES.map(read).flatMap(html => [...html.matchAll(/data-race-date="([^"]+)"/g)].map(match => match[1]));
-if (!countdownDates.length || new Set(countdownDates).size !== 1 || countdownDates[0] !== '2027-02-13T00:00:00+04:00') fail('shared planning countdown', 'countdowns do not share the unconfirmed planning date start');
+if (!countdownDates.length || new Set(countdownDates).size !== 1 || countdownDates[0] !== '2027-03-01T00:00:00+04:00') fail('shared planning countdown', 'countdowns do not share the unconfirmed planning date start');
 else pass('shared planning countdown uses one non-invented start');
 if (PAGES.map(read).some(html => /class="countdown-grid"[^>]*aria-live="polite"/.test(html))) fail('countdown accessibility', 'second-by-second countdown would interrupt assistive technology');
 else pass('countdown avoids second-by-second live announcements');

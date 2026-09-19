@@ -40,7 +40,7 @@ piece and not a demo — it is the team's public face, used to recruit sponsors 
 to show judges the build is real.
 
 - **Team:** SIS Al Jada Cobras, SABIS® Al Jada, Sharjah
-- **Target:** EVGP competition, 13 February 2027
+- **Target:** EVGP competition, March 2027 (exact date to be confirmed)
 - **Live:** https://areej-1.github.io/electric_car_website/
 - **Repo:** `areej-1/electric_car_website` (`origin`). `fork` points at
   `fabricyo-dev/electric_car_website` and is not the deploy target.
@@ -148,9 +148,9 @@ the viewport, and follows you across pages (`localStorage.cobras_crew_out`).
   on the member cards. Sources are in `portraits-detailed/`, which is gitignored
   on purpose: source art stays on disk rather than being deleted.
 
-19 members are on the page; 15 have art. The other four (Ayah Yousif, Joud
-Hassan, Taim Saadi, Yas Shahriari) show matching initials placeholders and have no
-walk button. Role keys are explicit in each card’s `data-role` attribute so the
+18 members are on the page; 14 have art. The other four (Abdulrahman Abdullahi,
+Hasan Safar, Mohamad Makkawi, Taim Saadi) show matching initials placeholders and
+have no walk button. Role keys are explicit in each card’s `data-role` attribute so the
 Arabic filters do not depend on image alt text.
 
 ---

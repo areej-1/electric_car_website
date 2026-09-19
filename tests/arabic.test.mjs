@@ -7,7 +7,7 @@ const require = createRequire(import.meta.url);
 const Arabic = require('../arabic.js');
 const Lib = require('../cobras-lib.js');
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
-const pages = ['index.html','members.html','projects.html','game.html','101.html','specs.html','checklist.html','race-day.html','about.html','sponsors.html','news.html','sponsor-package.html','404.html'];
+const pages = ['index.html','members.html','projects.html','game.html','strategy.html','101.html','specs.html','checklist.html','race-day.html','about.html','sponsors.html','news.html','sponsor-package.html','404.html'];
 
 const checks = [
   ['projects.html', 'Build stages', 'مراحل البناء'],
@@ -17,7 +17,7 @@ const checks = [
   ['about.html', 'Our Mission', 'مهمتنا'],
   ['sponsors.html', 'Want to sponsor us?', 'هل ترغب في رعايتنا؟'],
   ['checklist.html', 'Safety gear', 'معدات السلامة'],
-  ['sponsor-package.html', 'Equipment partner', 'شريك المعدات'],
+  ['sponsor-package.html', 'Silver — AED 7,500', 'الفضي — 7,500 درهم إماراتي'],
   ['404.html', 'Back home', 'العودة إلى الرئيسية']
 ];
 
@@ -40,7 +40,7 @@ for (const page of pages) {
 assert.equal(Arabic.translateText('members.html', 'Mechanic'), 'الميكانيكا');
 assert.equal(Arabic.translateText('members.html', 'Areej Dridi'), 'Areej Dridi');
 assert.equal(Arabic.TITLES['race-day.html'], 'يوم السباق | فريق كوبرا سيس الجادة');
-assert.equal(Lib.t('ar', 'home.statusTitle'), 'الأولوية الحالية: اختبار الأنظمة.');
+assert.equal(Lib.t('ar', 'home.statusTitle'), 'الأولوية الحالية: بناء السيارة الثانية.');
 assert.equal(Lib.t('ar', 'data.historyTitle'), 'بانتظار جولات مسجلة');
 assert.notEqual(Lib.t('ar', 'member.assignmentLabel'), 'member.assignmentLabel');
 assert.notEqual(Lib.t('ar', 'chat.thinking'), 'chat.thinking');

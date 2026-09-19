@@ -62,11 +62,11 @@ check('countdownParts future day math', () => {
 
 check('race calendar countdown uses UAE days and stays at zero after the target', () => {
   const target = Date.parse(Lib.RACE_ISO);
-  assert.equal(Lib.raceCalendarDays(Date.parse('2026-09-06T14:30:00+04:00'), target), 160);
-  assert.equal(Lib.raceCalendarDays(Date.parse('2026-09-06T19:59:59Z'), target), 160);
-  assert.equal(Lib.raceCalendarDays(Date.parse('2026-09-06T20:00:00Z'), target), 159);
-  assert.equal(Lib.raceCalendarDays(Date.parse('2027-02-13T00:00:00+04:00'), target), 0);
-  assert.equal(Lib.raceCalendarDays(Date.parse('2027-02-14T00:00:00+04:00'), target), 0);
+  assert.equal(Lib.raceCalendarDays(Date.parse('2026-09-06T14:30:00+04:00'), target), 176);
+  assert.equal(Lib.raceCalendarDays(Date.parse('2026-09-06T19:59:59Z'), target), 176);
+  assert.equal(Lib.raceCalendarDays(Date.parse('2026-09-06T20:00:00Z'), target), 175);
+  assert.equal(Lib.raceCalendarDays(Date.parse('2027-03-01T00:00:00+04:00'), target), 0);
+  assert.equal(Lib.raceCalendarDays(Date.parse('2027-03-02T00:00:00+04:00'), target), 0);
 });
 
 check('buildScoreShareText includes mode and score', () => {
@@ -134,6 +134,12 @@ check('currentPageName + nav current', () => {
     assert.ok(Lib.isCurrentNav(resources, page));
   }
   assert.equal(Lib.isCurrentNav(resources, 'index.html'), false);
+  const games = Lib.NAV_ITEMS.find((item) => item.id === 'games');
+  assert.ok(games);
+  assert.equal(games.children.length, 2);
+  for (const page of ['game.html', 'strategy.html']) {
+    assert.ok(Lib.isCurrentNav(games, page));
+  }
 });
 
 if (failures.length) {

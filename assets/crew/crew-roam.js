@@ -82,7 +82,7 @@ export function send(member) {
     dir: Math.random() < 0.5 ? -1 : 1,
     frame: 0,
     nextStep: 0,
-    // A pause every so often, so nineteen of them are not one marching column.
+    // A pause every so often, so fourteen of them are not one marching column.
     idleUntil: 0,
     nextIdle: 1500 + Math.random() * 6000,
   });

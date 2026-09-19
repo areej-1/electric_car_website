@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Beat the Battery — the SIS Al Jada Cobras EVGP energy strategy simulator. Most laps on one charge wins.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="cobra-race-mark.png" type="image/png">
+  <title>Battery Challenge | SIS Al Jada Cobras</title>
+</head>
+<body>
+    <nav class="site-nav" data-i18n-aria="nav.main" aria-label="Main navigation"></nav>
+
+  <main id="main" class="race-page strategy-page">
+    <header>
+      <span class="race-kicker" data-i18n="strategy.kicker">EVGP energy lab</span>
+      <h1 data-i18n="strategy.title">Beat the Battery</h1>
+      <p data-i18n="strategy.intro">EVGP isn't a speed race — it's an energy race. Most laps on a single charge wins. Can you beat the battery?</p>
+    </header>
+
+    <section class="race-shell strategy-setup" aria-labelledby="strategy-setup-title">
+      <h2 id="strategy-setup-title" data-i18n="strategy.setup">Race setup</h2>
+      <div class="control-grid">
+        <div class="control-block">
+          <span class="control-label" id="style-label" data-i18n="strategy.style">Driving style</span>
+          <div class="race-modes strategy-seg" role="group" aria-labelledby="style-label">
+            <button type="button" data-style="aggressive" aria-pressed="false"><span aria-hidden="true">🔥</span> <span data-i18n="strategy.agg">Aggressive</span></button>
+            <button type="button" data-style="balanced" class="is-active" aria-pressed="true"><span aria-hidden="true">⚖️</span> <span data-i18n="strategy.bal">Balanced</span></button>
+            <button type="button" data-style="eco" aria-pressed="false"><span aria-hidden="true">🌿</span> <span data-i18n="strategy.eco">Eco</span></button>
+          </div>
+        </div>
+        <div class="control-block">
+          <label class="control-label" for="charge-range"><span data-i18n="strategy.charge">Start charge</span> · <strong id="charge-value" dir="ltr">100%</strong></label>
+          <input type="range" id="charge-range" min="50" max="100" step="5" value="100">
+        </div>
+        <div class="control-block">
+          <span class="control-label" id="track-label" data-i18n="strategy.track">Track length</span>
+          <div class="race-modes strategy-seg" role="group" aria-labelledby="track-label">
+            <button type="button" data-track="0.3" aria-pressed="false"><bdi dir="ltr">0.3 km</bdi></button>
+            <button type="button" data-track="0.4" class="is-active" aria-pressed="true"><bdi dir="ltr">0.4 km</bdi></button>
+            <button type="button" data-track="0.5" aria-pressed="false"><bdi dir="ltr">0.5 km</bdi></button>
+          </div>
+        </div>
+        <div class="control-block">
+          <span class="control-label" id="regen-label" data-i18n="strategy.regen">Regen braking</span>
+          <button type="button" id="regen-toggle" class="regen-toggle" aria-labelledby="regen-label" aria-pressed="false"><span data-i18n="strategy.off">Off</span></button>
+        </div>
+      </div>
+      <button type="button" id="run-btn" class="strategy-run" data-i18n="strategy.run">Run simulation</button>
+    </section>
+
+    <section class="race-shell strategy-stage" aria-label="Battery simulation playback">
+      <div class="race-topbar">
+        <div class="race-stat"><span data-i18n="strategy.lap">Lap</span><strong id="lap-count" dir="ltr">0</strong></div>
+        <div class="race-stat"><span data-i18n="strategy.best">Best</span><strong id="best-laps" dir="ltr">—</strong></div>
+        <div class="race-stat"><span data-i18n="strategy.styleStat">Style</span><strong id="style-stat">—</strong></div>
+        <div class="energy-meter">
+          <span data-i18n="strategy.battery">Battery</span>
+          <div class="energy-track"><div id="strategy-energy-fill"></div></div>
+          <span class="energy-pct" id="energy-pct" dir="ltr">100%</span>
+        </div>
+      </div>
+      <div class="race-stage">
+        <canvas id="strategy-canvas" width="960" height="520" role="img" data-i18n-aria="strategy.canvasAria" aria-label="Oval race track. A dot drives lap by lap while the battery drains."></canvas>
+      </div>
+      <div class="race-controls strategy-stagebar">
+        <span class="strategy-hint" data-i18n="strategy.hint">The 2024 EVGP winners did 32 laps on one charge.</span>
+        <button type="button" id="ff-toggle" class="ff-toggle" aria-pressed="false"><span data-i18n="strategy.ff">Fast-forward</span> ×8</button>
+      </div>
+    </section>
+
+    <section class="race-shell strategy-results" id="results" aria-labelledby="results-title" hidden>
+      <div class="results-head">
+        <span class="section-kicker" data-i18n="strategy.resultsKicker">Simulation result</span>
+        <h2 id="results-title"><strong id="result-laps" dir="ltr">0</strong> <span data-i18n="strategy.laps">laps</span></h2>
+        <p id="result-verdict" class="verdict"></p>
+      </div>
+      <dl class="results-grid">
+        <div><dt data-i18n="strategy.time">Total race time</dt><dd id="result-time" dir="ltr">—</dd></div>
+        <div><dt data-i18n="strategy.avg">Average speed</dt><dd id="result-avg" dir="ltr">—</dd></div>
+        <div><dt data-i18n="strategy.eff">Efficiency score</dt><dd id="result-eff" dir="ltr">—</dd></div>
+        <div><dt data-i18n="strategy.used">Energy used</dt><dd id="result-used" dir="ltr">—</dd></div>
+      </dl>
+      <div class="results-actions">
+        <button type="button" id="share-btn" class="share-score-btn" data-i18n="strategy.share">Share result</button>
+        <p class="best-line"><span data-i18n="strategy.yourBest">Your best</span>: <strong id="best-line-value" dir="ltr">—</strong></p>
+      </div>
+    </section>
+
+    <button class="open-button" type="button">CarGPT</button>
+    <div class="chat-popup" id="myForm">
+      <div class="form-container">
+        <h1>CarGPT</h1>
+        <div id="chatMessages" class="chat-messages">
+          <div class="bot-msg">Ask me anything about the Cobras team, EVGP, or electric cars.</div>
+        </div>
+        <textarea id="chatInput" aria-label="Message to CarGPT" maxlength="1200" placeholder="Ask CarGPT…"></textarea>
+        <button type="button" class="btn">Send</button>
+        <button type="button" class="btn cancel">Close</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Copyright 2026 SIS Al Jada Cobras</p>
+    <p>Made by Areej and Mirza</p>
+    <div class="socials">
+      <a href="https://tiktok.com/@sisaljadacobras?_r=1&amp;_t=ZS-935T-PczwWdL" target="_blank" rel="noopener noreferrer"><img src="tiktok.png" alt="SIS Al Jada Cobras on TikTok" width="28" height="28"></a>
+      <a href="https://instagram.com/sisaljadacobras?igsh=dmRpbXlyMzVjNjV1" target="_blank" rel="noopener noreferrer"><img src="instagram.png" alt="SIS Al Jada Cobras on Instagram" width="28" height="28"></a>
+    </div>
+  </footer>
+
+  <script src="cobras-lib.js"></script>
+  <script src="arabic.js"></script>
+  <script src="site.js"></script>
+  <script src="strategy.js" defer></script>
+</body>
+</html>

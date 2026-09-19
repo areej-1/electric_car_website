@@ -90,8 +90,8 @@ const TURNS = [
   {
     n: 'F', name: 'Race target', kicker: 'The grid', flag: true,
     x: 0.2863, y: 0.2008, status: 'pending',
-    body: 'Race target: February 13, 2027. Venue, official timing, driver selection and results remain pending team confirmation.',
-    tags: ['Venue pending', 'Timing pending', 'Driver pending'],
+    body: 'Race target: March 2027 (exact date to be confirmed). Venue and official timing remain pending; drivers confirmed.',
+    tags: ['Venue pending', 'Timing pending'],
   },
 ];
 

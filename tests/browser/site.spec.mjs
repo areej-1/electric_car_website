@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 
 const origin = 'http://127.0.0.1:4327';
 const copy = {
-  en: { dir: 'ltr', language: 'Language', menu: 'Open menu', members: 'Members', resources: 'Resources', innovation: 'Innovation', testing: 'Testing + troubleshooting', brake: 'Brakes', close: 'Close detail', top: 'Top', eye: 'Eye level', zoom: 'Zoom in' },
-  ar: { dir: 'rtl', language: 'اللغة', menu: 'فتح القائمة', members: 'الأعضاء', resources: 'الموارد', innovation: 'الابتكار', testing: 'الاختبار واستكشاف الأعطال', brake: 'المكابح', close: 'إغلاق التفاصيل', top: 'علوي', eye: 'مستوى النظر', zoom: 'تكبير' },
+  en: { dir: 'ltr', language: 'Language', menu: 'Open menu', members: 'Members', resources: 'Resources', games: 'Games', media: 'Media', testing: 'Testing + troubleshooting', brake: 'Brakes', close: 'Close detail', top: 'Top', eye: 'Eye level', zoom: 'Zoom in' },
+  ar: { dir: 'rtl', language: 'اللغة', menu: 'فتح القائمة', members: 'الأعضاء', resources: 'الموارد', games: 'الألعاب', media: 'الإعلام', testing: 'الاختبار واستكشاف الأعطال', brake: 'المكابح', close: 'إغلاق التفاصيل', top: 'علوي', eye: 'مستوى النظر', zoom: 'تكبير' },
 };
 
 async function fitsViewport(page) {
@@ -47,9 +47,15 @@ for (const lang of ['en', 'ar']) {
       await menu.click();
       await expect(menu).toHaveAttribute('aria-expanded', 'true');
       await page.getByRole('button', { name: label.resources, exact: true }).click();
-      await expect(page.locator('.nav-submenu')).toBeVisible();
+      await expect(page.locator('#nav-resources-menu')).toBeVisible();
       await page.keyboard.press('Escape');
-      await expect(page.locator('.nav-submenu')).toBeHidden();
+      await expect(page.locator('#nav-resources-menu')).toBeHidden();
+      // The Games group shares the same wiring.
+      await page.getByRole('button', { name: label.games, exact: true }).click();
+      await expect(page.locator('#nav-games-menu')).toBeVisible();
+      await expect(page.locator('#nav-games-menu a')).toHaveCount(2);
+      await page.keyboard.press('Escape');
+      await expect(page.locator('#nav-games-menu')).toBeHidden();
       await page.keyboard.press('Escape');
       await expect(menu).toHaveAttribute('aria-expanded', 'false');
       await expect(menu).toBeFocused();
@@ -64,8 +70,8 @@ for (const lang of ['en', 'ar']) {
       await menu.click();
       await page.getByRole('navigation').getByRole('link', { name: label.members, exact: true }).click();
       await expect(page).toHaveURL(/\/members\.html$/);
-      await page.getByRole('button', { name: label.innovation, exact: true }).click();
-      await expect(page.locator('.members-grid > section:visible h2')).toHaveText(['Joud Hassan', 'Yas Shahriari']);
+      await page.getByRole('button', { name: label.media, exact: true }).click();
+      await expect(page.locator('.members-grid > section:visible h2')).toHaveText(['Abdulrahman Abdullahi', 'Jiayi Lin', 'Shiqi Lin', 'Zainab Baber']);
       await fitsViewport(page);
     });
 

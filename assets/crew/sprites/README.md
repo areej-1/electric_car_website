@@ -3,14 +3,14 @@
 Drop the artwork here, one PNG per member, named after them in lower-case with
 hyphens:
 
-    basar-ural.png
+    hasan-safar.png
     mirza-akova.png
     shiqi-lin.png
     ...
 
 Then add a line to `../crew-roster.js`:
 
-    { name: 'Basar Ural', sprite: 'assets/crew/sprites/basar-ural.png' },
+    { name: 'Hasan Safar', sprite: 'assets/crew/sprites/hasan-safar.png' },
 
 That is the whole integration. Being on that list is what gives someone the
 "send for a walk" button on their card, so a member without artwork simply has
@@ -49,11 +49,11 @@ sampled colour is not. If the next four arrive the same way, mark them first.
 
 Four members have no artwork and so no button:
 
-- Ayah Yousif
-- Joud Hassan
+- Abdulrahman Abdullahi
+- Hasan Safar
+- Mohamad Makkawi
 - Taim Saadi
-- Yas Shahriari
 
 There was a generator here that drew a stand-in for them from a text grid. It
-was recognisably a stand-in next to fifteen drawn characters, so it is gone
+was recognisably a stand-in next to fourteen drawn characters, so it is gone
 rather than sitting in the repo waiting to be re-enabled.

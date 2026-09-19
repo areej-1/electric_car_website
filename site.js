@@ -103,21 +103,25 @@
   const toggle = nav.querySelector('.nav-toggle');
   const menu = nav.querySelector('#site-menu');
   const langBtn = nav.querySelector('.lang-toggle');
-  const resourceGroup = menu?.querySelector('.nav-group');
-  const resourceToggle = resourceGroup?.querySelector('.nav-group-toggle');
-  const resourceMenu = resourceGroup?.querySelector('.nav-submenu');
+  const groups = [...(menu?.querySelectorAll('.nav-group') || [])];
 
-  const setResourcesOpen = (open, restoreFocus = false) => {
-    if (!resourceGroup || !resourceToggle || !resourceMenu) return;
-    resourceGroup.classList.toggle('is-open', open);
-    resourceToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-    resourceMenu.hidden = !open;
-    if (restoreFocus) resourceToggle.focus?.();
+  /* Every dropdown group (Games, Resources) shares the same open/close wiring.
+     One group open at a time; Escape and outside clicks close whichever is open. */
+  const setGroupOpen = (group, open, restoreFocus = false) => {
+    const btn = group.querySelector('.nav-group-toggle');
+    const submenu = group.querySelector('.nav-submenu');
+    if (!btn || !submenu) return;
+    group.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    submenu.hidden = !open;
+    if (restoreFocus) btn.focus?.();
   };
+  const openGroup = () => groups.find(g => g.querySelector('.nav-group-toggle')?.getAttribute('aria-expanded') === 'true');
+  const closeGroups = () => groups.forEach(g => setGroupOpen(g, false));
 
   const setMenuOpen = (open) => {
     nav.classList.toggle('is-open', open);
-    if (!open) setResourcesOpen(false);
+    if (!open) closeGroups();
     if (toggle) {
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       toggle.setAttribute('aria-label', Lib.t(lang, open ? 'nav.menuClose' : 'nav.menu'));
@@ -125,12 +129,20 @@
   };
 
   toggle?.addEventListener('click', () => setMenuOpen(!nav.classList.contains('is-open')));
-  resourceToggle?.addEventListener('click', () => setResourcesOpen(resourceToggle.getAttribute('aria-expanded') !== 'true'));
+  groups.forEach(group => {
+    const btn = group.querySelector('.nav-group-toggle');
+    btn?.addEventListener('click', () => {
+      const opening = btn.getAttribute('aria-expanded') !== 'true';
+      closeGroups();
+      setGroupOpen(group, opening);
+    });
+  });
   menu?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setMenuOpen(false)));
   document.addEventListener('keydown', event => {
     if (event.key !== 'Escape') return;
-    if (resourceToggle?.getAttribute('aria-expanded') === 'true') {
-      setResourcesOpen(false, true);
+    const open = openGroup();
+    if (open) {
+      setGroupOpen(open, false, true);
       return;
     }
     if (nav.classList.contains('is-open')) {
@@ -139,8 +151,9 @@
     }
   });
   document.addEventListener('click', event => {
-    if (resourceGroup && resourceToggle?.getAttribute('aria-expanded') === 'true' && typeof resourceGroup.contains === 'function' && !resourceGroup.contains(event.target)) {
-      setResourcesOpen(false);
+    const open = openGroup();
+    if (open && !open.contains(event.target)) {
+      setGroupOpen(open, false);
     }
   });
 

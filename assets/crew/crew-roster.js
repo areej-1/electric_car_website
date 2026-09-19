@@ -13,7 +13,6 @@ export const CREW = [
   { name: 'Areej Dridi',      sprite: 'assets/crew/sprites/areej-dridi.png' },
   { name: 'Abdulla Sumaity',  sprite: 'assets/crew/sprites/abdulla-sumaity.png' },
   { name: 'Ali Husseinpoor',  sprite: 'assets/crew/sprites/ali-husseinpoor.png' },
-  { name: 'Basar Ural',       sprite: 'assets/crew/sprites/basar-ural.png' },
   { name: 'Bushra Al Sultan', sprite: 'assets/crew/sprites/bushra-al-sultan.png' },
   { name: 'Dua Hasan',        sprite: 'assets/crew/sprites/dua-hasan.png' },
   { name: 'Jiayi Lin',        sprite: 'assets/crew/sprites/jiayi-lin.png' },

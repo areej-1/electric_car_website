@@ -59,6 +59,7 @@ Checks report on PRs; they do not change branch protection or prevent direct edi
 | Race Day hub | `race-day.html` |
 | News | `news.html` |
 | Game (Cobra Circuit) | `game.html` |
+| Battery Challenge (strategy simulator) | `strategy.html`, `strategy.js` |
 | Electric Cars 101 | `101.html` |
 | Specs (+ PDF) | `specs.html`, `specs-sheet.pdf` |
 | Race checklist | `checklist.html` |

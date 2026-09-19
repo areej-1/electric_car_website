@@ -3,7 +3,7 @@
   const COMMON = {
     'Published specifications for the Cobras 48V electric race car. Values evolve as we test, weigh, and prepare for EVGP.': 'المواصفات المنشورة لسيارة سباق كوبرا الكهربائية بجهد 48 فولت. تتغير القيم مع الاختبار والوزن والاستعداد لمسابقة EVGP.',
     'Measurement dates and test conditions have not been published.': 'لم تُنشر تواريخ القياس وظروف الاختبار بعد.',
-    "Nineteen student builders. One electric race car. We are the Cobras at SABIS® Al Jada, preparing for EVGP.": "تسعة عشر طالبًا وطالبة. سيارة سباق كهربائية واحدة. نحن فريق كوبرا في سابيس الجادة، نستعد لمسابقة EVGP.",
+    "Eighteen student builders. Two electric race cars. Two classes. We are the Cobras at SABIS® Al Jada, preparing for EVGP.": "ثمانية عشر طالبًا وطالبة. سيارتا سباق كهربائيتان. فئتان. نحن فريق كوبرا في سابيس الجادة، نستعد لمسابقة EVGP.",
     "Side view of the Cobra, an AI-assisted visualisation based on team reference photographs": "منظر جانبي لكوبرا، تصوّر بمساعدة الذكاء الاصطناعي اعتمادًا على صور الفريق المرجعية",
     "AI-assisted visualisation from team reference photos.": "تصوّر بمساعدة الذكاء الاصطناعي اعتمادًا على صور الفريق المرجعية.",
     "Explore the Cobra in 360°": "استكشف كوبرا بزاوية 360°",
@@ -15,7 +15,7 @@
     "02 / Workshop log": "02 / سجل الورشة",
     "The latest published update.": "آخر تحديث منشور.",
     "See the full build story": "شاهد قصة البناء كاملة",
-    "Planning target; official event details await confirmation.": "موعد مستهدف للتخطيط؛ تفاصيل الفعالية الرسمية قيد التأكيد.",
+    "March 2027 · exact date coming soon.": "مارس 2027 · التاريخ الدقيق قريبًا.",
     "Back student engineering": "ادعم الهندسة الطلابية",
     "Help build what comes next.": "ساهم في بناء المرحلة القادمة.",
     "Support the next test, supply equipment, or share your engineering expertise.": "ادعم الاختبار القادم أو وفّر المعدات أو شارك خبرتك الهندسية.",
@@ -46,7 +46,7 @@
     // assets/crew/crew-roam.js after the page-wide pass has already happened,
     // so it looks these up itself the way the trackmap prototype does. They are
     // templates, not sentences: the module substitutes {name} after looking the
-    // string up, which keeps nineteen names out of this file. Names stay in
+    // string up, which keeps eighteen names out of this file. Names stay in
     // Latin script, matching the cards, and bidi nests them correctly inside an
     // Arabic sentence. The phrasing is deliberately ungendered.
     'crew': {
@@ -97,7 +97,7 @@
       'The kart being driven during a test session': 'السيارة أثناء القيادة في جلسة اختبار',
       'Final adjustment work on the kart': 'أعمال التعديلات النهائية على السيارة',
       'Race target': 'هدف السباق',
-      'Race target: February 13, 2027. Venue, official timing, driver selection and results remain pending team confirmation.': 'هدف السباق: 13 فبراير 2027. الموقع والتوقيت الرسمي واختيار السائق والنتائج تبقى بانتظار تأكيد الفريق.',
+      'Race target: March 2027 (exact date to be confirmed). Venue and official timing remain pending; drivers confirmed.': 'هدف السباق: مارس 2027 (التاريخ الدقيق قيد التأكيد). الموقع والتوقيت الرسميان ما زالا قيد التأكيد؛ السائقان مؤكدان.',
       'Venue pending': 'الموقع قيد التأكيد',
       'Timing pending': 'التوقيت قيد التأكيد',
       'Driver pending': 'السائق قيد التأكيد',
@@ -117,6 +117,12 @@
     // into two different Arabic voices for the same sentence.
     'index.html': {
       'EVGP · SABIS® Al Jada · Sharjah': 'EVGP · سابيس الجادة · الشارقة',
+      '03 / The arc': '03 / القصة',
+      'Every season, faster.': 'كل موسم، أسرع.',
+      'First EVGP entry.': 'أول مشاركة في EVGP.',
+      'Ten places gained.': 'تقدمنا عشرة مراكز.',
+      'Two cars. Two classes. Target: March 2027.': 'سيارتان. فئتان. الهدف: مارس 2027.',
+      '23rd': 'المركز 23', '13th': 'المركز 13',
       'Built to strike.': 'صُنعت للانقضاض.',
       'Engineered to race.': 'صُممت للسباق.',
       'We are a Grades 11–12 student team turning classroom knowledge into a competition-ready electric race car—one design, test, and hard-earned improvement at a time.': 'نحن فريق طلابي من الصفين 11–12 نحوّل معرفة الصف إلى سيارة سباق كهربائية جاهزة للمنافسة—تصميماً واختباراً وتحسيناً في كل مرة.',
@@ -152,7 +158,7 @@
       'Weight balance': 'توازن الوزن',
       'Reliability checks': 'فحوصات الموثوقية',
       'Race preparation': 'الاستعداد للسباق',
-      'Target race date · February 13, 2027': 'موعد السباق المستهدف · 13 فبراير 2027',
+      'Race Day · March 2027 (date to be confirmed)': 'يوم السباق · مارس 2027 (التاريخ قيد التأكيد)',
       'The countdown to EVGP is on.': 'العدّ التنازلي لـ EVGP بدأ.',
       'Days': 'أيام',
       'Recalculated at each publish — not a live, second-by-second countdown.': 'يُحتسب العدّ مع كل تحديث للموقع، وليس عدًّا تنازليًا لحظيًا بالثواني.',
@@ -298,7 +304,7 @@
     },
     'members.html': {
       'Staring contest winner': 'المركز الأول في مسابقة التحديق',
-      'Nineteen student builders across mechanics, safety, innovation, media, and driving—each contributing to the Cobra race car.': 'تسعة عشر طالبًا وطالبة يساهمون في سيارة سباق كوبرا عبر الميكانيكا والسلامة والابتكار والإعلام والقيادة.'
+      'Eighteen student builders across mechanics, safety, media, and driving—each contributing to the Cobra race car.': 'ثمانية عشر طالبًا وطالبة يساهمون في سيارة سباق كوبرا عبر الميكانيكا والسلامة والإعلام والقيادة.'
     },
     'projects.html': {
       'Build stages': 'مراحل البناء',
@@ -328,7 +334,7 @@
       'Refine balance, reliability, safety, and presentation so the car and team are ready for EVGP.': 'نحسّن التوازن والموثوقية والسلامة والمظهر حتى تصبح السيارة والفريق جاهزين لـ EVGP.',
       'Weight balance': 'توازن الوزن', 'Reliability checks': 'فحوصات الموثوقية', 'Race preparation': 'الاستعداد للسباق',
       'The details that separate a build from a race car. (Lightweight clip for faster loads.)': 'التفاصيل التي تحوّل المشروع إلى سيارة سباق حقيقية.',
-      'Next milestone': 'المحطة التالية', 'Race target: February 13, 2027.': 'موعد السباق المستهدف: 13 فبراير 2027.',
+      'Next milestone': 'المحطة التالية', 'Race target: March 2027 (exact date to be confirmed).': 'موعد السباق المستهدف: مارس 2027 (التاريخ الدقيق قيد التأكيد).',
       'The timeline does not end here. Testing, learning, and refinement continue until race day.': 'لا ينتهي مسار العمل هنا؛ فالاختبار والتعلّم والتحسين مستمرة حتى يوم السباق.',
       'Help us reach the grid': 'ساعدنا في الوصول إلى خط الانطلاق', 'Ask me about any stage of the Cobra build.': 'اسألني عن أي مرحلة من مراحل بناء كوبرا.', 'Ask about the build…': 'اسأل عن مراحل البناء…'
     },
@@ -366,9 +372,9 @@
       'design, build, and test a real race car—combining engineering, safety, media, and teamwork under one black-and-red brand.': 'سيارة سباق حقيقية ويبنونها ويختبرونها، جامعِين الهندسة والسلامة والإعلام والعمل الجماعي تحت هوية واحدة بالأسود والأحمر.',
       'This season we are preparing a competition-ready car for the': 'نستعد هذا الموسم بسيارة جاهزة للمنافسة في',
       'Electric Vehicle Grand Prix (EVGP)': 'سباق المركبات الكهربائية الكبير (EVGP)',
-      'on our target date of': '، وموعدنا المستهدف هو',
-      'February 13, 2027': '13 فبراير 2027',
-      '. Every design choice is judged on performance, safety, and reliability—not just looking good in the workshop.': '. نقيم كل قرار تصميمي وفق الأداء والسلامة والموثوقية، لا وفق المظهر داخل الورشة فقط.',
+      'with a race target of': '، وهدف السباق هو',
+      'March 2027': 'مارس 2027',
+      '(exact date to be confirmed). Every design choice is judged on performance, safety, and reliability—not just looking good in the workshop.': '(التاريخ الدقيق قيد التأكيد). نقيم كل قرار تصميمي وفق الأداء والسلامة والموثوقية، لا وفق المظهر داخل الورشة فقط.',
       'We meet in the': 'نجتمع في',
       'Electric Car Room': 'غرفة السيارة الكهربائية',
       'every': 'كل',
@@ -376,7 +382,7 @@
       '. Sessions mix build work, electrical checks, safety drills, and media updates so the whole crew stays race-ready.': '. تجمع الجلسات بين أعمال البناء والفحوصات الكهربائية وتدريبات السلامة والتحديثات الإعلامية ليبقى الفريق مستعدًا للسباق.',
       'About SIS Al Jada Cobras': 'عن فريق كوبرا سيس الجادة', 'Our Mission': 'مهمتنا', 'Build a safe, fast, and efficient electric car while developing teamwork, engineering skills, and confidence through real hands-on experience.': 'بناء سيارة كهربائية آمنة وسريعة وفعّالة، مع تنمية العمل الجماعي والمهارات الهندسية والثقة من خلال تجربة عملية حقيقية.',
       'Who We Are': 'من نحن', 'The SIS Al Jada Cobras are a student-led electric race team at SABIS® Al Jada. Students in Grades 11 and 12 design, build, and test a real race car—combining engineering, safety, media, and teamwork under one black-and-red brand.': 'فريق كوبرا سيس الجادة هو فريق سباق كهربائي يقوده طلاب سابيس® الجادة. يصمّم طلاب الصفين الحادي عشر والثاني عشر سيارة سباق حقيقية ويبنونها ويختبرونها، جامعِين الهندسة والسلامة والإعلام والعمل الجماعي تحت هوية واحدة بالأسود والأحمر.',
-      'Our Goal': 'هدفنا', 'This season we are preparing a competition-ready car for the Electric Vehicle Grand Prix (EVGP) on our target date of February 13, 2027. Every design choice is judged on performance, safety, and reliability—not just looking good in the workshop.': 'نستعد هذا الموسم بسيارة جاهزة للمنافسة في سباق المركبات الكهربائية الكبير (EVGP)، وموعدنا المستهدف هو 13 فبراير 2027. نقيم كل قرار تصميمي وفق الأداء والسلامة والموثوقية، لا وفق المظهر داخل الورشة فقط.',
+      'Our Goal': 'هدفنا', 'This season we are preparing a competition-ready car for the Electric Vehicle Grand Prix (EVGP) with a race target of March 2027 (exact date to be confirmed). Every design choice is judged on performance, safety, and reliability—not just looking good in the workshop.': 'نستعد هذا الموسم بسيارة جاهزة للمنافسة في سباق المركبات الكهربائية الكبير (EVGP)، وهدف السباق مارس 2027 (التاريخ الدقيق قيد التأكيد). نقيم كل قرار تصميمي وفق الأداء والسلامة والموثوقية، لا وفق المظهر داخل الورشة فقط.',
       'When We Meet': 'مواعيد اجتماعاتنا', 'We meet in the Electric Car Room every Wednesday and Thursday. Sessions mix build work, electrical checks, safety drills, and media updates so the whole crew stays race-ready.': 'نجتمع في غرفة السيارة الكهربائية كل أربعاء وخميس. تجمع الجلسات بين أعمال البناء والفحوصات الكهربائية وتدريبات السلامة والتحديثات الإعلامية ليبقى الفريق مستعدًا للسباق.',
       'Grades': 'الصفوف', 'Days per week': 'يومان أسبوعيًا', 'Team, One Dream': 'فريق واحد، حلم واحد', 'See the work': 'شاهد عملنا', 'Follow the build, the specs, and the people behind the car.': 'تابع مراحل البناء والمواصفات والطلاب الذين يقفون خلف السيارة.'
     },
@@ -393,12 +399,23 @@
       'Testing': 'الاختبارات', 'Track access, diagnostic tools, data collection, and consumables.': 'استخدام الحلبة وأدوات التشخيص وجمع البيانات والمواد المستهلكة.',
       'Race logistics': 'الخدمات اللوجستية للسباق', 'Transportation, team materials, documentation, and event preparation.': 'النقل ومواد الفريق والوثائق والاستعداد للفعالية.',
       '03 / Partnership': '03 / الشراكة', 'Ways to take part': 'طرق المشاركة', 'Choose the support that fits.': 'اختر نوع الدعم الأنسب.',
-      'Equipment partner': 'شريك المعدات', 'Provide what the team uses': 'وفّر ما يحتاجه الفريق', 'Contribute parts, tools, safety gear, workshop services, or technical expertise.': 'قدّم قطعًا أو أدوات أو معدات سلامة أو خدمات ورش أو خبرة تقنية.',
-      'Recognition on the website': 'إبراز الشريك على الموقع', 'Workshop acknowledgement': 'تقدير الشريك في الورشة', 'Impact update from the team': 'تقرير من الفريق عن أثر الدعم',
-      'Race partner': 'شريك السباق', 'Help take the Cobra to EVGP': 'ساعد كوبرا في الوصول إلى EVGP', 'Support testing, preparation, transport, and the costs of getting the complete team to competition.': 'ادعم الاختبارات والاستعداد والنقل وتكاليف مشاركة الفريق كاملًا في المسابقة.',
-      'Prominent website placement': 'ظهور بارز على الموقع', 'Race-day team recognition': 'تقدير الشريك في يوم السباق', 'Logo placement subject to competition rules': 'وضع الشعار وفق قواعد المسابقة',
-      'Learning partner': 'شريك التعلّم', 'Invest in student development': 'استثمر في تنمية الطلاب', 'Offer mentoring, technical talks, engineering visits, media support, or specialist advice.': 'قدّم إرشادًا أو محاضرات تقنية أو زيارات هندسية أو دعمًا إعلاميًا أو استشارات متخصصة.',
-      'Partner profile on the website': 'ملف تعريفي للشريك على الموقع', 'Student learning session': 'جلسة تعليمية للطلاب', 'Team thank-you feature': 'فقرة شكر خاصة من الفريق',
+      'Title Partner': 'الشريك الرئيسي', 'AED 25,000 · one partner only': '25,000 درهم إماراتي · شريك واحد فقط',
+      '"Cobras, powered by [Brand]" naming rights': 'حقوق تسمية "كوبرا، بدعم من [العلامة]"', 'Largest logo on both cars — nose and sidepods — plus the team kit': 'أكبر شعار على السيارتين — المقدمة والجوانب — وعلى طقم الفريق', 'Homepage feature': 'إبراز على الصفحة الرئيسية', 'Pit access at the showcase day': 'دخول منطقة الصيانة في يوم العرض', 'Car-display day at your premises': 'يوم عرض السيارة في مقر مؤسستكم', 'Presentation for your staff': 'عرض تقديمي لموظفيكم', 'Exclusive renewal rights until 30 June 2027': 'حق تجديد حصري حتى 30 يونيو 2027',
+      'Gold': 'الذهبي', 'AED 15,000 · two partners maximum': '15,000 درهم إماراتي · شريكان كحد أقصى',
+      'Prominent logo on both cars and the team kit': 'شعار بارز على السيارتين وطقم الفريق', 'Thank-you post series': 'سلسلة منشورات شكر', 'Featured logo and link on this site': 'شعار ورابط بارزان على هذا الموقع', 'School newsletter and assembly mention': 'ذكر في نشرة المدرسة وطابور الصباح',
+      'Silver': 'الفضي', 'AED 7,500 · four partners maximum': '7,500 درهم إماراتي · أربعة شركاء كحد أقصى',
+      'Logo on both cars': 'شعار على السيارتين', 'Dedicated thank-you post': 'منشور شكر مخصص', 'Logo and link on this sponsors page': 'شعار ورابط على صفحة الرعاة', 'Showcase day invite': 'دعوة ليوم العرض',
+      'Bronze': 'البرونزي', 'AED 2,500': '2,500 درهم إماراتي',
+      'Logo on the sponsors page': 'شعار على صفحة الرعاة', 'Social thank-you': 'شكر عبر وسائل التواصل', 'Commemorative plaque': 'لوحة تذكارية',
+      'Supporter': 'داعم', 'AED 1,000': '1,000 درهم إماراتي',
+      'Name on the sponsors page': 'الاسم على صفحة الرعاة', 'Group thank-you': 'شكر جماعي', 'Digital certificate': 'شهادة رقمية',
+      'Tiers are first-come, first-served. Sponsor artwork deadline: 1 December 2026. All partners receive a post-season report in April 2027.': 'الفئات بأسبقية الحجز. الموعد النهائي لأعمال الرعاة الفنية: 1 ديسمبر 2026. يتلقى جميع الشركاء تقرير ما بعد الموسم في أبريل 2027.',
+      'Qamia — Gold Partner · Confirmed': 'Qamia — الشريك الذهبي · مؤكد',
+      '04 / Partners': '04 / الشركاء', 'Confirmed partners': 'الشركاء المؤكدون', 'The wall so far.': 'جدار الشركاء حتى الآن.',
+      'Logo slots fill as sponsorships are confirmed. Artwork deadline: 1 December 2026.': 'تمتلئ خانات الشعارات مع تأكيد الرعايات. الموعد النهائي للأعمال الفنية: 1 ديسمبر 2026.',
+      'Open': 'متاحة', 'Bronze and Supporter places are open — names join the wall as they confirm.': 'أماكن الفئتين البرونزية والداعمة متاحة — تنضم الأسماء إلى الجدار عند تأكيدها.',
+      'Email Ms. Sara Rizk, Faculty Advisor, at info@sisaljada.sabis.net or call +971 6 502 2111 — or message the Cobras social account.': 'راسلوا الأستاذة سارة رزق، المشرفة الأكاديمية، عبر info@sisaljada.sabis.net أو اتصلوا على +971 6 502 2111 — أو راسلوا حساب كوبرا على التواصل الاجتماعي.',
+      'Faculty Advisor': 'المشرفة الأكاديمية', 'Faculty Advisor, SIS Al Jada Cobras — SABIS® Al Jada, Sharjah.': 'المشرفة الأكاديمية لفريق كوبرا سيس الجادة — سابيس® الجادة، الشارقة.', 'Instagram': 'إنستغرام',
       'Want to sponsor us?': 'هل ترغب في رعايتنا؟', 'Tell CarGPT you want to partner with the Cobras.': 'أخبر CarGPT بأنك ترغب في الشراكة مع فريق كوبرا.', 'Open the assistant and choose the sponsorship prompt, or message the team on Instagram/TikTok. We will connect you with the right school contact for equipment, race, or learning partnerships.': 'افتح المساعد واختر سؤال الرعاية، أو راسل الفريق عبر إنستغرام أو تيك توك. سنوصلك بجهة التواصل المناسبة في المدرسة لشراكات المعدات أو السباق أو التعلّم.',
       'Open CarGPT': 'افتح CarGPT', 'Ask how your organization can support the Cobras.': 'اسأل كيف يمكن لمؤسستك دعم فريق كوبرا.', 'How can I sponsor the team?': 'كيف يمكنني رعاية الفريق؟', 'What support does the team need?': 'ما نوع الدعم الذي يحتاجه الفريق؟', 'Ask about sponsorship…': 'اسأل عن الرعاية…',
       'Real contact': 'التواصل المباشر', 'Email the sponsorship desk': 'راسل فريق الرعاية', 'Open sponsor package': 'افتح باقة الرعاية', 'Download package PDF': 'نزّل باقة الرعاية بصيغة PDF'
@@ -417,17 +434,22 @@
     },
     'sponsor-package.html': {
       'One-pager': 'ملخص من صفحة واحدة', 'Download the package PDF': 'نزّل باقة الرعاية بصيغة PDF', 'Share with your CSR or marketing team in one click.': 'شاركها بسهولة مع فريق المسؤولية المجتمعية أو التسويق.', 'Partnership tiers': 'فئات الشراكة',
-      'Tier 01': 'الفئة 01', 'Tier 02': 'الفئة 02', 'Tier 03': 'الفئة 03', 'Equipment partner': 'شريك المعدات', 'Race partner': 'شريك السباق', 'Learning partner': 'شريك التعلّم',
-      'Parts, tools, safety gear, workshop services, or technical expertise.': 'قطع وأدوات ومعدات سلامة وخدمات ورش أو خبرة تقنية.', 'Support testing, transport, and competition logistics for EVGP.': 'دعم الاختبارات والنقل والخدمات اللوجستية لمسابقة EVGP.', 'Mentoring, technical talks, lab visits, or media support.': 'إرشاد ومحاضرات تقنية وزيارات مختبرية أو دعم إعلامي.',
-      'Website recognition': 'إبراز الشريك على الموقع', 'Workshop acknowledgement': 'تقدير الشريك في الورشة', 'Impact update from the team': 'تقرير عن أثر الدعم', 'Prominent website placement': 'ظهور بارز على الموقع', 'Race-day team recognition': 'تقدير في يوم السباق', 'Logo placement subject to rules': 'وضع الشعار وفق القواعد', 'Partner profile on the website': 'ملف للشريك على الموقع', 'Student learning session': 'جلسة تعليمية للطلاب', 'Team thank-you feature': 'فقرة شكر من الفريق',
-      'Real contact': 'التواصل المباشر', 'Talk to the Cobras sponsorship desk': 'تواصل مع فريق رعاية كوبرا', 'This is a school-channel placeholder — replace with your official address when ready. You can also message @sisaljadacobras on Instagram or TikTok.': 'هذا عنوان مؤقت لقناة المدرسة؛ استبدله بالعنوان الرسمي عند اعتماده. ويمكنك أيضًا مراسلة @sisaljadacobras عبر إنستغرام أو تيك توك.',
+      'Tier 01 · one only': 'الفئة 01 · واحدة فقط', 'Tier 02 · max 2': 'الفئة 02 · بحد أقصى 2', 'Tier 03 · max 4': 'الفئة 03 · بحد أقصى 4', 'Tier 04': 'الفئة 04', 'Tier 05': 'الفئة 05',
+      'Title Partner — AED 25,000': 'الشريك الرئيسي — 25,000 درهم إماراتي', 'Gold — AED 15,000': 'الذهبي — 15,000 درهم إماراتي', 'Silver — AED 7,500': 'الفضي — 7,500 درهم إماراتي', 'Bronze — AED 2,500': 'البرونزي — 2,500 درهم إماراتي', 'Supporter — AED 1,000': 'داعم — 1,000 درهم إماراتي',
+      '"Cobras, powered by [Brand]" naming rights.': 'حقوق تسمية "كوبرا، بدعم من [العلامة]".', 'Prominent logo on both cars and the team kit.': 'شعار بارز على السيارتين وطقم الفريق.', 'Logo on both cars.': 'شعار على السيارتين.', 'Logo on the sponsors page.': 'شعار على صفحة الرعاة.', 'Name on the sponsors page.': 'الاسم على صفحة الرعاة.',
+      'Largest logo on both cars (nose + sidepods) and team kit': 'أكبر شعار على السيارتين (المقدمة والجوانب) وعلى طقم الفريق', 'Homepage feature': 'إبراز على الصفحة الرئيسية', 'Pit access at the showcase day': 'دخول منطقة الصيانة في يوم العرض', 'Car-display day at your premises': 'يوم عرض السيارة في مقر مؤسستكم', 'Staff presentation': 'عرض تقديمي للموظفين', 'Exclusive renewal until 30 June 2027': 'تجديد حصري حتى 30 يونيو 2027',
+      'Thank-you post series': 'سلسلة منشورات شكر', 'Featured logo and link on this site': 'شعار ورابط بارزان على هذا الموقع', 'School newsletter and assembly mention': 'ذكر في نشرة المدرسة وطابور الصباح',
+      'Dedicated thank-you post': 'منشور شكر مخصص', 'Logo and link on the sponsors page': 'شعار ورابط على صفحة الرعاة', 'Showcase day invite': 'دعوة ليوم العرض',
+      'Social thank-you': 'شكر عبر وسائل التواصل', 'Commemorative plaque': 'لوحة تذكارية', 'Group thank-you': 'شكر جماعي', 'Digital certificate': 'شهادة رقمية',
+      'Season target: AED 60,000. Tiers are first-come, first-served. Sponsor artwork deadline: 1 December 2026. All partners receive a post-season report in April 2027.': 'هدف الموسم: 60,000 درهم إماراتي. الفئات بأسبقية الحجز. الموعد النهائي لأعمال الرعاة الفنية: 1 ديسمبر 2026. يتلقى جميع الشركاء تقرير ما بعد الموسم في أبريل 2027.',
+      'Faculty Advisor': 'المشرفة الأكاديمية', 'Faculty Advisor, SIS Al Jada Cobras — SABIS® Al Jada, Sharjah.': 'المشرفة الأكاديمية لفريق كوبرا سيس الجادة — سابيس® الجادة، الشارقة.', 'Instagram': 'إنستغرام',
       'Organization': 'المؤسسة', 'Company or foundation': 'شركة أو مؤسسة', 'Your email': 'بريدك الإلكتروني', 'How you can help': 'كيف يمكنك المساعدة', 'Parts, funding, mentoring…': 'قطع أو تمويل أو إرشاد…', 'Send via email app': 'إرسال عبر تطبيق البريد'
     },
     'news.html': {
       'Team news': 'أخبار الفريق', 'Systems week: kill switch & labels': 'أسبوع الأنظمة: مفتاح الإيقاف والتسميات', 'Electrical crew re-checked the 48V layout, secured connectors, and re-labeled critical runs so troubleshooting is faster on test day.': 'أعاد فريق الكهرباء فحص نظام 48 فولت وثبّت الموصلات وجدّد تسميات التوصيلات المهمة لتسريع اكتشاف الأعطال في يوم الاختبار.',
       'Balance passes on the current chassis': 'اختبارات التوازن على الهيكل الحالي', 'Mechanics shifted battery placement after low-speed runs. Weight is still near 186 kg — we will re-weigh after the next parts drop.': 'عدّل فريق الميكانيكا مواضع البطاريات بعد جولات منخفضة السرعة. ما زال الوزن قريبًا من 186 كغ، وسنعيد الوزن بعد تركيب القطع التالية.',
       'Media pack + sponsor one-pager': 'الحزمة الإعلامية وملخص الرعاية', 'Media crew published a clean sponsor package PDF and refreshed social stills for race partner outreach.': 'نشر فريق الإعلام ملف رعاية مختصرًا بصيغة PDF وحدّث الصور المخصصة للتواصل مع شركاء السباق.',
-      'EVGP countdown is live': 'بدأ العدّ التنازلي لـ EVGP', 'Target race date locked for planning: 13 February 2027. The Race Checklist page tracks gear, docs, and safety items.': 'اعتمدنا 13 فبراير 2027 موعدًا مستهدفًا للتخطيط. تتابع صفحة قائمة السباق المعدات والوثائق ومتطلبات السلامة.'
+      'EVGP countdown is live': 'بدأ العدّ التنازلي لـ EVGP', 'Race window set for planning: March 2027, exact date to be confirmed. The Race Checklist page tracks gear, docs, and safety items.': 'حددنا مارس 2027 موعدًا للتخطيط، والتاريخ الدقيق قيد التأكيد. تتابع صفحة قائمة السباق المعدات والوثائق ومتطلبات السلامة.'
     },
     '404.html': {
       '404 · Off course': '404 · خارج المسار', 'This page': 'هذه الصفحة', 'missed the grid.': 'لم تصل إلى خط الانطلاق.', 'That URL is not on the Cobras site. Head back home or jump into the build.': 'هذا الرابط غير موجود في موقع كوبرا. عُد إلى الرئيسية أو انتقل إلى مراحل البناء.'
@@ -435,7 +457,7 @@
   };
 
   const TITLES = {
-    'members.html': 'الأعضاء | فريق كوبرا سيس الجادة', 'projects.html': 'مشروعنا | فريق كوبرا سيس الجادة', '101.html': 'أساسيات السيارات الكهربائية | فريق كوبرا سيس الجادة', 'specs.html': 'المواصفات | فريق كوبرا سيس الجادة', 'about.html': 'من نحن | فريق كوبرا سيس الجادة', 'sponsors.html': 'رعاية الفريق | فريق كوبرا سيس الجادة', 'news.html': 'الأخبار | فريق كوبرا سيس الجادة', 'checklist.html': 'قائمة السباق | فريق كوبرا سيس الجادة', 'race-day.html': 'يوم السباق | فريق كوبرا سيس الجادة', 'sponsor-package.html': 'باقة الرعاية | فريق كوبرا سيس الجادة', '404.html': 'الصفحة غير موجودة | فريق كوبرا سيس الجادة',
+    'members.html': 'الأعضاء | فريق كوبرا سيس الجادة', 'strategy.html': 'تحدي البطارية | فريق كوبرا سيس الجادة', 'projects.html': 'مشروعنا | فريق كوبرا سيس الجادة', '101.html': 'أساسيات السيارات الكهربائية | فريق كوبرا سيس الجادة', 'specs.html': 'المواصفات | فريق كوبرا سيس الجادة', 'about.html': 'من نحن | فريق كوبرا سيس الجادة', 'sponsors.html': 'رعاية الفريق | فريق كوبرا سيس الجادة', 'news.html': 'الأخبار | فريق كوبرا سيس الجادة', 'checklist.html': 'قائمة السباق | فريق كوبرا سيس الجادة', 'race-day.html': 'يوم السباق | فريق كوبرا سيس الجادة', 'sponsor-package.html': 'باقة الرعاية | فريق كوبرا سيس الجادة', '404.html': 'الصفحة غير موجودة | فريق كوبرا سيس الجادة',
     'index.html': 'فريق كوبرا سيس الجادة | سيارة سباق كهربائية من صنع الطلاب', 'trackmap.html': 'خريطة المسار | فريق كوبرا سيس الجادة', 'car.html': 'الكوبرا | فريق كوبرا سيس الجادة'
   };
 

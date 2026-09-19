@@ -1,5 +1,5 @@
 /* Cobras PWA service worker — offline shell cache */
-const CACHE = 'cobras-shell-v21';
+const CACHE = 'cobras-shell-v32';
 const SHELL = [
   './',
   './index.html',
@@ -9,6 +9,8 @@ const SHELL = [
   './site.js',
   './game.js',
   './game.html',
+  './strategy.html',
+  './strategy.js',
   './race-day.html',
   './manifest.webmanifest',
   './cobra-race-mark.png'

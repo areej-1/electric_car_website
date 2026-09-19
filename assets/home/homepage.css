@@ -86,3 +86,26 @@ html[dir="rtl"] #main.cobras-home .hero-copy { text-align: right; }
   #main.cobras-home .home-race { grid-template-columns: 1fr; gap: 16px; }
   #main.cobras-home .home-count { display: flex; align-items: baseline; gap: 12px; text-align: start; }
 }
+/* Story arc: season results as a three-step strip. */
+#main.cobras-home .home-story { padding-block: 56px; }
+#main.cobras-home .story-arc { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 28px 0 0; padding: 0; border-block: 1px solid var(--border-red); }
+#main.cobras-home .story-arc li { padding: 24px 20px; border-inline-start: 1px solid rgba(245,240,232,.09); }
+#main.cobras-home .story-arc li:first-child { border-inline-start: 0; padding-inline-start: 0; }
+#main.cobras-home .story-arc .arc-year { color: var(--gold); font-size: .75rem; letter-spacing: .08em; }
+#main.cobras-home .story-arc strong { display: block; font: 900 clamp(2rem, 4vw, 3.2rem)/1.2 var(--display); margin-block: 10px; font-variant-numeric: tabular-nums; }
+#main.cobras-home .story-arc p { margin: 0; font-size: .85rem; color: var(--muted); }
+#main.cobras-home .story-arc .arc-next strong { color: var(--hot-red); }
+@media (max-width: 600px) {
+  #main.cobras-home .home-story { padding-block: 36px; }
+  #main.cobras-home .story-arc { grid-template-columns: 1fr; }
+  #main.cobras-home .story-arc li { border-inline-start: 0; padding-inline: 0; border-top: 1px solid rgba(245,240,232,.09); }
+  #main.cobras-home .story-arc li:first-child { border-top: 0; }
+}
+
+/* Under reduced motion the car rests mid-travel. Doing it in CSS rather than in
+   homepage.js makes it instantaneous — style recalculation is synchronous, while
+   the JS media-query change event is dispatched as a task and can lag the flip. */
+@media (prefers-reduced-motion: reduce) {
+  #main.cobras-home .hero-drive img { transform: translateX(12.5%); }
+  html[dir="rtl"] #main.cobras-home .hero-drive img { transform: translateX(-12.5%); }
+}
